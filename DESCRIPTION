@@ -1,6 +1,6 @@
 Package: strucchange
-Version: 1.2-2
-Date: 2004-02-25
+Version: 1.2-3
+Date: 2004-06-23
 Title: Testing for Structural Change
 Author: Achim Zeileis, Friedrich Leisch, Bruce Hansen,
         Kurt Hornik, Christian Kleiber, Andrea Peters
@@ -19,3 +19,4 @@ Description: Testing, dating and monitoring of structural change in
              Emphasis is always given to methods for visualizing the data.
 Depends: sandwich, zoo, R (>= 1.5.0)
 License: GPL
+Packaged: Wed Jun 23 19:51:32 2004; zeileis

@@ -5,8 +5,8 @@ Grossarl                Marriages and Births in Grossarl
 PhillipsCurve           UK Phillips Curve Equation Data
 RealInt                 US Ex-post Real Interest Rate
 USIncExp                Income and Expenditures in the US
-boundary.Fstats         Boundary for F Statistics
 boundary                Boundary Function for Structural Change Tests
+boundary.Fstats         Boundary for F Statistics
 boundary.efp            Boundary for Empirical Fluctuation Processes
 boundary.mefp           Boundary Function for Monitoring of Structural
                         Changes
@@ -28,6 +28,6 @@ plot.mefp               Plot Methods for mefp Objects
 recresid                Recursive Residuals
 root.matrix             Root of a Matrix
 sctest.Fstats           supF-, aveF- and expF-Test
-sctest.formula          Structural Change Tests
 sctest.efp              Generalized Fluctuation Tests
+sctest.formula          Structural Change Tests
 solveCrossprod          Inversion of X'X

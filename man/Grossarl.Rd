@@ -1,6 +1,5 @@
 \name{Grossarl}
 \alias{Grossarl}
-\non_function{}
 \title{Marriages and Births in Grossarl}
 \usage{data(Grossarl)}
 \description{

@@ -137,4 +137,12 @@ USIncExp3 <- window(USIncExp, start=c(1969,1), end=c(1976,12))
 me.mefp <- monitor(me.mefp)
 plot(me.mefp, functional = NULL)
 }
+
+\concept{CUSUM}
+\concept{MOSUM}
+\concept{recursive estimates}
+\concept{moving estimates}
+\concept{fluctuation test}
+\concept{monitoring}
+\concept{structural change}
 \keyword{regression}

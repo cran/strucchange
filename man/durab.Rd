@@ -1,6 +1,5 @@
 \name{durab}
 \alias{durab}
-\non_function{}
 \title{US Labor Productivity}
 \usage{data(durab)}
 \description{

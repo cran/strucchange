@@ -287,4 +287,7 @@ ci.seat2
 lines(ci.seat2)
 }
 
+\concept{breakpoint estimation}
+\concept{changepoint estimation}
+\concept{segmented regression}
 \keyword{regression}

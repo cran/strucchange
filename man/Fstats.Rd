@@ -96,4 +96,9 @@ plot(fs, aveF = TRUE)
 ## perform the expF test
 sctest(fs, type = "expF")
 }
+
+\concept{F statistics}
+\concept{Andrews test}
+\concept{Chow test}
+\concept{Quandt test}
 \keyword{regression}

@@ -150,4 +150,19 @@ plot(re.seat)
 plot(re.seat, functional = NULL)
 sctest(re.seat)
 }
+
+\concept{CUSUM}
+\concept{MOSUM}
+\concept{recursive estimates}
+\concept{moving estimates}
+\concept{fluctuation test}
+\concept{maximum likelihood scores}
+\concept{structural change}
+\concept{CUSUM}
+\concept{MOSUM}
+\concept{recursive estimates}
+\concept{moving estimates}
+\concept{fluctuation test}
+\concept{maximum likelihood scores}
+\concept{structural change}
 \keyword{regression}

@@ -74,4 +74,8 @@ if("package:sandwich" \%in\% search() || require(sandwich)) {
 }
 
 }
+\concept{M-fluctuation}
+\concept{fluctuation test}
+\concept{maximum likelihood scores}
+\concept{structural change}
 \keyword{regression}
