@@ -3,7 +3,7 @@
 \title{Generalized Fluctuation Tests}
 \description{Performs a generalized fluctuation test.}
 \usage{
-sctest(x, alt.boundary = FALSE, functional = c("max", "range"))
+\method{sctest}{efp}(x, alt.boundary = FALSE, functional = c("max", "range"), ...)
 }
 
 \arguments{
@@ -12,6 +12,7 @@ sctest(x, alt.boundary = FALSE, functional = c("max", "range"))
      the standard linear boundaries) will be used (for CUSUM processes only).}
   \item{functional}{indicates which functional should be applied to the
      estimates based processes (\code{"fluctuation"} and \code{"ME"}).}
+  \item{...}{currently not used.}
 }
 
 \details{The critical values for the MOSUM tests and the ME test are just

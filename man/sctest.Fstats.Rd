@@ -3,7 +3,8 @@
 \title{supF-, aveF- and expF-Test}
 \description{Performs the supF-, aveF- or expF-test}
 \usage{
-sctest(x, type = c("supF", "aveF", "expF"), asymptotic = FALSE)}
+\method{sctest}{Fstats}(x, type = c("supF", "aveF", "expF"),
+    asymptotic = FALSE, ...)}
 \arguments{
  \item{x}{an object of class \code{"Fstats"}.}
  \item{type}{a character string specifying which test will be performed.}
@@ -11,6 +12,7 @@ sctest(x, type = c("supF", "aveF", "expF"), asymptotic = FALSE)}
      statistic and type is \code{"supF"} or \code{"aveF"}. If then set to
      \code{TRUE} the asymptotic (chi-square) distribution instead of the exact
      (F) distribution will be used to compute the p value.}
+ \item{...}{currently not used.}
 }
 
 \details{If \code{x} contains just a single F statistic and type is

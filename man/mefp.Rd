@@ -18,12 +18,12 @@ mefp(obj, ...)
     alpha=0.05, functional = c("max", "range"), period=10,
     tolerance=.Machine$double.eps^0.5,
     MECritvalTable=monitorMECritvalTable,
-    rescale=FALSE)
+    rescale=FALSE, ...)
 
 \method{mefp}{efp}(obj, alpha=0.05, functional = c("max", "range"),
     period=10, tolerance=.Machine$double.eps^0.5,
     MECritvalTable=monitorMECritvalTable,
-    rescale=NULL)
+    rescale=NULL, ...)
 
 monitor(obj, data=NULL, verbose=TRUE)
 }
@@ -57,6 +57,7 @@ monitor(obj, data=NULL, verbose=TRUE)
     be used. In \code{mefp.efp} the default is to take the same value as in
     the original call of \code{efp}.}
   \item{verbose}{If \code{TRUE}, signal breaks by text output.}
+  \item{...}{Currently not used.}
 }
 \details{
   \code{\link{mefp}} creates an object of class \code{"mefp"} either
@@ -106,5 +107,23 @@ plot(me2)
 # and now monitor on all data
 me3 <- monitor(me2, data=df1)
 plot(me3)
+
+
+## Load dataset "USIncExp" with income and expenditure in the US
+## and choose a suitable subset for the history period
+data(USIncExp)
+USIncExp3 <- window(USIncExp, start=c(1969,1), end=c(1971,12))
+## initialize the monitoring with the formula interface
+me.mefp <- mefp(expenditure~income, type="ME", rescale=TRUE,
+                   data=USIncExp3, alpha=0.05)
+
+## monitor the new observations for the year 1972
+USIncExp3 <- window(USIncExp, start=c(1969,1), end=c(1972,12))
+me.mefp <- monitor(me.mefp)
+
+## monitor the new data for the years 1973-1976
+USIncExp3 <- window(USIncExp, start=c(1969,1), end=c(1976,12))
+me.mefp <- monitor(me.mefp)
+plot(me.mefp, functional = NULL)
 }
 \keyword{regression}

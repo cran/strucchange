@@ -3,9 +3,10 @@
 \title{Boundary Function for Monitoring of Structural Changes}
 \description{Computes boundary for an object of class \code{"mefp"}}
 \usage{
-boundary(x)}
+\method{boundary}{mefp}(x, ...)}
 \arguments{
   \item{x}{an object of class \code{"mefp"}.}
+  \item{...}{currently not used.}
 }
 \value{an object of class \code{"ts"} with the same time properties as
 the monitored process}

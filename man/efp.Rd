@@ -6,10 +6,13 @@
 to a specified method from the generalized fluctuation test
 framework}
 \usage{
-efp(formula, type = <<see below>>, h = 0.15, dynamic = FALSE,
-  rescale = TRUE, tol = 1e-7, data)}
+efp(formula, data, type = <<see below>>, h = 0.15, dynamic = FALSE,
+  rescale = TRUE, tol = 1e-7)}
 \arguments{
   \item{formula}{a symbolic describtion for the model to be tested.}
+  \item{data}{an optional data frame containing the variables in the model. By
+     default the variables are taken from the environment which \code{efp} is
+     called from.}
   \item{type}{specifies which type of fluctuation process will be
      computed. For details see below.}
   \item{h}{a numeric from interval (0,1) sepcifying the bandwidth. determins the
@@ -22,9 +25,6 @@ efp(formula, type = <<see below>>, h = 0.15, dynamic = FALSE,
     (1994); if \code{FALSE} the whole regressor matrix will be used.
     (only if \code{type} is either \code{"fluctuation"} or \code{"ME"})}
   \item{tol}{tolerance when \code{solve} is used}
-  \item{data}{an optional data frame containing the variables in the model. By
-     default the variables are taken from the environment which \code{efp} is
-     called from.}
 }
 
 \details{If \code{type} is one of \code{"Rec-CUSUM"}, \code{"OLS-CUSUM"},
@@ -99,11 +99,19 @@ plot(temp.cus, alpha = 0.01, alt.boundary = TRUE)
 ## and calculate the test statistic
 sctest(temp.cus)
 
+
+## Load dataset "USIncExp" with income and expenditure in the US
+## and choose a suitable subset
+data(USIncExp)
+USIncExp2 <- window(USIncExp, start=c(1970,1), end=c(1989,12))
+
+## test the null hypothesis that the way the income is spent in expenditure
+## does not change over time
 ## compute moving estimates fluctuation process
-temp.me <- efp(nhtemp ~ 1, type = "ME", h = 0.2)
-## plot the process with functional = "max"
-plot(temp.me)
+me <- efp(expenditure~income, type="ME", data=USIncExp2, h=0.2)
+## plot the two dimensional fluctuation process with boundaries
+plot(me, functional=NULL)
 ## and perform the corresponding test
-sctest(temp.me)
+sctest(me)
 }
 \keyword{regression}

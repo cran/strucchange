@@ -1,7 +1,8 @@
 Fstats                   F Statistics
 USIncExp                 Income and Expenditures in the US
 boundary.Fstats          Boundary for F Statistics
-boundary.efp             Boundary Function for Structural Change Tests
+boundary                 Boundary Function for Structural Change Tests
+boundary.efp             Boundary for Empirical Fluctuation Processes
 boundary.mefp            Boundary Function for Monitoring of Structural
                          Changes
 efp                      Empirical Fluctuation Process

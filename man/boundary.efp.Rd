@@ -1,12 +1,9 @@
 \name{boundary.efp}
-\alias{boundary}
 \alias{boundary.efp}
-\title{Boundary Function for Structural Change Tests}
-\description{A generic function computing boundaries for structural change
-tests}
+\title{Boundary for Empirical Fluctuation Processes}
+\description{Computes boundary for an object of class \code{"efp"}}
 \usage{
-boundary(x, ...)
-boundary(x, alpha = 0.05, alt.boundary = FALSE)}
+\method{boundary}{efp}(x, alpha = 0.05, alt.boundary = FALSE, ...)}
 
 \arguments{
   \item{x}{an object of class \code{"efp"}.}
@@ -15,6 +12,7 @@ boundary(x, alpha = 0.05, alt.boundary = FALSE)}
   \item{alt.boundary}{logical. If set to \code{TRUE} alternative boundaries
      (instead of the standard linear boundaries) will be computed (for CUSUM
      processes only).}
+  \item{...}{currently not used.}
 }
 
 \value{an object of class \code{"ts"} with the same time properties as
@@ -38,7 +36,7 @@ temp.cus <- efp(nhtemp ~ 1, type = "OLS-CUSUM")
 plot(temp.cus, alpha = 0.01, boundary = FALSE)
 ## add the boundaries in another colour
 bound <- boundary(temp.cus, alpha = 0.01)
-lines(bound, col=2)
-lines(-bound, col=2)
+lines(bound, col=4)
+lines(-bound, col=4)
 }
 \keyword{regression}

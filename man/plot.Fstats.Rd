@@ -5,7 +5,7 @@
 \description{Plotting method for objects of class \code{"Fstats"}}
 \usage{
 \method{plot}{Fstats}(x, pval = FALSE, asymptotic = FALSE, alpha = 0.05, boundary = TRUE,
-  xlab = "Time", ylab = NULL, ylim = NULL, ...)}
+  aveF = FALSE, xlab = "Time", ylab = NULL, ylim = NULL, ...)}
 
 \arguments{
  \item{x}{an object of class \code{"Fstats"}.}
@@ -18,6 +18,10 @@
      which the boundary of the supF test will be computed.}
  \item{boundary}{logical. If set to \code{FALSE} the boundary will be computed
      but not plotted.}
+ \item{aveF}{logical. If set to \code{TRUE} the boundary of the aveF test will
+     be plotted. As this is a boundary for the mean of the F statistics rather
+     than for the F statistics themselves a dashed line for the mean of the F
+     statistics will also be plotted.}
  \item{...}{graphical parameters.}}
 
 \references{

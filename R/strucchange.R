@@ -436,7 +436,7 @@ pvalue.efp <- function(x, type, alt.boundary, functional = "max", h = NULL, k = 
 }
 
 
-sctest.efp <- function(x, alt.boundary = FALSE, functional = c("max", "range"))
+sctest.efp <- function(x, alt.boundary = FALSE, functional = c("max", "range"), ...)
 {
     
     k <- x$nreg
@@ -653,7 +653,7 @@ plot.Fstats <- function(x, pval = FALSE, asymptotic = FALSE,
     }
 }
 
-sctest.Fstats <- function(x, type = c("supF", "aveF", "expF"), asymptotic = FALSE)
+sctest.Fstats <- function(x, type = c("supF", "aveF", "expF"), asymptotic = FALSE, ...)
 {
     dname <- paste(deparse(substitute(x)))
     type <- match.arg(type)
@@ -693,19 +693,20 @@ sctest <- function(x, ...)
     UseMethod("sctest")
 }
 
-sctest.formula <- function(x, type = c("Rec-CUSUM", "OLS-CUSUM",
+sctest.formula <- function(formula, type = c("Rec-CUSUM", "OLS-CUSUM",
   "Rec-MOSUM", "OLS-MOSUM", "fluctuation", "ME", "Chow", "supF", "aveF",
   "expF"), h = 0.15, dynamic = FALSE, tol = 1e-7, alt.boundary = FALSE,
   functional = c("max", "range"), from = 0.15, to = NULL,
-  point = floor(0.5*nrow(model.frame(x))), asymptotic = FALSE, data = list())
+  point = floor(0.5*nrow(model.frame(formula))), asymptotic = FALSE,
+  data = list(), ...)
 {
   type <- match.arg(type)
-  dname <- paste(deparse(substitute(x)))
+  dname <- paste(deparse(substitute(formula)))
   if(type == "Chow")
   {
-    mf <- model.frame(x, data = data)
+    mf <- model.frame(formula, data = data)
     y <- model.response(mf)
-    X <- model.matrix(x, data = data)
+    X <- model.matrix(formula, data = data)
     METHOD <- "Chow test"
     k <- ncol(X)
     n <- length(y)
@@ -725,13 +726,13 @@ sctest.formula <- function(x, type = c("Rec-CUSUM", "OLS-CUSUM",
   else if(any(type == c("Rec-CUSUM", "OLS-CUSUM",
   "Rec-MOSUM", "OLS-MOSUM", "fluctuation", "ME")))
   {
-    process <- efp(x, type = type, h = h, dynamic = dynamic, tol = tol,
+    process <- efp(formula, type = type, h = h, dynamic = dynamic, tol = tol,
     data = data)
     RVAL <- sctest(process, alt.boundary = alt.boundary, functional = functional)
   }
   else if(any(type == c("supF", "aveF", "expF")))
   {
-    fs <- Fstats(x, from = from, to = to, data=data)
+    fs <- Fstats(formula, from = from, to = to, data=data)
     RVAL <- sctest(fs, type = type)
   }
   RVAL$data.name <- dname
@@ -743,7 +744,7 @@ boundary <- function(x, ...)
     UseMethod("boundary")
 }
 
-boundary.efp <- function(x, alpha = 0.05, alt.boundary = FALSE)
+boundary.efp <- function(x, alpha = 0.05, alt.boundary = FALSE, ...)
 {
     pos <- FALSE
     k <- x$nreg
@@ -776,7 +777,7 @@ boundary.efp <- function(x, alpha = 0.05, alt.boundary = FALSE)
 }
 
 boundary.Fstats <- function(x, alpha = 0.05, pval = FALSE, aveF =
-                            FALSE, asymptotic = FALSE)
+                            FALSE, asymptotic = FALSE, ...)
 {
     if(aveF)
       myfun <-  function(y) {pvalue.Fstats(y, type="ave", x$nreg, x$par) - alpha}

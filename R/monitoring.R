@@ -1,14 +1,14 @@
 mefp <- function(obj, ...) UseMethod("mefp")
 
 mefp.formula <-
-    function(obj, data=list(), type = c("ME", "fluctuation"), h=1,
+    function(formula, data=list(), type = c("ME", "fluctuation"), h=1,
              alpha=0.05, functional = c("max", "range"),
              period=10, tolerance=.Machine$double.eps^0.5,
-             MECritvalTable=monitorMECritvalTable, rescale=FALSE)
+             MECritvalTable=monitorMECritvalTable, rescale=FALSE, ...)
 {
     type <- match.arg(type)
     functional <- match.arg(functional)
-    val <- efp(obj, type=type, h=h, data=data, rescale=rescale)
+    val <- efp(formula, type=type, h=h, data=data, rescale=rescale)
     val <- mefp(val, alpha=alpha, functional=functional, period=period,
                 tolerance=tolerance, MECritvalTable=MECritvalTable,
                 rescale=rescale)
@@ -23,7 +23,7 @@ mefp.formula <-
 mefp.efp <-
     function(obj, alpha=0.05, functional = c("max", "range"),
              period=10, tolerance=.Machine$double.eps^0.5,
-             MECritvalTable=monitorMECritvalTable, rescale=NULL)
+             MECritvalTable=monitorMECritvalTable, rescale=NULL, ...)
 {
     functional <- match.arg(functional)
     if(! (obj$type %in% c("ME", "fluctuation")))
@@ -188,7 +188,7 @@ monitor <- function(obj, data=NULL, verbose=TRUE){
     obj
 }
 
-print.mefp <- function(obj){
+print.mefp <- function(obj, ...){
 
     cat(obj$type.name, "\n\n")
     cat("Initial call:\n ", deparse(obj$initcall), "\n\n")
@@ -266,7 +266,7 @@ plot.mefp <- function(x, boundary=TRUE, functional="max", main=NULL,
     }
 }
 
-boundary.mefp <- function(x)
+boundary.mefp <- function(x, ...)
 {
     ts(x$border((x$histsize+1):x$last),
        start = x$histtsp[2]+1/x$histtsp[3],

@@ -4,13 +4,14 @@
 \title{Structural Change Tests}
 \description{Performs tests on structural change.}
 \usage{
-sctest(x, type = <<see below>>, h = 0.15, dynamic = FALSE, tol = 1e-7,
-  alt = FALSE, functional = c("max", "range"), from = 0.15, to = NULL,
-  point = floor(0.5*nrow(model.frame(x))), asymptotic = FALSE, data)
+\method{sctest}{formula}(formula, type = <<see below>>, h = 0.15, dynamic = FALSE,
+    tol = 1e-7, alt.boundary = FALSE, functional = c("max", "range"),
+    from = 0.15, to = NULL, point = floor(0.5*nrow(model.frame(x))),
+    asymptotic = FALSE, data, ...)
 }
 
 \arguments{
-  \item{x}{a formula describing the model to be tested.}
+  \item{formula}{a formula describing the model to be tested.}
   \item{type}{a character string specifying the structural change test that ist
      to be performed. Besides the tests types described in \code{\link{efp}}
      and \code{\link{sctest.Fstats}} the Chow test is can be performed by
@@ -21,8 +22,9 @@ sctest(x, type = <<see below>>, h = 0.15, dynamic = FALSE, tol = 1e-7,
   \item{dynamic}{logical. If \code{TRUE} the lagged observations are included as
      a regressor (for generalized fluctuation tests only).}
   \item{tol}{tolerance when \code{solve} is used}
-  \item{alt}{logical. If set to \code{TRUE} alternative boundaries (instead of
-     the standard linear boundaries) will be used (for CUSUM processes only).}
+  \item{alt.boundary}{logical. If set to \code{TRUE} alternative boundaries
+     (instead of the standard linear boundaries) will be used (for CUSUM
+     processes only).}
   \item{functional}{indicates which functional should be applied to the
      estimates based processes (\code{"fluctuation"} and \code{"ME"}).}
  \item{from, to}{numerics. If \code{from} is smaller than 1 they are
@@ -40,6 +42,7 @@ sctest(x, type = <<see below>>, h = 0.15, dynamic = FALSE, tol = 1e-7,
   \item{data}{an optional data frame containing the variables in the model. By
      default the variables are taken from the environment which
      \code{sctest} is called from.}
+  \item{...}{currently not used.}
 }
 
 \details{\code{sctest.formula} is mainly a wrapper for \code{\link{sctest.efp}}
