@@ -5,6 +5,8 @@ boundary                 Boundary Function for Structural Change Tests
 boundary.efp             Boundary for Empirical Fluctuation Processes
 boundary.mefp            Boundary Function for Monitoring of Structural
                          Changes
+covHC                    Heteroskedasticity-Consistent Covariance Matrix
+                         Estimation
 efp                      Empirical Fluctuation Process
 mefp                     Monitoring of Empirical Fluctuation Processes
 plot.Fstats              Plot F Statistics

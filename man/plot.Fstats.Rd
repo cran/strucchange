@@ -22,7 +22,7 @@
      be plotted. As this is a boundary for the mean of the F statistics rather
      than for the F statistics themselves a dashed line for the mean of the F
      statistics will also be plotted.}
- \item{...}{graphical parameters.}}
+ \item{xlab, ylab, ylim, ...}{high-level \code{\link{plot}} function parameters.}}
 
 \references{
 Andrews D.W.K. (1993), Tests for parameter instability and structural

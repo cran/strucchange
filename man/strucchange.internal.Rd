@@ -5,7 +5,12 @@
 \alias{sc.me}
 \alias{pvalue.efp}
 \alias{pvalue.Fstats}
+\alias{monitorMECritval}
+\alias{monitorMECritvalData}
 \alias{monitorMECritvalTable}
+\alias{monitorRECritval}
+\alias{monitorRECritvalData}
+\alias{monitorRECritvalTable}
 \title{Internal strucchange objects}
 \description{
   These are not to be called by the user.

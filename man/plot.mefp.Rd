@@ -10,7 +10,7 @@
 }
 \usage{
 \method{plot}{mefp}(x, boundary=TRUE, functional="max", main=NULL,
-    ylab="empirical fluctuation process", ylim=NULL, ...) 
+    ylab="empirical fluctuation process", ylim=NULL, ...)
 }
 \arguments{
   \item{x}{an object of class \code{"mefp"}.}
@@ -19,7 +19,7 @@
     multivariate empirical process. If set to \code{NULL} all dimensions
     of the process (one process per coefficient in the linear model) are
     plotted. }
-  \item{...}{graphical parameters.}
+  \item{main, ylab, ylim, ...}{high-level \code{\link{plot}} function parameters.}
 }
 \author{Friedrich Leisch}
 \seealso{\code{\link{mefp}}}

@@ -20,7 +20,7 @@
   \item{functional}{indicates which functional should be applied to the
      estimates based processes (\code{"fluctuation"} and \code{"ME"}). If set
      to \code{NULL} a multiple process is plotted.}
-  \item{...}{graphical parameters.}
+  \item{main, ylim, ylab, ...}{high-level \code{\link{plot}} function parameters.}
 }
 
 \details{Alternative boundaries that are proportional to the standard deviation
