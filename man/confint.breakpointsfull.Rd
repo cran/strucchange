@@ -1,5 +1,4 @@
-\name{confint}
-\alias{confint}
+\name{confint.breakpointsfull}
 \alias{confint.breakpointsfull}
 \alias{lines.confint.breakpoints}
 \alias{print.confint.breakpoints}
@@ -8,14 +7,16 @@
   Computes confidence intervals for breakpoints.
 }
 \usage{
-\method{confint}{breakpointsfull}(object, level = 0.95, breaks = NULL,
-    het.reg = TRUE, het.err = TRUE, ...)
+\method{confint}{breakpointsfull}(object, parm = NULL, level = 0.95,
+    breaks = NULL, het.reg = TRUE, het.err = TRUE, ...)
 \method{lines}{confint.breakpoints}(x, col = 2, angle = 90, length = 0.05,
     code = 3, at = NULL, breakpoints = TRUE, ...)
 }
 \arguments{
   \item{object}{an object of class \code{"breakpointsfull"} as computed by
     \code{\link{breakpoints}} from a \code{formula}.}
+  \item{parm}{the same as \code{breaks}, only one of the two should be
+    specified.}
   \item{level}{the confidence level required.}
   \item{breaks}{an integer specifying the number of breaks to be used.
     By default the breaks of the minimum BIC partition are used.}

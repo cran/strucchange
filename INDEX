@@ -10,7 +10,8 @@ boundary.mefp           Boundary Function for Monitoring of Structural
 breakdates              Breakdates Corresponding to Breakpoints
 breakfactor             Factor Coding of Segmentations
 breakpoints             Dating Breaks
-confint                 Confidence Intervals for Breakpoints
+confint.breakpointsfull
+                        Confidence Intervals for Breakpoints
 covHC                   Heteroskedasticity-Consistent Covariance Matrix
                         Estimation
 durab                   US Labor Productivity
