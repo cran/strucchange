@@ -3,7 +3,7 @@ recresid <- function(x, ..., tol = 1e-7)
   UseMethod("recresid")
 }
 
-recresid.formula <- function(formula, data=list(), tol = 1e-7)
+recresid.formula <- function(formula, data=list(), ..., tol = 1e-7)
 {
     mf <- model.frame(formula, data = data)
     y <- model.response(mf)
@@ -13,7 +13,7 @@ recresid.formula <- function(formula, data=list(), tol = 1e-7)
     return(rr)
 }
 
-recresid.lm <- function(x, data=list(), tol = 1e-7)
+recresid.lm <- function(x, data=list(), ..., tol = 1e-7)
 {
     mf <- model.frame(x, data = data)
     y <- model.response(mf)
@@ -23,7 +23,7 @@ recresid.lm <- function(x, data=list(), tol = 1e-7)
     return(rr)
 }
 
-recresid.default <- function(x, y, tol = 1e-7)
+recresid.default <- function(x, y, ..., tol = 1e-7)
 {
     n <- nrow(x)
     q <- ncol(x)

@@ -1,6 +1,6 @@
 Package: strucchange
-Version: 1.0-0
-Date: 2002-10-28
+Version: 1.0-1
+Date: 2002-01-20
 Title: Testing for Structural Change
 Author: Achim Zeileis, Friedrich Leisch, Bruce Hansen,
         Kurt Hornik, Christian Kleiber, Andrea Peters

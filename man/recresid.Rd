@@ -9,9 +9,9 @@
   (standardized one step prediction errors) of a linear regression model.
 }
 \usage{
-\method{recresid}{default}(x, y, tol = 1e-7)
-\method{recresid}{formula}(formula, data = list(), tol = 1e-7)
-\method{recresid}{lm}(x, data = list(), tol = 1e-7)
+\method{recresid}{default}(x, y, \dots, tol = 1e-7)
+\method{recresid}{formula}(formula, data = list(), \dots, tol = 1e-7)
+\method{recresid}{lm}(x, data = list(), \dots, tol = 1e-7)
 }
 \arguments{
   \item{x, y, formula}{specification of the linear regression model:
@@ -22,6 +22,7 @@
      called from. Specifying \code{data} might also be necessary when applying
      \code{recresid} to a fitted model of class \code{"lm"} if this does not
      contain the regressor matrix and the response.}
+  \item{\dots}{\emph{currently not used.}}
   \item{tol}{tolerance when \code{solve} is used.}
 }
 \details{

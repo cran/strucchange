@@ -170,7 +170,7 @@ breakdates <- function(obj, format.times = FALSE, ...)
   UseMethod("breakdates")
 }
 
-breakdates.breakpoints <- function(obj, breaks = NULL, format.times = FALSE, ...)
+breakdates.breakpoints <- function(obj, format.times = FALSE, breaks = NULL, ...)
 {
   if("breakpointsfull" %in% class(obj)) obj <- breakpoints(obj, breaks = breaks)
   if(is.null(format.times)) format.times <- ((obj$datatsp[3] > 1) & (obj$datatsp[3] < obj$nobs))
