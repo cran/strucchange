@@ -50,7 +50,7 @@ confint(bp.ri, breaks = 3, vcov = vcov.ri)
 
 ## Visualization
 plot(RealInt)
-lines(fitted(fm.ri), col = 4)
+lines(as.vector(time(RealInt)), fitted(fm.ri), col = 4)
 lines(confint(bp.ri, breaks = 3, vcov = vcov.ri))
 }
 }

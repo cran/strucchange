@@ -231,8 +231,8 @@ breakpoints(bp.nile)
 fm0 <- lm(Nile ~ 1)
 fm1 <- lm(Nile ~ breakfactor(bp.nile, breaks = 1))
 plot(Nile)
-lines(fitted(fm0), col = 3)
-lines(fitted(fm1), col = 4)
+lines(1871:1970, fitted(fm0), col = 3)
+lines(1871:1970, fitted(fm1), col = 4)
 lines(bp.nile)
 
 ## confidence interval

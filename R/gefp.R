@@ -31,7 +31,18 @@ gefp <- function(...,
       else if(is.zoo(psi)) z <- time(psi)
       else if(is.ts(data)) z <- time(data)
       else if(is.zoo(data)) z <- time(data)
-      else z <- index/n
+      else ## support for time series regression in lm()
+           ## has been limited since R 2.0.0. Until there is
+           ## a better option, there is an ugly hack here,
+           ## for `guessing' ts attributes.
+	  if(any(c("lm", "glm", "rlm") %in% class(fm)) && !is.null(formula(fm))) {
+            form <- formula(fm)
+            env <- environment(form)
+	    if(missing(data)) data <- env
+            orig.y <- eval(attr(terms(form), "variables")[[2]], data, env)
+            if(is.ts(orig.y)) z <- time(orig.y)
+	    else if(is.zoo(orig.y)) z <- time(orig.y)
+          } else z <- index/n
     order.name <- "Time"
   }
 
