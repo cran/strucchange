@@ -2,6 +2,8 @@ BostonHomicide          Youth Homicides in Boston
 Fstats                  F Statistics
 GermanM1                German M1 Money Demand
 Grossarl                Marriages and Births in Grossarl
+PhillipsCurve           UK Phillips Curve Equation Data
+RealInt                 US Ex-post Real Interest Rate
 USIncExp                Income and Expenditures in the US
 boundary.Fstats         Boundary for F Statistics
 boundary                Boundary Function for Structural Change Tests
@@ -13,10 +15,10 @@ breakfactor             Factor Coding of Segmentations
 breakpoints             Dating Breaks
 confint.breakpointsfull
                         Confidence Intervals for Breakpoints
-covHC                   Heteroskedasticity-Consistent Covariance
-                        Matrix Estimation
 durab                   US Labor Productivity
 efp                     Empirical Fluctuation Processes
+efpFunctional           Functionals for Fluctuation Processes
+gefp                    Generalized Empirical M-Fluctuation Processes
 logLik.breakpoints      Log Likelihood and Information Criteria for
                         Breakpoints
 mefp                    Monitoring of Empirical Fluctuation Processes

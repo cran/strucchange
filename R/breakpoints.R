@@ -155,7 +155,7 @@ breakpoints.breakpointsfull <- function(obj, breaks = NULL, ...)
 print.breakpoints <- function(x, format.times = NULL, ...)
 {
   if(is.null(format.times)) format.times <- ((x$datatsp[3] > 1) & (x$datatsp[3] < x$nobs))
-  if(is.na(x$breakpoints)) lbp <- 0
+  if(any(is.na(x$breakpoints))) lbp <- 0
     else lbp <- length(x$breakpoints)
   cat(paste("\n\t Optimal ", lbp + 1, "-segment partition: \n\n", sep = ""))
   cat("Call:\n")
@@ -360,6 +360,7 @@ pargmaxV <- function(x, xi = 1, phi1 = 1, phi2 = 1)
 
   G2 <- function(x, xi = 1, phi = 1)
   {
+    x <- abs(x)
     frac <- xi^2/phi
     rval <- 1 + sqrt(frac) * exp(log(x)/2 - (frac*x)/8  - log(2*pi)/2) +
             (xi/phi * (2*phi + xi)/(phi + xi)) * exp(((phi + xi) * x/2) + pnorm(-(phi + xi/2)/sqrt(phi) * sqrt(x), log.p = TRUE)) -
@@ -371,7 +372,7 @@ pargmaxV <- function(x, xi = 1, phi1 = 1, phi2 = 1)
 }
 
 confint.breakpointsfull <- function(object, parm = NULL, level = 0.95, breaks = NULL,
-                                    het.reg = TRUE, het.err = TRUE, ...)
+                                    het.reg = TRUE, het.err = TRUE, vcov = NULL, sandwich = TRUE, ...)
 {
   X <- object$X
   y <- object$y
@@ -383,7 +384,9 @@ confint.breakpointsfull <- function(object, parm = NULL, level = 0.95, breaks = 
     if(!is.null(parm)) breaks <- parm
 
   myfun <- function(x, level = 0.975, xi = 1, phi1 = 1, phi2 = 1)
-    (pargmaxV(x, xi = xi, phi1 = phi1, phi2 = phi2) - level)^2
+    (pargmaxV(x, xi = xi, phi1 = phi1, phi2 = phi2) - level)
+
+  myprod <- function(delta, mat) as.vector(crossprod(delta, mat) %*% delta)
 
   bp <- breakpoints(object, breaks = breaks)$breakpoints
   nbp <- length(bp)
@@ -391,16 +394,38 @@ confint.breakpointsfull <- function(object, parm = NULL, level = 0.95, breaks = 
   lower <- rep(0, nbp)
   bp <- c(0, bp, n)
 
-  sigma1 <- sigma2 <- sum(lm.fit(X,y)$residuals^2)/n
+  res <- residuals(object, breaks = breaks)
+  sigma1 <- sigma2 <- sum(res^2)/n
   Q1 <- Q2 <- crossprod(X)/n
+
+  if(is.null(vcov))
+    Omega1 <- Omega2 <- sigma1 * Q1
+  else {
+    y.nb <- rowSums(X) + res
+    fm <- lm(y.nb ~ 0 + X)
+    if(sandwich) {
+      Omega1 <- Omega2 <- n * crossprod(Q1, vcov(fm)) %*% Q1
+    } else {
+      Omega1 <- Omega2 <- vcov(fm)
+    }
+  }
+
   xi <- 1
 
   X2 <- X[(bp[1]+1):bp[2],,drop = FALSE]
   y2 <- y[(bp[1]+1):bp[2]]
-  fm <- lm.fit(X2, y2)
-  beta2 <- fm$coefficients
-  if(het.err) sigma2 <- sum(fm$residuals^2)/nrow(X2)
+  fm2 <- lm(y2 ~ 0+ X2) 
+  beta2 <- coef(fm2)
   if(het.reg) Q2 <- crossprod(X2)/nrow(X2)
+  if(het.err) {
+    sigma2 <- sum(residuals(fm2)^2)/nrow(X2)
+    if(is.null(vcov))
+      Omega2 <- sigma2 * Q2
+    else {
+      if(sandwich) Omega2 <- nrow(X2) * crossprod(Q2, vcov(fm2)) %*% Q2
+        else Omega2 <- vcov(fm2)
+    }
+  }
 
   for(i in 2:(nbp+1))
   {
@@ -409,25 +434,53 @@ confint.breakpointsfull <- function(object, parm = NULL, level = 0.95, breaks = 
     beta1 <- beta2
     sigma1 <- sigma2
     Q1 <- Q2
+    Omega1 <- Omega2
 
     X2 <- X[(bp[i]+1):bp[i+1],,drop = FALSE]
     y2 <- y[(bp[i]+1):bp[i+1]]
-    fm <- lm.fit(X2, y2)
-    beta2 <- fm$coefficients
+    fm2 <- lm(y2 ~ 0 + X2) 
+    beta2 <- coef(fm2)
     delta <- beta2 - beta1
-    frac <- as.vector(crossprod(delta, Q1) %*% delta)/sigma1
 
-    if(het.err) sigma2 <- sum(fm$residuals^2)/nrow(X2)
-    if(het.reg) {
-      Q2 <- crossprod(X2)/nrow(X2)
-      xi <- as.vector(crossprod(delta, Q2) %*% delta)/(sigma1*frac)
+    if(het.reg) Q2 <- crossprod(X2)/nrow(X2)
+    if(het.err) {
+      sigma2 <- sum(residuals(fm2)^2)/nrow(X2)
+      if(is.null(vcov))
+        Omega2 <- sigma2 * Q2
+      else {
+        if(sandwich) Omega2 <- nrow(X2) * crossprod(Q2, vcov(fm2)) %*% Q2
+          else Omega2 <- vcov(fm2)
+      }
     }
+        
+    Oprod1 <- myprod(delta, Omega1)
+    Oprod2 <- myprod(delta, Omega2)
+    Qprod1 <- myprod(delta, Q1)
+    Qprod2 <- myprod(delta, Q2)
 
-    upper[i-1] <- optimize(myfun, c(0,n), level = (1-a2), xi = xi, phi1 = sqrt(sigma1), phi2 = sqrt(sigma2))$minimum/frac
-    lower[i-1] <- optimize(myfun, c(-n,0), level = a2, xi = xi, phi1 = sqrt(sigma1), phi2 = sqrt(sigma2))$minimum/frac
+    if(het.reg) xi <- Qprod2/Qprod1
+    if(!is.null(vcov)) phi1 <- sqrt(Oprod1/Qprod1)
+      else phi1 <- sqrt(sigma1)
+    if(!is.null(vcov)) phi2 <- sqrt(Oprod2/Qprod2)
+      else phi2 <- sqrt(sigma2)
+ 
+    p0 <- pargmaxV(0, phi1 = phi1, phi2 = phi2, xi = xi)
+    if(p0 < a2 || p0 > (1-a2))
+      stop(paste("Confidence interval cannot be computed: P(argmax V <= 0) =", round(p0, digits = 4)))
+    ub <- lb <- 0
+    while(pargmaxV(ub, phi1 = phi1, phi2 = phi2, xi = xi) < (1 - a2)) ub <- ub + 1000
+    while(pargmaxV(lb, phi1 = phi1, phi2 = phi2, xi = xi) > a2) lb <- lb - 1000
+
+    upper[i-1] <- uniroot(myfun, c(0, ub), level = (1-a2), xi = xi, phi1 = phi1, phi2 = phi2)$root
+    lower[i-1] <- uniroot(myfun, c(lb, 0), level = a2, xi = xi, phi1 = phi1, phi2 = phi2)$root
+    
+    upper[i-1] <- upper[i-1] * phi1^2 / Qprod1
+    lower[i-1] <- lower[i-1] * phi1^2 / Qprod1
   }
-  bp <- bp[-c(1,nbp+2)]
-  bp <- cbind(bp+floor(lower),bp,bp+ceiling(upper))
+  
+  bp <- bp[-c(1, nbp+2)]
+  bp <- cbind(bp - ceiling(upper), bp, bp - floor(lower))
+  #V.BP# bp <- cbind(floor(bp - upper) - 1, bp, floor(bp - lower) + 1)
   a2 <- round(a2 * 100, digits = 1)
   colnames(bp) <- c(paste(a2, "%"), "breakpoints", paste(100 - a2, "%"))
   rownames(bp) <- 1:nbp
@@ -490,3 +543,171 @@ lines.confint.breakpoints <- function(x, col = 2, angle = 90, length = 0.05,
   arrows(x[,1], at, x[,3], at, col = col, angle = angle, length = length, code = code, ...)
 }
 
+coef.breakpointsfull <- function(object, breaks = NULL, names = NULL, ...)
+{
+  X <- object$X
+  y <- object$y
+  n <- object$nobs
+  bp <- obp <- breakpoints(object, breaks = breaks)$breakpoints
+  if(any(is.na(bp))) {
+    nbp <- 0
+    bp <- c(0, n)
+  } else {
+    nbp <- length(bp)
+    bp <- c(0, bp, n)
+  }
+  
+  if(!is.null(names)) {
+    if(length(names) == 1) names <- paste(names, 1:(nbp+1))
+      else if(length(names) != (nbp+1)) names <- NULL
+  }
+  if(is.null(names)) {
+    bd1 <- structure(list(breakpoints = bp[-(nbp+2)] + 1, nobs = n, datatsp = object$datatsp),
+                    class = "breakpoints")
+    bd2 <- structure(list(breakpoints = bp[-1], nobs = n, datatsp = object$datatsp),
+                    class = "breakpoints")
+    bd1 <- breakdates(bd1, format.times = NULL)
+    bd2 <- breakdates(bd2, format.times = NULL)
+    names <- paste(bd1, "-", bd2) 
+  }
+    
+  rval <- NULL
+
+  for(i in 1:(nbp+1))
+  {
+    X2 <- X[(bp[i]+1):bp[i+1],,drop = FALSE]
+    y2 <- y[(bp[i]+1):bp[i+1]]
+    rval <- rbind(rval, lm.fit(X2, y2)$coef)
+  }
+  
+  rownames(rval) <- names
+  return(rval)
+}
+
+fitted.breakpointsfull <- function(object, breaks = NULL, ...)
+{
+  X <- object$X
+  y <- object$y
+  n <- object$nobs
+  bp <- obp <- breakpoints(object, breaks = breaks)$breakpoints
+  if(any(is.na(bp))) {
+    nbp <- 0
+    bp <- c(0, n)
+  } else {
+    nbp <- length(bp)
+    bp <- c(0, bp, n)
+  }
+  rval <- NULL
+
+  for(i in 1:(nbp+1))
+  {
+    X2 <- X[(bp[i]+1):bp[i+1],,drop = FALSE]
+    y2 <- y[(bp[i]+1):bp[i+1]]
+    rval <- c(rval, lm.fit(X2, y2)$fitted.values)
+  }
+  
+  return(rval)
+}
+
+residuals.breakpointsfull <- function(object, breaks = NULL, ...)
+{
+  X <- object$X
+  y <- object$y
+  n <- object$nobs
+  bp <- obp <- breakpoints(object, breaks = breaks)$breakpoints
+  if(any(is.na(bp))) {
+    nbp <- 0
+    bp <- c(0, n)
+  } else {
+    nbp <- length(bp)
+    bp <- c(0, bp, n)
+  }
+  rval <- NULL
+
+  for(i in 1:(nbp+1))
+  {
+    X2 <- X[(bp[i]+1):bp[i+1],,drop = FALSE]
+    y2 <- y[(bp[i]+1):bp[i+1]]
+    rval <- c(rval, lm.fit(X2, y2)$residuals)
+  }
+  
+  return(rval)
+}
+
+vcov.breakpointsfull <- function(object, breaks = NULL, names = NULL, het.reg = TRUE,
+                                 het.err = TRUE, vcov = NULL, sandwich = TRUE, ...)
+{
+  X <- object$X
+  y <- object$y
+  n <- object$nobs
+
+  bp <- breakpoints(object, breaks = breaks)$breakpoints
+  if(any(is.na(bp))) {
+    nbp <- 0
+    bp <- c(0, n)
+  } else {
+    nbp <- length(bp)
+    bp <- c(0, bp, n)
+  }
+
+  if(!is.null(names)) {
+    if(length(names) == 1) names <- paste(names, 1:(nbp+1))
+      else if(length(names) != (nbp+1)) names <- NULL
+  }
+  if(is.null(names)) {
+    bd1 <- structure(list(breakpoints = bp[-(nbp+2)] + 1, nobs = n, datatsp = object$datatsp),
+                    class = "breakpoints")
+    bd2 <- structure(list(breakpoints = bp[-1], nobs = n, datatsp = object$datatsp),
+                    class = "breakpoints")
+    bd1 <- breakdates(bd1, format.times = NULL)
+    bd2 <- breakdates(bd2, format.times = NULL)
+    names <- paste(bd1, "-", bd2) 
+  }
+    
+  res <- residuals(object, breaks = breaks)
+  sigma2 <- sum(res^2)/n
+  Q2 <- crossprod(X)/n
+
+  if(is.null(vcov))
+    Omega2 <- sigma2 * solve(Q2) / n
+  else {
+    y.nb <- rowSums(X) + res
+    fm <- lm(y.nb ~ 0 + X)
+    if(sandwich) {
+      Omega2 <- vcov(fm)
+    } else {
+      modelv <- summary(fm)$cov.unscaled
+      Omega2 <- n * modelv %*% vcov(fm) %*% modelv
+    }
+  }
+  rownames(Omega2) <- colnames(Omega2) <- colnames(X)
+
+  rval <- list()
+
+  for(i in 1:(nbp+1))
+  {
+    X2 <- X[(bp[i]+1):bp[i+1],,drop = FALSE]
+    y2 <- y[(bp[i]+1):bp[i+1]]
+    fm2 <- lm(y2 ~ 0 + X2) 
+
+    if(het.reg) Q2 <- crossprod(X2)/nrow(X2)
+    if(het.err) {
+      sigma2 <- sum(residuals(fm2)^2)/nrow(X2)
+      if(is.null(vcov))
+        Omega2 <- sigma2 * solve(Q2) / nrow(X2)
+      else {
+        if(sandwich) {
+          Omega2 <- vcov(fm2)
+        } else {
+          modelv <- summary(fm2)$cov.unscaled
+          Omega2 <- n * modelv %*% vcov(fm2) %*% modelv
+        }
+      }
+      rownames(Omega2) <- colnames(Omega2) <- colnames(X)
+    }
+    rval[[i]] <- Omega2
+  }
+    
+  names(rval) <- names
+  return(rval)
+}

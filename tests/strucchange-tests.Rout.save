@@ -1,19 +1,21 @@
 
-R : Copyright 2003, The R Development Core Team
-Version 1.7.0  (2003-04-16)
+R : Copyright 2003, The R Foundation for Statistical Computing
+Version 1.8.1  (2003-11-21), ISBN 3-900051-00-3
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
-Type `license()' or `licence()' for distribution details.
+Type 'license()' or 'licence()' for distribution details.
 
 R is a collaborative project with many contributors.
-Type `contributors()' for more information.
+Type 'contributors()' for more information and
+'citation()' on how to cite R in publications.
 
-Type `demo()' for some demos, `help()' for on-line help, or
-`help.start()' for a HTML browser interface to help.
-Type `q()' to quit R.
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for a HTML browser interface to help.
+Type 'q()' to quit R.
 
 > library(strucchange)
+Loading required package: zio 
 > if(! "package:stats" %in% search()) library(ts)
 > 
 > ## Nile data
@@ -434,12 +436,12 @@ confint.breakpointsfull(object = Grossarl.bp)
 
 Breakpoints at observation number:
   2.5 % breakpoints 97.5 %
-1    49          55     58
-2   120         122    128
+1    52          55     61
+2   116         122    124
 
 Corresponding to breakdates:
   2.5 % breakpoints 97.5 %
-1  1748        1754   1757
-2  1819        1821   1827
+1  1751        1754   1760
+2  1815        1821   1823
 > 
 > 

@@ -10,6 +10,10 @@
 \alias{print.breakpoints}
 \alias{print.summary.breakpointsfull}
 \alias{lines.breakpoints}
+\alias{coef.breakpointsfull}
+\alias{vcov.breakpointsfull}
+\alias{fitted.breakpointsfull}
+\alias{residuals.breakpointsfull}
 \title{Dating Breaks}
 
 \description{
@@ -19,11 +23,17 @@
 
 \usage{
 \method{breakpoints}{formula}(formula, h = 0.15, breaks = NULL,
-    data = list(), ...)
-\method{breakpoints}{breakpointsfull}(obj, breaks = NULL, ...)
+    data = list(), \dots)
+\method{breakpoints}{breakpointsfull}(obj, breaks = NULL, \dots)
 \method{summary}{breakpointsfull}(object, breaks = NULL, sort = TRUE,
-    format.times = NULL, ...)
-\method{lines}{breakpoints}(x, breaks = NULL, lty = 2, ...)
+    format.times = NULL, \dots)
+\method{lines}{breakpoints}(x, breaks = NULL, lty = 2, \dots)
+
+\method{coef}{breakpointsfull}(object, breaks = NULL, names = NULL, \dots)
+\method{fitted}{breakpointsfull}(object, breaks = NULL, \dots)
+\method{residuals}{breakpointsfull}(object, breaks = NULL, \dots)
+\method{vcov}{breakpointsfull}(object, breaks = NULL, names = NULL,
+    het.reg = TRUE, het.err = TRUE, vcov = NULL, sandwich = TRUE, \dots)
 }
 
 \arguments{
@@ -46,6 +56,18 @@
     for more information.}
   \item{x}{an object of class \code{"breakpoints"}.}
   \item{lty}{line type.}
+  \item{names}{a character vector giving the names of the segments. If of length
+    1 it is taken to be a generic prefix, e.g. \code{"segment"}.}
+  \item{het.reg}{logical. Should heterogenous regressors be assumed? If set
+    to \code{FALSE} the distribution of the regressors is assumed to be
+    homogenous over the segments.}
+  \item{het.err}{logical. Should heterogenous errors be assumed? If set
+    to \code{FALSE} the distribution of the errors is assumed to be
+    homogenous over the segments.}
+  \item{vcov}{a function to extract the covariance matrix
+     for the coefficients of a fitted model of class \code{"lm"}.}
+  \item{sandwich}{logical. Is the function \code{vcov} the sandwich
+     estimator or only the middle part?}
 }
 
 \details{
@@ -115,7 +137,9 @@
   can be computed using the method of \code{\link{confint}}.
   The breakdates corresponding to the breakpoints can again be computed
   by \code{\link{breakdates}}. The breakpoints and their confidence
-  intervals can be visualized by \code{lines}.
+  intervals can be visualized by \code{lines}. Convenience functions are
+  provided for extracting the coefficients and covariance matrix, fitted 
+  values and residuals of segmented models.
 
   The log likelihood as well as some information criteria can be computed
   using the methods for the \code{\link{logLik}} and \code{\link{AIC}}. As

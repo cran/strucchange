@@ -1,0 +1,445 @@
+gefp <- function(...,
+  fit = glm, scores = estfun, vcov = NULL,
+  decorrelate = TRUE, sandwich = TRUE,
+  order.by = NULL, fitArgs = NULL, parm = NULL, data = list())
+{
+  if(is.null(fitArgs))
+    fm <- fit(..., data = data)	
+  else
+    fm <- do.call("fit", c(..., fitArgs, list(data = data)))
+    
+  psi <- as.matrix(scores(fm))
+  n <- nrow(psi)
+  k <- ncol(psi)
+
+  if(!is.null(order.by))
+  {
+    if(inherits(order.by, "formula")) {
+      z <- model.matrix(order.by, data = data)
+      z <- as.vector(z[,ncol(z)])
+    } else {
+      z <- order.by
+    }
+    index <- order(z)
+    psi <- psi[index, , drop = FALSE]
+    z <- z[index]
+  } else {
+    index <- 1:n
+    if(is.ts(psi)) z <- time(psi)
+      else if(is.zoo(psi)) z <- time(psi)
+      else if(is.ts(data)) z <- time(data)
+      else if(is.zoo(data)) z <- time(data)
+      else z <- index/n
+  }
+
+  if(inherits(z, "POSIXt"))
+    z <- c(z[1] + as.numeric(difftime(z[1], z[2], units = "secs")), z)
+  else
+    z <- c(z[1] - diff(z[1:2]), z)
+
+  process <- psi/sqrt(n)
+
+  if(is.null(vcov))
+    J12 <- root.matrix(crossprod(process))
+  else {
+    if(sandwich) {
+      Q <- chol2inv(chol(summary(fm)$cov.unscaled))
+      J12 <- root.matrix((Q %*% vcov(fm, order.by = order.by, data = data) %*% Q)/n)
+    } else {
+      J12 <- root.matrix(vcov(fm, order.by = order.by, data = data))
+    }
+  }
+
+  process <- rbind(0, process)
+  process <- apply(process, 2, cumsum)
+
+  if(decorrelate) process <- t(chol2inv(chol(J12)) %*% t(process))
+    else {
+      process <- t(1/diag(J12) * t(process))
+      if(length(parm) > 1) stop("limiting process is not a Brownian bridge")
+    }
+
+  colnames(process) <- colnames(psi)
+  if(!is.null(parm)) process <- process[, parm]
+
+  retval <- list(process = zoo(process, z),
+                 nreg = k,
+                 nobs = n,
+                 call = match.call(),
+		 fit = fit,
+		 scores = scores,
+		 fitted.model = fm,
+                 par = NULL,
+                 lim.process = "Brownian bridge",
+		 type.name = "M-fluctuation test",
+                 J12 = J12)
+
+  class(retval) <- "gefp"
+  return(retval)
+}
+
+plot.gefp <- function(x, alpha = 0.05, functional = maxBB, ...)
+{
+  if(is.null(functional)) functional <- "max"
+  if(is.character(functional)) {
+    functional <- match.arg(functional, c("max", "range", "maxL2", "meanL2"))
+    lim.process <- switch(x$lim.process,
+      "Brownian motion" = "BM",
+      "Brownian motion increments" = "BMI",
+      "Brownian bridge" = "BB",
+      "Brownian bridge increments" = "BBI")
+    functional <- get(paste(functional, lim.process, sep = ""), pos = "package:strucchange")
+  }
+  if(!("efpFunctional" %in% class(functional)))
+    stop(paste(dQuote("functional"), "has to be of class", sQuote("efpFunctional")))
+  if(functional$lim.process != x$lim.process)
+    stop(paste("limiting process of", dQuote("functional"), "does not match that of", dQuote("x")))
+  functional$plotProcess(x, alpha = alpha, ...)
+}
+
+sctest.gefp <- function(x, functional = maxBB, ...)
+{
+  if(is.character(functional)) {
+    functional <- match.arg(functional, c("max", "range", "maxL2", "meanL2"))
+    lim.process <- switch(x$lim.process,
+      "Brownian motion" = "BM",
+      "Brownian motion increments" = "BMI",
+      "Brownian bridge" = "BB",
+      "Brownian bridge increments" = "BBI")
+    functional <- get(paste(functional, lim.process, sep = ""), pos = "package:strucchange")
+  }
+  if(!("efpFunctional" %in% class(functional)))
+    stop(paste(dQuote("functional"), "has to be of class", sQuote("efpFunctional")))
+  if(functional$lim.process != x$lim.process)
+    stop(paste("limiting process of", dQuote("functional"), "does not match that of", dQuote("x")))
+  stat <- functional$computeStatistic(x$process)
+  names(stat) <- "f(efp)"
+  rval <- list(statistic = stat,
+               p.value = functional$computePval(stat, NCOL(x$process)),
+	       method = x$type.name,
+	       data.name = deparse(substitute(x)))
+  class(rval) <- "htest"
+  return(rval)
+}
+
+time.gefp <- function(x, ...)
+{
+  time(x$process, ...)
+}
+
+print.gefp <- function(x, ...)
+{
+  cat("\nGeneralized Empirical M-Fluctuation Process\n\n")
+  cat("Call: ")
+  print(x$call)
+  cat("\n\n")
+  cat("Fitted model: ")
+  print(x$fitted.model)
+  cat("\n")
+  invisible(x)
+}
+
+
+efpFunctional <- function(functional = list(comp = function(x) max(abs(x)), time = max),
+		     boundary = function(x) rep(1, length(x)),
+		     computePval = NULL,
+		     computeCritval = NULL,
+		     plotProcess = NULL,
+		     lim.process = "Brownian bridge",
+		     nobs = 10000, nrep = 50000, nproc = 1:20, h = 0.5,
+		     probs = c(0:84/100, 850:1000/1000))
+{		     
+  probs <- probs[probs != 0]
+
+  ## compute from functional list the full functional
+  ## lambda = myfun
+  
+  if(is.list(functional)) {
+    if(identical(names(functional), c("comp", "time"))) {
+      if(identical(functional[[2]], max)) {
+        myfun <- function(x) {
+	  rval <- apply(as.matrix(x), 1, functional[[1]])
+	  functional[[2]](rval/boundary(0:(length(rval)-1)/(length(rval)-1)))
+	}
+      } else
+        myfun <- function(x) functional[[2]](apply(as.matrix(x), 1, functional[[1]]))
+    }
+    else if(identical(names(functional), c("time", "comp")))
+      myfun <- function(x) functional[[2]](apply(as.matrix(x), 2, functional[[1]]))
+    else  
+      stop(paste(dQuote("functional"), "should be a list with elements", dQuote("comp"), "and", dQuote("time")))
+  } else {
+    myfun <- functional
+  }
+
+  ## setup computeStatistic function
+  computeStatistic <- function(x) {
+    if (all(as.matrix(x)[1,] < .Machine$double.eps)) 
+      x <- as.matrix(x)[-1,]
+    else x <- as.matrix(x)
+    myfun(x)
+  }
+
+  ## if missing simulate values for
+  ## computePval and computeCritval
+  
+  if(is.null(computePval) & is.null(computeCritval)) {
+    if(is.null(nproc)) {
+      z <- simulateBMDist(nobs = nobs, nrep = nrep, nproc = 1,
+             h = h, lim.process = lim.process, functional = myfun)
+      
+      zquant <- c(0, quantile(z, probs = probs))
+      rm(z)
+
+      pfun <- approxfun(zquant, 1 - c(0, probs))
+      computePval <- function(x, nproc = 1) {
+        1 - (1 - ifelse(x > max(zquant), 0, pfun(x)))^nproc
+      }
+      
+      cfun <- approxfun(c(0, probs), zquant)
+      computeCritval <- function(alpha, nproc = 1) cfun((1-alpha)^(1/nproc))
+
+    } else {
+      z <- matrix(rep(0, nrep * length(nproc)), ncol = length(nproc))
+      colnames(z) <- as.character(nproc)
+      for(i in nproc)
+        z[, as.character(i)] <- simulateBMDist(nobs = nobs, nrep = nrep, nproc = i,
+               h = h, lim.process = lim.process, functional = myfun)
+
+      zquant <- rbind(0, apply(z, 2, function(x) quantile(x, probs = probs)))
+      rm(z)
+      computePval <- function(x, nproc = 1) {
+        if(as.character(nproc) %in% colnames(zquant)) {
+          pfun <- approxfun(zquant[, as.character(nproc)], 1 - c(0, probs))
+          ifelse(x > max(zquant[, as.character(nproc)]), 0, pfun(x))
+	}
+	else stop("insufficient simulated values: cannot compute p value")
+      }
+      computeCritval <- function(alpha, nproc = 1) {
+        if(as.character(nproc) %in% colnames(zquant)) {
+          cfun <- approxfun(c(0, probs), zquant[, as.character(nproc)])
+          cfun(1 - alpha)
+        } else stop("insufficient simulated values: cannot compute critical value")
+      }
+    }
+  }
+
+  if(is.null(computeCritval)) {
+    nproc <- NULL
+    computeCritval <- function(alpha, nproc = 1)
+      uniroot(function(y) {computePval(y, nproc = nproc) - alpha}, c(0, 1000))$root
+  }
+
+  if(is.null(computePval)) {
+    nproc <- NULL
+    computePval <- function(x, nproc = 1)
+      uniroot(function(y) {computeCritval(y, nproc = nproc) - x}, c(0, 1))$root
+  }
+
+
+  ## define sensible default plotting method
+
+  if(is.null(plotProcess)) {
+    if(is.list(functional)) {
+
+      if(identical(names(functional), c("comp", "time"))) {
+
+      ## lambda = lambda_time(lambda_comp(x))
+      ## aggregate first over components then over time
+
+        if(identical(functional[[2]], max)) {
+
+      ## special case: lambda = max(lambda_comp(x))
+      ## can also use boundary argument: b(t) = critval * boundary(t)
+    
+          plotProcess <- function(x, alpha = 0.05, aggregate = TRUE,
+	    xlab = "Time", ylab = NULL, main = x$type.name, ylim = NULL, ...)
+	  {
+            n <- x$nobs
+	    bound <- computeCritval(alpha = alpha, nproc = NCOL(x$process)) * boundary(0:n/n)
+	    bound <- zoo(bound, time(x))
+
+            if(aggregate) {
+	      proc <- zoo(apply(as.matrix(x$process), 1, functional[[1]]), time(x))
+	    
+              if(is.null(ylab)) ylab <- "empirical fluctuation process"
+	      if(is.null(ylim)) ylim <- range(c(range(proc), range(bound)))
+	    
+	      plot(proc, xlab = xlab, ylab = ylab, main = main, ylim = ylim, ...)
+	      abline(0, 0)
+	      lines(bound, col = 2)	    
+	    } else {
+	      if(is.null(ylim) & NCOL(x$process) < 2) ylim <- range(c(range(x$process), range(bound), range(-bound)))
+	      if(is.null(ylab) & NCOL(x$process) < 2) ylab <- "empirical fluctuation process"
+
+	      panel <- function(x, ...)
+	      {
+                lines(x, ...)
+  	        abline(0, 0)
+	        if(paste(deparse(functional[[1]]), collapse = "") == "function (x) max(abs(x))") {
+	          lines(bound, col = 2)
+		  lines(-bound, col = 2)
+	        }	      
+	      }
+	      plot(x$process, xlab = xlab, ylab = ylab, main = main, panel = panel, ylim = ylim, ...)
+	    }
+	  }
+
+        } else {
+
+      ## nothing specific known about lambda_time
+      ## plot: first aggregate, add critval and statistic
+
+          plotProcess <- function(x, alpha = 0.05, aggregate = TRUE,
+	    xlab = "Time", ylab = NULL, main = x$type.name, ylim = NULL, ...)
+	  {
+            n <- x$nobs
+	    bound <- computeCritval(alpha = alpha, nproc = NCOL(x$process)) * boundary(0:n/n)
+	    bound <- zoo(bound, time(x))
+            stat <- computeStatistic(x$process)
+	    stat <- zoo(rep(stat, length(time(x))), time(x))
+
+	    if(aggregate) {
+	      proc <- zoo(apply(as.matrix(x$process), 1, functional[[1]]), time(x))
+	    
+	      if(is.null(ylab)) ylab <- "empirical fluctuation process"
+	      if(is.null(ylim)) ylim <- range(c(range(proc), range(bound), range(stat)))
+	    
+	      plot(proc, xlab = xlab, ylab = ylab, main = main, ylim = ylim, ...)
+	      abline(0, 0)
+	      lines(bound, col = 2)
+	      lines(stat, lty = 2)	    
+	    } else {
+	      panel <- function(x, ...)
+	      {
+                lines(x, ...)
+	        abline(0, 0)
+	      }
+	      plot(x$process, xlab = xlab, ylab = ylab, main = main, panel = panel, ...)
+	    }
+	  }
+        }
+      }
+    
+      else if(identical(names(functional), c("time", "comp"))) {
+
+      ## lambda = lambda_comp(lambda_time(x))
+
+        plotProcess <- function(x, alpha = 0.05, aggregate = TRUE,
+	    xlab = "Component", ylab = "Statistic", main = x$type.name, ylim = NULL, ...)
+        {
+          k <- NCOL(x$process)
+          bound <- computeCritval(alpha = alpha, nproc = NCOL(x$process)) * boundary(1:k/k)
+          stat <- rep(computeStatistic(x$process), k)
+
+          if(aggregate) {
+	    proc <- apply(as.matrix(x$process), 2, functional[[1]])
+	  
+	    xlabels <- colnames(x$process)
+	    if(is.null(xlabels)) xlabels <- paste("Series", 1:k)
+            if(is.null(ylim)) ylim <- range(c(range(proc), range(bound), range(stat), 0))
+	    
+	    plot(1:k, proc, xlab = xlab, ylab = ylab, main = main, ylim = ylim, axes = FALSE, type = "h", ...)
+	    points(1:k, proc)
+	    box()
+	    axis(2)
+	    axis(1, at = 1:k, labels = xlabels)
+	    abline(0, 0)
+	    lines(bound, col = 2)
+	    if(!identical(functional[[2]], max)) lines(stat, lty = 2)	    
+	  } else {
+	    panel <- function(x, ...)
+	    {
+              lines(x, ...)
+              abline(0, 0)
+	    }
+            plot(x$process, xlab = xlab, ylab = ylab, main = main, panel = panel, ...)
+	  }      
+        }
+
+      }
+    
+    } else {
+
+      ## lambda = lambda(x)
+      ## functional is already the full functional lambda
+      ## for plotting: just plot raw process
+      plotProcess <- function(x, alpha = 0.05, aggregate = FALSE,
+        xlab = "Time", ylab = NULL, main = x$type.name, ...)
+      {
+        if(aggregate) warning("aggregation not available")
+        panel <- function(x, ...) {
+          lines(x, ...)
+	  abline(0, 0)
+        }
+        plot(x$process, xlab = xlab, ylab = ylab, main = main, panel = panel, ...)
+      }  
+    }
+  }
+  
+  rval <- list(plotProcess = plotProcess,
+               computeStatistic = computeStatistic,
+	       computePval = computePval,
+	       computeCritval = computeCritval,
+	       boundary = boundary,
+	       lim.process = lim.process,
+	       nobs = nobs, nrep = nrep, nproc = nproc)
+	       
+  class(rval) <- "efpFunctional"
+  return(rval)
+}
+
+simulateBMDist <- function(nobs = 1000, nrep = 5000, nproc = 1,
+                         lim.process = "Brownian bridge", 
+			 h = 0.5, functional = max)
+{
+  lim.process <- match.arg(lim.process,
+    c("Brownian motion", "Brownian motion increments", 
+      "Brownian bridge", "Brownian bridge increments"))
+  rval <- numeric(nrep)
+  
+  switch(lim.process,
+  
+  "Brownian motion" = {
+    for(i in 1:nrep) {
+      x <- matrix(rnorm(nproc * nobs), ncol = nproc)
+      x <- apply(x, 2, cumsum)
+      x <- rbind(0, x)/sqrt(nobs)
+      rval[i] <- functional(x[-1,,drop = FALSE])
+    }
+  },
+  
+  "Brownian motion increments" = {
+    nh <- floor(nobs * h)
+    for(i in 1:nrep) {
+      x <- matrix(rnorm(nproc * nobs), ncol = nproc)
+      x <- apply(x, 2, cumsum)
+      x <- rbind(0, x)/sqrt(nobs)
+      x <- apply(x, 2, function(z) z[-(1:nh)] - z[1:(nobs-nh+1)])
+      rval[i] <- functional(x)
+    }
+  },
+  
+  "Brownian bridge" = {
+    for(i in 1:nrep) {
+      x <- matrix(rnorm(nproc * nobs), ncol = nproc)
+      x <- apply(x, 2, function(z) cumsum(z - mean(z)))
+      x <- rbind(0, x)/sqrt(nobs)
+      rval[i] <- functional(x[-1,,drop = FALSE])
+    }
+  },
+  
+  "Brownian bridge increments" = {
+    nh <- floor(nobs * h)
+    for(i in 1:nrep) {
+      x <- matrix(rnorm(nproc * nobs), ncol = nproc)
+      x <- apply(x, 2, function(z) cumsum(z - mean(z)))
+      x <- rbind(0, x)/sqrt(nobs)
+      x <- apply(x, 2, function(z) z[-(1:nh)] - z[1:(nobs-nh+1)])
+      rval[i] <- functional(x)
+    }
+  })
+  
+  return(rval)
+}
+

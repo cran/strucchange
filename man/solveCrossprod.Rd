@@ -3,12 +3,12 @@
 \title{Inversion of X'X}
 \description{Computes the inverse of the cross-product of a matrix X.}
 \usage{
-solveCrossprod(X, method = c("qr", "chol"))
+solveCrossprod(X, method = c("qr", "chol", "solve"))
 }
 \arguments{
   \item{X}{a matrix, typically a regressor matrix.}
-  \item{method}{a string indicating whether the QR or the Cholesky
-    decomposition should be used.}
+  \item{method}{a string indicating whether the QR decomposition,
+    the Cholesky decomposition or \code{solve} should be used.}
 }
 \details{Using the Cholesky decomposition of X'X (as computed by \code{crossprod(X)})
 is computationally faster and preferred to \code{solve(crossprod(X))}. Using the

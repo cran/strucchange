@@ -1,4 +1,4 @@
-efp <- function(formula, data=list(),
+efp <- function(formula, data = list(),
                 type = c("Rec-CUSUM", "OLS-CUSUM", "Rec-MOSUM", "OLS-MOSUM",
                 "RE", "ME", "Score-CUSUM", "Score-MOSUM", "fluctuation"),
                 h = 0.15, dynamic = FALSE, rescale = TRUE)
@@ -534,270 +534,12 @@ pvalue.efp <- function(x, lim.process, alt.boundary, functional = "max", h = NUL
 }
 
 
-sctest.efp <- function(x, alt.boundary = FALSE, functional = c("max", "range", "maxL2", "meanL2"), ...)
-{
-    h <- x$par
-    type <- x$type
-    lim.process <- x$lim.process
-    functional <- match.arg(functional)
-    dname <- paste(deparse(substitute(x)))
-    METHOD <- x$type.name
-    x <- as.matrix(x$process)
-    if(lim.process %in% c("Brownian motion", "Brownian bridge"))
-      x <- x[-1, , drop = FALSE]
-    n <- nrow(x)
-    k <- ncol(x)
-
-    if(alt.boundary) {
-      if(functional == "max" & lim.process %in% c("Brownian motion", "Brownian bridge")) {
-        trim <- max(round(n * 0.001, digits = 0), 1)
-        j <- 1:n/n
-        if(lim.process == "Brownian bridge") {
-          x <- x * 1/sqrt(j * (1-j))
-	  x <- x[(trim+1):(n-trim), , drop = FALSE]
-        } else {
-          x <- x * 1/sqrt(j)
-          x <- x[trim:n, , drop = FALSE]
-        }
-        METHOD <- paste(METHOD, "with alternative boundaries")
-      } else {
-        if(lim.process == "Brownian motion") {
-          j <- 1:n/n
-          x <- x * 1/(1 + 2*j)
-        }
-        warning(paste("no alternative boundaries for", lim.process, "with", functional, "functional"))
-      }
-    } else {
-      if(lim.process == "Brownian motion") {
-        j <- 1:n/n
-        x <- x * 1/(1 + 2*j)
-      }
-    }
-
-
-    switch(functional,
-      "max" = { STAT <- max(abs(x)) },
-      "range" = {
-        myrange <- function(y) diff(range(y))
-        STAT <- max(apply(x,2,myrange))
-        METHOD <- paste(METHOD, "with range norm")
-      },
-      "maxL2" = {
-        STAT <- max(rowSums(x^2))
-        METHOD <- paste(METHOD, "with max L2 norm")
-      },
-      "meanL2" = {
-        STAT <- mean(rowSums(x^2))
-        METHOD <- paste(METHOD, "with mean L2 norm")
-      })
-
-    switch(type,
-      "Rec-CUSUM" = { names(STAT) <- "S" },
-      "OLS-CUSUM" = { names(STAT) <- "S0" },
-      "Rec-MOSUM" = { names(STAT) <- "M" },
-      "OLS-MOSUM" = { names(STAT) <- "ME" },
-      "RE" = { names(STAT) <- "FL" },
-      "ME" = { names(STAT) <- "ME" },
-      names(STAT) <- "f(efp)")
-
-    PVAL <- pvalue.efp(STAT, lim.process, alt.boundary, functional = functional, h = h, k = k)
-    RVAL <- list(statistic = STAT, p.value = PVAL, method = METHOD, data.name = dname)
-    class(RVAL) <- "htest"
-    return(RVAL)
-}
-
-Fstats <- function(formula, from = 0.15, to = NULL, data = list(),
-   cov.type = c("const","HC", "HC1"))
-{
-  mf <- model.frame(formula, data = data)
-  y <- model.response(mf)
-  modelterms <- terms(formula, data = data)
-  X <- model.matrix(modelterms, data = data)
-  k <- ncol(X)
-  n <- length(y)
-  e <- lm.fit(X,y)$residuals
-  cov.type <- match.arg(cov.type)
-
-  if(is.ts(data)){
-      ytime <- time(data)
-      yfreq <- frequency(data)
-  }
-  else if(is.ts(y)){
-      ytime <- time(y)
-      yfreq <- frequency(y)
-  }
-
-  ts.eps <- getOption("ts.eps")
-
-  if(length(from)==2)
-  {
-    from <- which(abs(ytime-(from[1]+(from[2]-1)/yfreq)) < ts.eps)
-    if(!is.null(to)) to <- which(abs(ytime-(to[1]+(to[2]-1)/yfreq)) < ts.eps)
-  }
-  else
-  if(from < 1)
-  {
-    from <- floor(from*n)
-    if(!is.null(to)) to <- floor(to*n)
-  }
-  if(is.null(to)) to <- n - from
-  if(from < (k+1))
-  {
-    from <- k+1
-    warning("'from' changed (was too small)")
-  }
-  if(to > (n-k-1))
-  {
-    to <- n-k-1
-    warning("'to' changed (was too large)")
-  }
-  if(from <= to)
-    point <- (from:to)
-  else
-    stop("inadmissable change points: 'from' is larger than 'to'")
-
-  sume2 <- sum(e^2)
-  lambda <- ((n-from)*to)/(from*(n-to))
-  np <- length(point)
-  stats <- rep(0,np)
-  for(i in 1:np)
-  {
-    X1 <- as.matrix(X[(1:point[i]),])
-    X2 <- as.matrix(X[((point[i]+1):n),])
-    fm1 <- lm.fit(X1,y[1:point[i]])
-    fm2 <- lm.fit(X2,y[((point[i]+1):n)])
-    u <- c(fm1$residuals, fm2$residuals)
-    sigma2 <- (sum(u^2))/(n-2*k)
-    if(cov.type == "const") {
-      stats[i] <- (sume2-sum(u^2))/sigma2}
-    else {
-      allX <- cbind(X1, matrix(rep(0, point[i]*k), ncol=k))
-      allX <- rbind(allX, cbind(X2, X2))
-      beta2 <- fm2$coefficients - fm1$coefficients
-      Q1 <- solveCrossprod(allX)
-
-      VX <- apply(allX, 2, function(x) x * e)
-      V <- crossprod((VX %*% Q1))
-      if(cov.type == "HC1") {V <- V * (n/(n-k))}
-
-      stats[i] <- as.vector(t(beta2) %*% chol2inv(chol(V[-(1:k),-(1:k)])) %*% beta2)
-     }
-  }
-
-  sup.point <- which.max(stats) + from - 1
-  if(cov.type == "const")
-    min.RSS <- sume2/(1 + max(stats)/(n - 2*k))
-  else
-    min.RSS <- NA
-
-  if(is.ts(data)){
-      stats <- ts(stats, start = time(data)[from], frequency = frequency(data))
-      datatsp <- tsp(data)
-  }
-  else if(is.ts(y)){
-      stats <- ts(stats, start = time(y)[from], frequency = frequency(y))
-      datatsp <- tsp(y)
-  }
-  else{
-      stats <- ts(stats, start = from/n, frequency = n)
-      datatsp <- c(0, 1, n)
-  }
-
-  retval <- list(Fstats = stats,
-                 nreg = k,
-                 nobs = n,
-                 par = lambda,
-                 call = match.call(),
-                 formula = formula,
-		 breakpoint = sup.point,
-		 RSS = min.RSS,
-                 datatsp = datatsp)
-
-  class(retval) <- "Fstats"
-  return(retval)
-}
-
 print.efp <- function(x, ...)
 {
     cat("\nEmpirical Fluctuation Process:", x$type.name, "\n\n")
     cat("Call: ")
     print(x$call)
     cat("\n")
-}
-
-print.Fstats <- function(x, ...)
-{
-    cat("\nF statistics \n\n")
-    cat("Call: ")
-    print(x$call)
-    cat("\n")
-}
-
-plot.Fstats <- function(x, pval = FALSE, asymptotic = FALSE,
-                        alpha = 0.05, boundary = TRUE, aveF = FALSE,
-                        xlab = "Time", ylab = NULL,
-                        ylim = NULL, ...)
-{
-    k <- x$nreg
-    n <- x$nobs
-    bound <- boundary(x, alpha = alpha, pval = pval, aveF = aveF, asymptotic =
-                      asymptotic)
-    x <- x$Fstats
-
-    if(pval)
-    {
-        if(asymptotic)
-            x <- 1 - pchisq(x, k)
-        else
-            x <- 1 - pf(x, k, (n-2*k))
-        if(is.null(ylab)) ylab <- "p values"
-    }
-    else
-        if(is.null(ylab)) ylab <- "F statistics"
-    if(is.null(ylim)) ylim <- c(0, max(c(x,bound)))
-    plot(x, xlab = xlab, ylab = ylab, ylim = ylim, ...)
-    abline(0,0)
-    if(boundary)
-    {
-        lines(bound, col=2)
-        if(aveF) lines(ts(rep(mean(x),length(x)),start=start(x),
-                       frequency = frequency(x)),lty=2)
-    }
-}
-
-sctest.Fstats <- function(x, type = c("supF", "aveF", "expF"), asymptotic = FALSE, ...)
-{
-    dname <- paste(deparse(substitute(x)))
-    type <- match.arg(type)
-    switch(type,
-           supF = {
-               STATISTIC <- max(x$Fstats)
-               names(STATISTIC) <- "sup.F"
-               METHOD <- "supF test"
-           },
-           aveF = {
-               STATISTIC <- mean(x$Fstats)
-               names(STATISTIC) <- "ave.F"
-               METHOD <- "aveF test"
-           },
-           expF = {
-               STATISTIC <- log(mean(exp(0.5*x$Fstats)))
-               names(STATISTIC) <- "exp.F"
-               METHOD <- "expF test"
-           })
-    if((x$par == 1) & !(type == "expF") & !asymptotic)
-    {
-        METHOD <- "Chow test"
-        PVAL <- 1 - pf(STATISTIC, k, (n-2*k))
-    }
-    else
-        PVAL <- pvalue.Fstats(STATISTIC, type = type,
-                              k=x$nreg, lambda=x$par)
-
-    RVAL <- list(statistic = STATISTIC, p.value = PVAL,
-                 method = METHOD, data.name = dname)
-    class(RVAL) <- "htest"
-    return(RVAL)
 }
 
 sctest <- function(x, ...)
@@ -882,6 +624,78 @@ sctest.formula <- function(formula, type = c("Rec-CUSUM", "OLS-CUSUM",
   return(RVAL)
 }
 
+sctest.efp <- function(x, alt.boundary = FALSE, functional = c("max", "range", "maxL2", "meanL2"), ...)
+{
+    h <- x$par
+    type <- x$type
+    lim.process <- x$lim.process
+    functional <- match.arg(functional)
+    dname <- paste(deparse(substitute(x)))
+    METHOD <- x$type.name
+    x <- as.matrix(x$process)
+    if(lim.process %in% c("Brownian motion", "Brownian bridge"))
+      x <- x[-1, , drop = FALSE]
+    n <- nrow(x)
+    k <- ncol(x)
+
+    if(alt.boundary) {
+      if(functional == "max" & lim.process %in% c("Brownian motion", "Brownian bridge")) {
+        trim <- max(round(n * 0.001, digits = 0), 1)
+        j <- 1:n/n
+        if(lim.process == "Brownian bridge") {
+          x <- x * 1/sqrt(j * (1-j))
+	  x <- x[(trim+1):(n-trim), , drop = FALSE]
+        } else {
+          x <- x * 1/sqrt(j)
+          x <- x[trim:n, , drop = FALSE]
+        }
+        METHOD <- paste(METHOD, "with alternative boundaries")
+      } else {
+        if(lim.process == "Brownian motion") {
+          j <- 1:n/n
+          x <- x * 1/(1 + 2*j)
+        }
+        warning(paste("no alternative boundaries for", lim.process, "with", functional, "functional"))
+      }
+    } else {
+      if(lim.process == "Brownian motion") {
+        j <- 1:n/n
+        x <- x * 1/(1 + 2*j)
+      }
+    }
+
+
+    switch(functional,
+      "max" = { STAT <- max(abs(x)) },
+      "range" = {
+        myrange <- function(y) diff(range(y))
+        STAT <- max(apply(x,2,myrange))
+        METHOD <- paste(METHOD, "with range norm")
+      },
+      "maxL2" = {
+        STAT <- max(rowSums(x^2))
+        METHOD <- paste(METHOD, "with max L2 norm")
+      },
+      "meanL2" = {
+        STAT <- mean(rowSums(x^2))
+        METHOD <- paste(METHOD, "with mean L2 norm")
+      })
+
+    switch(type,
+      "Rec-CUSUM" = { names(STAT) <- "S" },
+      "OLS-CUSUM" = { names(STAT) <- "S0" },
+      "Rec-MOSUM" = { names(STAT) <- "M" },
+      "OLS-MOSUM" = { names(STAT) <- "ME" },
+      "RE" = { names(STAT) <- "FL" },
+      "ME" = { names(STAT) <- "ME" },
+      names(STAT) <- "f(efp)")
+
+    PVAL <- pvalue.efp(STAT, lim.process, alt.boundary, functional = functional, h = h, k = k)
+    RVAL <- list(statistic = STAT, p.value = PVAL, method = METHOD, data.name = dname)
+    class(RVAL) <- "htest"
+    return(RVAL)
+}
+
 boundary <- function(x, ...)
 {
     UseMethod("boundary")
@@ -945,34 +759,6 @@ boundary.efp <- function(x, alpha = 0.05, alt.boundary = FALSE, functional = "ma
     return(bound)
 }
 
-boundary.Fstats <- function(x, alpha = 0.05, pval = FALSE, aveF =
-                            FALSE, asymptotic = FALSE, ...)
-{
-    if(aveF)
-    {
-      myfun <-  function(y) {pvalue.Fstats(y, type="ave", x$nreg, x$par) - alpha}
-      upper <- 40
-    }
-    else
-    {
-      myfun <-  function(y) {pvalue.Fstats(y, type="sup", x$nreg, x$par) - alpha}
-      upper <- 80
-    }
-    bound <- uniroot(myfun, c(0,upper))$root
-    if(pval)
-    {
-        if(asymptotic)
-            bound <- 1 - pchisq(bound, x$nreg)
-        else
-            bound <- 1 - pf(bound, x$nreg, (x$nobs-2*x$nreg))
-    }
-    bound <- ts(bound,
-                start = start(x$Fstats),
-                end = end(x$Fstats),
-                frequency = frequency(x$Fstats))
-    return(bound)
-}
-
 lines.efp <- function(x, functional = "max", ...)
 {
     if(is.null(functional)) stop("lines() cannot be added for `functional = NULL'")
@@ -1013,10 +799,5 @@ lines.efp <- function(x, functional = "max", ...)
     }
 
     lines(z, ...)
-}
-
-lines.Fstats <- function(x, ...)
-{
-    lines(x$Fstats, ...)
 }
 
