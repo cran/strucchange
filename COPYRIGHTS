@@ -1,0 +1,21 @@
+COPYRIGHT STATUS
+----------------
+
+The bulk of this code is
+
+  Copyright (C) 2001 Achim Zeileis and Friedrich Leisch
+
+except the file 
+
+  R/pvalue.Fstats.R
+
+which are
+
+  Copyright (C) 2001 Achim Zeileis and Bruce Hansen.
+
+All code is subject to the GNU General Public License, Version 2. See
+the file COPYING for the exact conditions under which you may
+redistribute it.
+
+
+

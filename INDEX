@@ -1,0 +1,16 @@
+Fstats                   F Statistics
+USIncExp                 Income and Expenditures in the US
+boundary.Fstats          Boundary for F Statistics
+boundary.efp             Boundary Function for Structural Change Tests
+boundary.mefp            Boundary Function for Monitoring of Structural
+                         Changes
+efp                      Empirical Fluctuation Process
+mefp                     Monitoring of Empirical Fluctuation Processes
+plot.Fstats              Plot F Statistics
+plot.efp                 Plot Empirical Fluctuation Process
+plot.mefp                Plot Methods for mefp Objects
+root.matrix              Root of a Matrix
+sctest.Fstats            supF-, aveF- and expF-Test
+sctest.formula           Structural Change Tests
+sctest.efp               Generalized Fluctuation Tests
+strucchange.internal     Internal strucchange objects
