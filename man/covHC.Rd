@@ -6,12 +6,14 @@
  coefficient estimates in a linear regression model.
 }
 \usage{
-covHC(formula, type = c("HC2", "const", "HC", "HC1", "HC3"), data=list())
+covHC(formula, type = c("HC2", "const", "HC", "HC1", "HC3"), tol = 1e-10,
+ data=list())
 }
 \arguments{
  \item{formula}{a symbolic describtion for the model to be tested.}
   \item{type}{a character string specifying the estimation type. For
      details see below.}
+ \item{tol}{tolerance when \code{solve} is used}
  \item{data}{an optional data frame containing the variables in the model.
     By default the variables are taken from the environment which \code{covHC}
     is called from.}

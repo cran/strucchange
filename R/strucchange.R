@@ -894,14 +894,14 @@ lines.Fstats <- function(x, ...)
 }
 
 covHC <- function(formula, type=c("HC2", "const", "HC", "HC1", "HC3"),
- data=list())
+ tol = 1e-10, data=list())
 {
   mf <- model.frame(formula, data = data)
   y <- model.response(mf)
   X <- model.matrix(formula, data = data)
   n <- nrow(X)
   k <- ncol(X)
-  Q1 <- solve(crossprod(X))
+  Q1 <- solve(crossprod(X), tol = tol)
   res <- lm.fit(X,y)$residuals
   sigma2 <- var(res)*(n-1)/(n-k)
   type <- match.arg(type)
