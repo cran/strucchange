@@ -5,8 +5,9 @@
 \description{Plotting method for objects of class \code{"efp"}}
 \usage{
 \method{plot}{efp}(x, alpha = 0.05, alt.boundary = FALSE, boundary = TRUE,
-  functional = "max", main = NULL,  ylim = NULL,
-  ylab = "empirical fluctuation process", ...)}
+    functional = "max", main = NULL,  ylim = NULL,
+    ylab = "empirical fluctuation process", ...)
+}
 
 \arguments{
   \item{x}{an object of class \code{"efp"}.}
@@ -63,7 +64,6 @@ Working Paper 78, SFB "Adaptive Information Systems and Modelling in Economics
 and Management Science", Vienna University of Economics,
 \url{http://www.wu-wien.ac.at/am/wp00.htm#78}.
 }
-\author{Achim Zeileis \email{zeileis@ci.tuwien.ac.at}}
 
 \seealso{\code{\link{efp}}, \code{\link{boundary.efp}},
 \code{\link{sctest.efp}}}

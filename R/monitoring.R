@@ -1,18 +1,19 @@
 mefp <- function(obj, ...) UseMethod("mefp")
 
 mefp.formula <-
-    function(formula, type = c("OLS-CUSUM", "OLS-MOSUM", "ME", "fluctuation"),
+    function(formula, type = c("OLS-CUSUM", "OLS-MOSUM", "RE", "ME", "fluctuation"),
              data=list(), h=1, alpha=0.05, functional = c("max", "range"),
              period=10, tolerance=.Machine$double.eps^0.5,
              CritvalTable=NULL, rescale=NULL, border=NULL, ...)
 {
     type <- match.arg(type)
+    if(type == "fluctuation") type <- "RE"
     functional <- match.arg(functional)
 
     histrescale <- rescale
-    if(type=="fluctuation") histrescale <- TRUE
+    if(type=="RE") histrescale <- TRUE
     if(is.null(rescale)) {
-      if(type=="fluctuation") {
+      if(type=="RE") {
         rescale <- FALSE
 	histrescale <- TRUE
       }
@@ -40,8 +41,8 @@ mefp.efp <-
              CritvalTable=NULL, rescale=NULL, border=NULL, ...)
 {
     functional <- match.arg(functional)
-    if(! (obj$type %in% c("OLS-CUSUM", "OLS-MOSUM", "ME", "fluctuation")))
-        stop("efp must be of type `OLS-CUSUM', `OLS-MOSUM', `fluctuation' or `ME'")
+    if(! (obj$type %in% c("OLS-CUSUM", "OLS-MOSUM", "ME", "RE")))
+        stop("efp must be of type `OLS-CUSUM', `OLS-MOSUM', `RE' or `ME'")
 
     if(is.null(as.list(obj$call)$data)){
        data <- NULL
@@ -50,7 +51,7 @@ mefp.efp <-
        data <- as.character(as.list(obj$call)$data)
     }
 
-    if(is.null(rescale) & (obj$type == "fluctuation")) rescale <- FALSE
+    if(is.null(rescale) & (obj$type == "RE")) rescale <- FALSE
     if(is.null(rescale)) rescale <- obj$rescale
     if(is.null(rescale)) rescale <- TRUE
 
@@ -70,14 +71,12 @@ mefp.efp <-
     "OLS-CUSUM" = {
 
         mreSize <- function(a){
-            -2*(pnorm(a)-a*dnorm(a))
+            2-2*(pnorm(a)-a*dnorm(a))
         }
         mreCritval <- function(a){
             abs(2*(pnorm(a)-a*dnorm(a))+alpha-2)
         }
-        critval <- optim(5, mreCritval)$par
-        if((mreSize(critval)-alpha) > tolerance)
-            stop("Could not find critical within tolerance")
+        critval <- optimize(mreCritval, c(0,10), tol = tolerance)$minimum
 
         computeEmpProc <- function(X, y)
         {
@@ -176,18 +175,16 @@ mefp.efp <-
         }
     },
 
-    "fluctuation" = {
+    "RE" = {
 
         if(is.null(CritvalTable)){
             mreSize <- function(a){
-                -2*(pnorm(a)-a*dnorm(a))
+                2-2*(pnorm(a)-a*dnorm(a))
             }
             mreCritval <- function(a){
                 abs(2*(pnorm(a)-a*dnorm(a))+elemsiglevel-2)
             }
-            critval <- optim(5, mreCritval)$par
-            if((mreSize(critval)-elemsiglevel) > tolerance)
-                stop("Could not find critical within tolerance")
+            critval <- optimize(mreCritval, c(0,10), tol = tolerance)$minimum
         }
         else{
             dntab <- dimnames(CritvalTable)
@@ -234,7 +231,7 @@ mefp.efp <-
         }
     }
     else if(functional=="range"){
-        if(obj$type=="fluctuation")
+        if(obj$type=="RE")
             stop("Functional `range' not available for recursive estimates")
         else{
             computeStat <- function(empproc){

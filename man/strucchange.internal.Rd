@@ -11,9 +11,9 @@
 \alias{monitorRECritval}
 \alias{monitorRECritvalData}
 \alias{monitorRECritvalTable}
+\alias{pargmaxV}
 \title{Internal strucchange objects}
 \description{
   These are not to be called by the user.
 }
-\author{Achim Zeileis, Friedrich Leisch}
 \keyword{internal}

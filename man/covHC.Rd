@@ -7,10 +7,10 @@
 }
 \usage{
 covHC(formula, type = c("HC2", "const", "HC", "HC1", "HC3"), tol = 1e-10,
- data=list())
+   data=list())
 }
 \arguments{
- \item{formula}{a symbolic description for the model to be tested.}
+ \item{formula}{a symbolic description for the model to be fitted.}
   \item{type}{a character string specifying the estimation type. For
      details see below.}
  \item{tol}{tolerance when \code{solve} is used}
@@ -32,7 +32,7 @@ covHC(formula, type = c("HC2", "const", "HC", "HC1", "HC3"), tol = 1e-10,
 }
 \references{
 
-MacKinnon J.G., White H. (1985),
+MacKinnon J. G., White H. (1985),
 Some heteroskedasticity-consistent
 covariance matrix estimators with improved finite sample properties.
 \emph{Journal of Econometrics} \bold{29}, 305-325

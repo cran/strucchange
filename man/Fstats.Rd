@@ -5,7 +5,7 @@
 \description{Computes a series of F statistics for a specified data window.}
 \usage{
 Fstats(formula, from = 0.15, to = NULL, data,
-       cov.type = c("const", "HC", "HC1"), tol=1e-7)}
+    cov.type = c("const", "HC", "HC1"), tol=1e-7)}
 \arguments{
  \item{formula}{a symbolic description for the model to be tested}
  \item{from, to}{numeric. If \code{from} is smaller than 1 they are
@@ -54,29 +54,49 @@ processes, \emph{Journal of Business & Economic Statistics}, \bold{10}, 321-335.
 Hansen B. (1997), Approximate asymptotic p values for structural-change
 tests, \emph{Journal of Business & Economic Statistics}, \bold{15}, 60-67. }
 
-\author{Achim Zeileis \email{zeileis@ci.tuwien.ac.at}}
-
 \seealso{\code{\link{plot.Fstats}}, \code{\link{sctest.Fstats}},
 \code{\link{boundary.Fstats}}}
 
 \examples{
-## Load dataset "nhtemp" with average yearly temperatures in New Haven
-data(nhtemp)
-## plot the data
-plot(nhtemp)
+require(ts)
 
-## test the model null hypothesis that the average temperature remains constant
-## over the years for potential break points between 1941 (corresponds to from =
-## 0.5) and 1962 (corresponds to to = 0.85)
+## Nile data with one breakpoint: the annual flows drop in 1898
+## because the first Ashwan dam was built
+data(Nile)
+plot(Nile)
+
+## test the null hypothesis that the annual flow remains constant over the years
+fs.nile <- Fstats(Nile ~ 1)
+plot(fs.nile)
+sctest(fs.nile)
+## visualize the breakpoint implied by the argmax of the F statistics
+plot(Nile)
+lines(breakpoints(fs.nile))
+
+## UK Seatbelt data: a SARIMA(1,0,0)(1,0,0)_12 model
+## (fitted by OLS) is used and reveals (at least) two
+## breakpoints - one in 1973 associated with the oil crisis and
+## one in 1983 due to the introduction of compulsory
+## wearing of seatbelts in the UK.
+data(UKDriverDeaths)
+seatbelt <- log10(UKDriverDeaths)
+seatbelt <- cbind(seatbelt, lag(seatbelt, k = -1), lag(seatbelt, k = -12))
+colnames(seatbelt) <- c("y", "ylag1", "ylag12")
+seatbelt <- window(seatbelt, start = c(1970, 1), end = c(1984,12))
+plot(seatbelt[,"y"], ylab = expression(log[10](casualties)))
+
+## compute F statistics for potential breakpoints between
+## 1971(6) (corresponds to from = 0.1) and 1983(6) (corresponds to
+## to = 0.9 = 1 - from, the default)
 ## compute F statistics
-fs <- Fstats(nhtemp ~ 1, from = 0.5, to = 0.85)
+fs <- Fstats(y ~ ylag1 + ylag12, data = seatbelt, from = 0.1)
 ## this gives the same result
-fs <- Fstats(nhtemp ~ 1, from = c(1941,1), to = c(1962,1))
+fs <- Fstats(y ~ ylag1 + ylag12, data = seatbelt, from = c(1971, 6), to = c(1983, 6))
 ## plot the F statistics
 plot(fs, alpha = 0.01)
-## and the corresponding p values
-plot(fs, pval = TRUE, alpha = 0.01)
-## perform the aveF test
-sctest(fs, type = "aveF")
+## plot F statistics with aveF boundary
+plot(fs, aveF = TRUE)
+## perform the expF test
+sctest(fs, type = "expF")
 }
 \keyword{regression}

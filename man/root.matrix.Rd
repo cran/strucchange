@@ -10,8 +10,6 @@ root.matrix(X)}
 
 \value{a symmetric matrix of same dimensions as \code{X}}
 
-\author{Achim Zeileis \email{zeileis@ci.tuwien.ac.at}}
-
 \examples{
 X <- matrix(c(1,2,2,8), ncol=2)
 test <- root.matrix(X)

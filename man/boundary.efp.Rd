@@ -12,13 +12,11 @@
   \item{alt.boundary}{logical. If set to \code{TRUE} alternative boundaries
      (instead of the standard linear boundaries) will be computed (for CUSUM
      processes only).}
-  \item{...}{currently not used.}
+  \item{\dots}{currently not used.}
 }
 
 \value{an object of class \code{"ts"} with the same time properties as
 the time series in \code{x}}
-
-\author{Achim Zeileis \email{zeileis@ci.tuwien.ac.at}}
 
 \seealso{\code{\link{efp}}, \code{\link{plot.efp}}}
 

@@ -14,7 +14,7 @@
 \usage{
 mefp(obj, ...)
 
-\method{mefp}{formula}(formula, type = c("OLS-CUSUM", "OLS-MOSUM", "ME",
+\method{mefp}{formula}(formula, type = c("OLS-CUSUM", "OLS-MOSUM", "RE", "ME",
      "fluctuation"), data, h=1, alpha=0.05, functional = c("max", "range"),
     period=10, tolerance=.Machine$double.eps^0.5,
     CritvalTable=NULL, rescale=NULL, border=NULL, ...)
@@ -32,7 +32,7 @@ monitor(obj, data=NULL, verbose=TRUE)
      called from.}
   \item{type}{specifies which type of fluctuation process will be
      computed.}
-  \item{h}{(only used for ME processes). A numeric scalar from interval
+  \item{h}{(only used for MOSUM/ME processes). A numeric scalar from interval
     (0,1) specifying the size of the data window relative to the sample
     size.}
   \item{obj}{Object of class \code{"efp"} (for \code{mefp}) or
@@ -41,7 +41,7 @@ monitor(obj, data=NULL, verbose=TRUE)
     type I error.}
   \item{functional}{Determines if maximum or range of parameter
     differences is used as statistic.}
-  \item{period}{(only used for ME processes). Maximum time (relative
+  \item{period}{(only used for MOSUM/ME processes). Maximum time (relative
     to the history period) that will be monitored. Default is 10 times
     the history period.}
   \item{tolerance}{Tolerance for numeric \code{==} comparisons.}
@@ -54,7 +54,7 @@ monitor(obj, data=NULL, verbose=TRUE)
     the regressor matrix of the corresponding subsample similar to
     Kuan & Chen (1994); if \code{FALSE} the historic regressor matrix will
     be used. The default is to rescale the monitoring processes of type
-    \code{"ME"} but not of \code{"fluctuation"}.}
+    \code{"ME"} but not of \code{"RE"}.}
   \item{border}{An optional user-specified border function for the
       empirical process. \emph{This argument is under development.}}
   \item{verbose}{If \code{TRUE}, signal breaks by text output.}
@@ -81,8 +81,13 @@ monitor(obj, data=NULL, verbose=TRUE)
   Subsequent calls to \code{monitor} perform a sequential test of the
   null hypothesis of no structural change in new data against the
   general alternative of changes in one or more of the coefficients of
-  the regression model.}
-\author{Friedrich Leisch}
+  the regression model.
+
+  The recursive
+  estimates test is also called fluctuation test, therefore setting \code{type}
+  to \code{"fluctuation"} was used to specify it in earlier versions of
+  strucchange. It still can be used now, but will be forced to \code{"RE"}
+}
 \seealso{\code{\link{plot.mefp}}, \code{\link{boundary.mefp}}}
 \references{
   Friedrich Leisch, Kurt Hornik, and Chung-Ming Kuan. Monitoring

@@ -1,17 +1,27 @@
 Fstats                  F Statistics
+GermanM1                German M1 Money Demand
+Grossarl                Marriages and Births in Grossarl
 USIncExp                Income and Expenditures in the US
 boundary.Fstats         Boundary for F Statistics
 boundary                Boundary Function for Structural Change Tests
 boundary.efp            Boundary for Empirical Fluctuation Processes
 boundary.mefp           Boundary Function for Monitoring of Structural
                         Changes
+breakdates              Breakdates Corresponding to Breakpoints
+breakfactor             Factor Coding of Segmentations
+breakpoints             Dating Breaks
+confint                 Confidence Intervals for Breakpoints
 covHC                   Heteroskedasticity-Consistent Covariance Matrix
                         Estimation
-efp                     Empirical Fluctuation Process
+durab                   US Labor Productivity
+efp                     Empirical Fluctuation Processes
+logLik.breakpoints      Log Likelihood and Information Criteria for
+                        Breakpoints
 mefp                    Monitoring of Empirical Fluctuation Processes
 plot.Fstats             Plot F Statistics
 plot.efp                Plot Empirical Fluctuation Process
 plot.mefp               Plot Methods for mefp Objects
+recresid                Recursive Residuals
 root.matrix             Root of a Matrix
 sctest.Fstats           supF-, aveF- and expF-Test
 sctest.formula          Structural Change Tests

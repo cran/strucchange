@@ -1,6 +1,6 @@
 efp <- function(formula, data=list(),
                 type = c("Rec-CUSUM", "OLS-CUSUM", "Rec-MOSUM",
-                "OLS-MOSUM", "fluctuation", "ME"), h = 0.15,
+                "OLS-MOSUM", "RE", "ME", "fluctuation"), h = 0.15,
                 dynamic = FALSE, rescale = TRUE, tol = 1e-7)
 {
     mf <- model.frame(formula, data = data)
@@ -18,26 +18,7 @@ efp <- function(formula, data=list(),
     }
     k <- ncol(X)
     type <- match.arg(type)
-
-    ## recursive residuals
-
-    rec.res <- function(X, y, tol = 1e-7)
-    {
-        n <- nrow(X)
-        q <- ncol(X)
-        w <- rep(0,(n-q))
-        for(r in ((q+1):n))
-        {
-            Xr1 <- X[1:(r-1),]
-            xr <- as.vector(X[r,])
-            X1 <- solve(t(Xr1)%*%Xr1, tol=tol)
-            fr <- sqrt(1 + (t(xr) %*% X1 %*% xr))
-            wr <- t(xr)%*% X1 %*%t(Xr1)%*% y[1:(r-1)]
-            w[r-q] <- (y[r] - wr)/fr
-        }
-        return(w)
-    }
-
+    if(type == "fluctuation") type <- "RE"
 
     retval <- list(process = NULL,
                    type = type,
@@ -57,7 +38,7 @@ efp <- function(formula, data=list(),
            ## empirical process of Standard CUSUM model
 
            "Rec-CUSUM" = {
-               w <- rec.res(X, y, tol = tol)
+               w <- recresid(X, y, tol = tol)
                sigma <- sqrt(var(w))
                process <- cumsum(c(0,w))/(sigma*sqrt(n-k))
                if(is.ts(data))
@@ -94,7 +75,7 @@ efp <- function(formula, data=list(),
            ## empirical process of Recursive MOSUM model
 
            "Rec-MOSUM" = {
-               w <- rec.res(X, y, tol = tol)
+               w <- recresid(X, y, tol = tol)
                nw <- n - k
                nh <- floor(nw*h)
                process <- rep(0, (nw-nh))
@@ -155,7 +136,7 @@ efp <- function(formula, data=list(),
 
            ## empirical process of recursive estimates fluctuation
 
-           "fluctuation" = {
+           "RE" = {
                m.fit <- lm.fit(X,y)
                beta.hat <- m.fit$coefficients
                sigma <- sqrt(sum(m.fit$residual^2)/m.fit$df.residual)
@@ -277,7 +258,7 @@ plot.efp <- function(x, alpha = 0.05, alt.boundary = FALSE, boundary = TRUE,
 
     z <- x$process
     switch(x$type,
-           "fluctuation" = {
+           "RE" = {
                if(!is.null(functional) && (functional == "max"))
                {
                    z <- ts(apply(abs(x$process), 1, 'max'),
@@ -335,29 +316,26 @@ pvalue.efp <- function(x, type, alt.boundary, functional = "max", h = NULL, k =
  NULL)
 {
   type <- match.arg(type,
-    c("Rec-CUSUM", "OLS-CUSUM", "Rec-MOSUM", "OLS-MOSUM", "fluctuation", "ME"))
+    c("Rec-CUSUM", "OLS-CUSUM", "Rec-MOSUM", "OLS-MOSUM", "RE", "ME"))
   functional <- match.arg(functional, c("max", "range"))
-  switch(type,
 
-  "Rec-CUSUM" = {
-  if(alt.boundary)
-  {
-      pval <- c(1, 0.997, 0.99, 0.975, 0.949, 0.912, 0.864, 0.806, 0.739, 0.666,
-           0.589, 0.512, 0.437, 0.368, 0.307, 0.253, 0.205, 0.163, 0.129, 0.100,
-           0.077, 0.058, 0.043, 0.032, 0.024, 0.018, 0.012, 0.009, 0.006, 0.004,
-           0.003, 0.002, 0.001, 0.001, 0.001)
-      critval <- (10:44)/10
-      p <- approx(critval, pval, x, rule=2)$y
-    }
-    else
+  if(type == "Rec-CUSUM") {
+    if(alt.boundary)
     {
-      p <- ifelse(x < 0.3, 1 - 0.1465*x,
-       2*(1-pnorm(3*x) +
- exp(-4*(x^2))*(pnorm(x)+pnorm(5*x)-1)-exp(-16*(x^2))*(1-pnorm(x))))
+        pval <- c(1, 0.997, 0.99, 0.975, 0.949, 0.912, 0.864, 0.806, 0.739, 0.666,
+             0.589, 0.512, 0.437, 0.368, 0.307, 0.253, 0.205, 0.163, 0.129, 0.100,
+             0.077, 0.058, 0.043, 0.032, 0.024, 0.018, 0.012, 0.009, 0.006, 0.004,
+             0.003, 0.002, 0.001, 0.001, 0.001)
+        critval <- (10:44)/10
+        p <- approx(critval, pval, x, rule=2)$y
+    } else {
+        p <- ifelse(x < 0.3, 1 - 0.1465*x,
+        2*(1-pnorm(3*x) + exp(-4*(x^2))*(pnorm(x)+pnorm(5*x)-1)-exp(-16*(x^2))*(1-pnorm(x))))
     }
-  },
+  } else
 
-  "OLS-CUSUM" = {
+  if(type %in% c("OLS-CUSUM", "RE")) {
+    if(type == "OLS-CUSUM") k <- 1
     if(alt.boundary)
     {
       pval <- c(1, 1, 0.997, 0.99, 0.977, 0.954, 0.919, 0.871, 0.812, 0.743,
@@ -366,41 +344,9 @@ pvalue.efp <- function(x, type, alt.boundary, functional = "max", h = NULL, k =
        0.003, 0.002, 0.001, 0.001, 0.0001)
       critval <- (12:46)/10
       p <- approx(critval, pval, x, rule=2)$y
-    }
-    else
+      p <- 1 - (1-p)^k
+    } else
     {
-      p <- ifelse(x < 0.48, 1 - 0.1147*x,
-             2*(exp(-2*x^2)-exp(-8*x^2)))
-    }
-  },
-
-  "Rec-MOSUM" = {
-    crit.table <- cbind(c(3.2165, 2.9795, 2.8289, 2.7099, 2.6061, 2.5111, 2.4283, 2.3464, 2.2686, 2.2255),
-                        c(3.3185, 3.0894, 2.9479, 2.8303, 2.7325, 2.6418, 2.5609, 2.4840, 2.4083, 2.3668),
-                        c(3.4554, 3.2368, 3.1028, 2.9874, 2.8985, 2.8134, 2.7327, 2.6605, 2.5899, 2.5505),
-                        c(3.6622, 3.4681, 3.3382, 3.2351, 3.1531, 3.0728, 3.0043, 2.9333, 2.8743, 2.8334),
-                        c(3.8632, 3.6707, 3.5598, 3.4604, 3.3845, 3.3102, 3.2461, 3.1823, 3.1229, 3.0737),
-                        c(4.1009, 3.9397, 3.8143, 3.7337, 3.6626, 3.5907, 3.5333, 3.4895, 3.4123, 3.3912))
-    tablen <- dim(crit.table)[2]
-    tableh <- (1:10)*0.05
-    tablep <- c(0.2, 0.15, 0.1, 0.05, 0.025, 0.01)
-    tableipl <- numeric(tablen)
-    for(i in (1:tablen)) tableipl[i] <- approx(tableh, crit.table[,i], h, rule = 2)$y
-    p <- approx(c(0,tableipl), c(1,tablep), x, rule = 2)$y
-  },
-
-  "OLS-MOSUM" = {
-    if(k>6) k <- 6
-    crit.table <- get("sc.me")[(((k-1)*10+1):(k*10)), ]
-    tablen <- dim(crit.table)[2]
-    tableh <- (1:10)*0.05
-    tablep <- c(0.1, 0.05, 0.025, 0.01)
-    tableipl <- numeric(tablen)
-    for(i in (1:tablen)) tableipl[i] <- approx(tableh, crit.table[,i], h, rule = 2)$y
-    p <- approx(c(0,tableipl), c(1,tablep), x, rule = 2)$y
-  },
-
-  "fluctuation" = {
     switch(functional,
     "max" = {
       p <- ifelse(x<0.1, 1,
@@ -422,12 +368,29 @@ pvalue.efp <- function(x, type, alt.boundary, functional = "max", h = NULL, k =
         1-(1-2*p)^k
       })
     })
-  },
+    }
+  } else
 
-  "ME" = {
+  if(type == "Rec-MOSUM") {
+    crit.table <- cbind(c(3.2165, 2.9795, 2.8289, 2.7099, 2.6061, 2.5111, 2.4283, 2.3464, 2.2686, 2.2255),
+                        c(3.3185, 3.0894, 2.9479, 2.8303, 2.7325, 2.6418, 2.5609, 2.4840, 2.4083, 2.3668),
+                        c(3.4554, 3.2368, 3.1028, 2.9874, 2.8985, 2.8134, 2.7327, 2.6605, 2.5899, 2.5505),
+                        c(3.6622, 3.4681, 3.3382, 3.2351, 3.1531, 3.0728, 3.0043, 2.9333, 2.8743, 2.8334),
+                        c(3.8632, 3.6707, 3.5598, 3.4604, 3.3845, 3.3102, 3.2461, 3.1823, 3.1229, 3.0737),
+                        c(4.1009, 3.9397, 3.8143, 3.7337, 3.6626, 3.5907, 3.5333, 3.4895, 3.4123, 3.3912))
+    tablen <- dim(crit.table)[2]
+    tableh <- (1:10)*0.05
+    tablep <- c(0.2, 0.15, 0.1, 0.05, 0.025, 0.01)
+    tableipl <- numeric(tablen)
+    for(i in (1:tablen)) tableipl[i] <- approx(tableh, crit.table[,i], h, rule = 2)$y
+    p <- approx(c(0,tableipl), c(1,tablep), x, rule = 2)$y
+  } else
+
+  if(type %in% c("OLS-MOSUM", "ME")) {
+    if(type == "OLS-MOSUM") k <- 1
+    else if(k>6) k <- 6
     switch(functional,
     "max" = {
-      if(k>6) k <- 6
       crit.table <- get("sc.me")[(((k-1)*10+1):(k*10)), ]
       tablen <- dim(crit.table)[2]
       tableh <- (1:10)*0.05
@@ -444,18 +407,18 @@ pvalue.efp <- function(x, type, alt.boundary, functional = "max", h = NULL, k =
         1-(1-8*p)^k
       })
     })
-  })
+  }
+
   return(p)
 }
 
 
-sctest.efp <- function(x, alt.boundary = FALSE, functional = c("max", "range"),
- ...)
+sctest.efp <- function(x, alt.boundary = FALSE, functional = c("max", "range"), ...)
 {
-
     k <- x$nreg
     h <- x$par
     type <- x$type
+    n <- x$nobs
     functional <- match.arg(functional)
     dname <- paste(deparse(substitute(x)))
     METHOD <- x$type.name
@@ -479,16 +442,22 @@ sctest.efp <- function(x, alt.boundary = FALSE, functional = c("max", "range"),
            },
 
            "OLS-CUSUM" = {
-               if(alt.boundary)
-               {
-                   j <- (1:(length(x)-2))/(length(x)-1)
-                   x <- x[-1*c(1,length(x))]
-                   STAT <- max(abs(x/sqrt(j*(1-j))))
-                   METHOD <- paste(METHOD, "with alternative boundaries")
-               }
-               else
-               {
-                   STAT <- max(abs(x))
+               if(functional == "range") {
+                 STAT <- diff(range(x))
+                 METHOD <- paste(METHOD, "with range norm")
+               } else {
+  	         if(alt.boundary)
+                 {
+                     trim <- max(round(n * 0.001, digits = 0), 1)
+		     j <- (trim:(length(x)-(1+trim)))/(length(x)-1)
+                     x <- x[-1*c(1:trim,length(x):(length(x)-trim+1))]
+                     STAT <- max(abs(x/sqrt(j*(1-j))))
+                     METHOD <- paste(METHOD, "with alternative boundaries")
+                 }
+                 else
+                 {
+                     STAT <- max(abs(x))
+                 }
                }
                names(STAT) <- "S0"
            },
@@ -499,22 +468,40 @@ sctest.efp <- function(x, alt.boundary = FALSE, functional = c("max", "range"),
            },
 
            "OLS-MOSUM" = {
-               STAT <- max(abs(x))
-               names(STAT) <- "M0"
-           },
-
-           "fluctuation" = {
                switch(functional,
                       "max" = {
                           STAT <- max(abs(x))
                       },
                       "range" = {
-                          myrange <- function(y) diff(range(y))
-                          if(any(class(x)=="mts")) x <- x[-1,]
-                          else x <- as.matrix(x[-1])
-                          STAT <- max(apply(x,2,myrange))
+                          STAT <- diff(range(x))
                           METHOD <- paste(METHOD, "with range norm")
                       })
+               names(STAT) <- "ME"
+           },
+
+           "RE" = {
+               if(functional == "range") {
+                 myrange <- function(y) diff(range(y))
+                 if(any(class(x)=="mts")) x <- x[-1,]
+                 else x <- as.matrix(x[-1])
+                 STAT <- max(apply(x,2,myrange))
+                 METHOD <- paste(METHOD, "with range norm")
+               } else {
+  	         if(alt.boundary)
+                 {
+                     trim <- max(round(n * 0.001, digits = 0), 1)
+		     j <- (trim:(nrow(x)-(1+trim)))/(nrow(x)-1)
+                     if(any(class(x)=="mts")) x <- x[-1*c(1:trim,nrow(x):(nrow(x)-trim+1)),]
+		     else x <- as.matrix(x[-1*c(1:trim,nrow(x):(nrow(x)-trim+1))])
+		     mybound <- function(y) max(abs(y/sqrt(j*(1-j))))
+                     STAT <- max(apply(x,2,mybound))
+                     METHOD <- paste(METHOD, "with alternative boundaries")
+                 }
+                 else
+                 {
+                     STAT <- max(abs(x))
+                 }
+               }
                names(STAT) <- "FL"
            },
 
@@ -616,6 +603,13 @@ Fstats <- function(formula, from = 0.15, to = NULL, data = list(),
                     tol=tol) %*% beta2)
      }
   }
+
+  sup.point <- which.max(stats) + from - 1
+  if(cov.type == "const")
+    min.RSS <- sume2/(1 + max(stats)/(n - 2*k))
+  else
+    min.RSS <- NA
+
   if(is.ts(data)){
       stats <- ts(stats, start = time(data)[from], frequency = frequency(data))
       datatsp <- tsp(data)
@@ -635,6 +629,8 @@ Fstats <- function(formula, from = 0.15, to = NULL, data = list(),
                  par = lambda,
                  call = match.call(),
                  formula = formula,
+		 breakpoint = sup.point,
+		 RSS = min.RSS,
                  datatsp = datatsp)
 
   class(retval) <- "Fstats"
@@ -730,11 +726,12 @@ sctest <- function(x, ...)
 }
 
 sctest.formula <- function(formula, type = c("Rec-CUSUM", "OLS-CUSUM",
-  "Rec-MOSUM", "OLS-MOSUM", "fluctuation", "ME", "Chow", "supF", "aveF",
+  "Rec-MOSUM", "OLS-MOSUM", "RE", "ME", "fluctuation", "Chow", "supF", "aveF",
   "expF"), h = 0.15, alt.boundary = FALSE, functional = c("max", "range"),
   from = 0.15, to = NULL, point = 0.5, asymptotic = FALSE, data = list(), ...)
 {
   type <- match.arg(type)
+  if(type == "fluctuation") type <- "RE"
   dname <- paste(deparse(substitute(formula)))
   if(type == "Chow")
   {
@@ -784,7 +781,7 @@ sctest.formula <- function(formula, type = c("Rec-CUSUM", "OLS-CUSUM",
     class(RVAL) <- "htest"
   }
   else if(any(type == c("Rec-CUSUM", "OLS-CUSUM",
-  "Rec-MOSUM", "OLS-MOSUM", "fluctuation", "ME")))
+  "Rec-MOSUM", "OLS-MOSUM", "RE", "ME")))
   {
     process <- efp(formula, type = type, h = h, data = data, ...)
     RVAL <- sctest(process, alt.boundary = alt.boundary, functional = functional)
@@ -808,29 +805,39 @@ boundary.efp <- function(x, alpha = 0.05, alt.boundary = FALSE, ...)
     pos <- FALSE
     k <- x$nreg
     h <- x$par
+    if(is.matrix(x$process)) np <- nrow(x$process)
+    else np <- length(x$process)
 
     bound <- uniroot(function(y) {pvalue.efp(y, type=x$type,
         alt.boundary=alt.boundary, h=h, k=k) - alpha}, c(0,20))$root
     switch(x$type,
            "Rec-CUSUM" = {
                if(alt.boundary)
-                   bound <- sqrt((0:(length(x$process)-1))/(length(x$process)-1))*bound
+                   bound <- sqrt((0:(np-1))/(np-1))*bound
                else
-                   bound <- bound + (2*bound*(0:(length(x$process)-1))/(length(x$process)-1))
+                   bound <- bound + (2*bound*(0:(np-1))/(np-1))
            },
            "OLS-CUSUM" = {
                if(alt.boundary)
                {
-                   j <- (0:(length(x$process)-1))/(length(x$process)-1)
+                   j <- (0:(np-1))/(np-1)
                    bound <- sqrt(j*(1-j))*bound
                }
                else
-                   bound <- rep(bound,length(x$process))
+                   bound <- rep(bound,np)
            },
-           "Rec-MOSUM" = { bound <- rep(bound, length(x$process))},
-           "OLS-MOSUM" = { bound <- rep(bound, length(x$process))},
-           "fluctuation" = { bound <- rep(bound, length(x$process))},
-           "ME" = { bound <- rep(bound, length(x$process))})
+           "Rec-MOSUM" = { bound <- rep(bound, np)},
+           "OLS-MOSUM" = { bound <- rep(bound, np)},
+           "RE" = {
+               if(alt.boundary)
+               {
+                   j <- (0:(np-1))/(np-1)
+                   bound <- sqrt(j*(1-j))*bound
+               }
+               else
+                   bound <- rep(bound,np)
+           },
+           "ME" = { bound <- rep(bound, np)})
 
     bound <- ts(bound, end = end(x$process), frequency = frequency(x$process))
     return(bound)
@@ -842,12 +849,12 @@ boundary.Fstats <- function(x, alpha = 0.05, pval = FALSE, aveF =
     if(aveF)
     {
       myfun <-  function(y) {pvalue.Fstats(y, type="ave", x$nreg, x$par) - alpha}
-      upper <- 20
+      upper <- 40
     }
     else
     {
       myfun <-  function(y) {pvalue.Fstats(y, type="sup", x$nreg, x$par) - alpha}
-      upper <- 40
+      upper <- 80
     }
     bound <- uniroot(myfun, c(0,upper))$root
     if(pval)

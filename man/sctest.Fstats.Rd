@@ -4,7 +4,8 @@
 \description{Performs the supF-, aveF- or expF-test}
 \usage{
 \method{sctest}{Fstats}(x, type = c("supF", "aveF", "expF"),
-    asymptotic = FALSE, ...)}
+    asymptotic = FALSE, ...)
+}
 \arguments{
  \item{x}{an object of class \code{"Fstats"}.}
  \item{type}{a character string specifying which test will be performed.}

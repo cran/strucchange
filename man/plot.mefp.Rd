@@ -21,7 +21,6 @@
     plotted. }
   \item{main, ylab, ylim, ...}{high-level \code{\link{plot}} function parameters.}
 }
-\author{Friedrich Leisch}
 \seealso{\code{\link{mefp}}}
 \examples{
 df1 <- data.frame(y=rnorm(300))

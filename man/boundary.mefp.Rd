@@ -10,7 +10,6 @@
 }
 \value{an object of class \code{"ts"} with the same time properties as
 the monitored process}
-\author{Friedrich Leisch}
 \seealso{\code{\link{mefp}}, \code{\link{plot.mefp}}}
 \examples{
 df1 <- data.frame(y=rnorm(300))

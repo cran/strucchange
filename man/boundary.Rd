@@ -15,8 +15,6 @@ boundary(x, ...)}
 \value{an object of class \code{"ts"} with the same time properties as
 the time series in \code{x}}
 
-\author{Achim Zeileis \email{zeileis@ci.tuwien.ac.at}}
-
 \seealso{\code{\link{boundary.efp}}, \code{\link{boundary.mefp}},
   \code{\link{boundary.Fstats}}}
 

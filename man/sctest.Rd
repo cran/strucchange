@@ -57,8 +57,6 @@ corresponding test. The Chow test is available explicitely here.}
 \item{method}{a character string with the method used}
 \item{data.name}{a character string with the data name}}
 
-\author{Achim Zeileis \email{zeileis@ci.tuwien.ac.at}}
-
 \seealso{\code{\link{sctest.efp}}, \code{\link{sctest.Fstats}}}
 
 \examples{
