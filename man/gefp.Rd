@@ -15,7 +15,11 @@ gefp(\dots, fit = glm, scores = estfun, vcov = NULL,
 }
 \arguments{
   \item{\dots}{specification of some model which is passed together
-     with \code{data} to the \code{fit} function: \code{fm <- fit(\dots, data = data)}}
+     with \code{data} to the \code{fit} function: \code{fm <- fit(\dots, data = data)}.
+     If \code{fit} is set to \code{NULL} the first argument \code{\dots}
+     is assumed to be already the fitted model \code{fm}
+     (all other arguments in \code{\dots} are ignored and a warning
+     is issued in this case).}
   \item{fit}{a model fitting function, typically \code{\link{lm}},
      \code{\link{glm}} or \code{\link[MASS]{rlm}}.}
   \item{scores}{a function which extracts the scores or estimating

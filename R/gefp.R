@@ -3,10 +3,14 @@ gefp <- function(...,
   decorrelate = TRUE, sandwich = TRUE,
   order.by = NULL, fitArgs = NULL, parm = NULL, data = list())
 {
-  if(is.null(fitArgs))
-    fm <- fit(..., data = data)	
-  else
-    fm <- do.call("fit", c(..., fitArgs, list(data = data)))
+  if(is.null(fit)) {
+    fm <- list(...)
+    if(length(fm) > 1) warning("more than one argument supplied in `...', only the first is used")
+    fm <- fm[[1]]
+  } else {
+    if(is.null(fitArgs)) fm <- fit(..., data = data)	
+      else fm <- do.call("fit", c(..., fitArgs, list(data = data)))
+  }
     
   psi <- as.matrix(scores(fm))
   n <- nrow(psi)
@@ -38,10 +42,18 @@ gefp <- function(...,
 	  if(any(c("lm", "glm", "rlm") %in% class(fm)) && !is.null(formula(fm))) {
             form <- formula(fm)
             env <- environment(form)
-	    if(missing(data)) data <- env
-            orig.y <- eval(attr(terms(form), "variables")[[2]], data, env)
-            if(is.ts(orig.y)) z <- time(orig.y)
-	    else if(is.zoo(orig.y)) z <- time(orig.y)
+	    if(is.null(fit)) {
+	      dat <- fm$call[["data"]]
+	      if(!is.null(dat)) dat <- get(deparse(dat), envir = env)
+	    } else dat <- NULL
+	    if(is.ts(dat)) {
+	      z <- time(dat)
+	    } else {
+  	      if(missing(data)) data <- if(is.null(dat)) env else dat
+              orig.y <- eval(attr(terms(form), "variables")[[2]], data, env)
+              if(is.ts(orig.y)) z <- time(orig.y)
+	        else z <- index/n
+	    }	    
           } else z <- index/n
     order.name <- "Time"
   }

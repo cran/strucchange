@@ -9,16 +9,18 @@ century.
 }
 \format{
 \code{Grossarl} is a data frame containing 5 annual time series
-(1700 - 1899) and 3 factors coding policy interventions.
+(1700 - 1899), 3 factors coding policy interventions and 1 vector
+with the year (plain numeric).
  \describe{
     \item{marriages}{time series. Number of marriages,}
     \item{illegitimate}{time series. Number of illegitimate births,}
     \item{legitimate}{time series. Number of legitimate births,}
     \item{fraction}{time series. Fraction of illegitimate births,}
     \item{lag.marriages}{time series. Number of marriages in the previous year,}
-    \item{politics}{factor coding 4 different political regimes,}
-    \item{morals}{factor coding 5 different moral regulations,}
-    \item{nuptiality}{factor coding 5 different marriage restrictions.}
+    \item{politics}{ordered factor coding 4 different political regimes,}
+    \item{morals}{ordered factor coding 5 different moral regulations,}
+    \item{nuptiality}{ordered factor coding 5 different marriage restrictions,}
+    \item{year}{numeric. Year of observation.}
 }
 }
 
@@ -92,8 +94,8 @@ fm.bp <- lm(fraction ~ breakfactor(breakpoints(bp, breaks = 6)),
             data = Grossarl)
 
 plot(Grossarl$fraction)
-lines(fitted(fm.final), col = 3)
-lines(fitted(fm.bp), col = 4)
+lines(ts(fitted(fm.final), start = 1700), col = 3)
+lines(ts(fitted(fm.bp), start = 1700), col = 4)
 
 
 
@@ -132,8 +134,8 @@ fm.bp <- lm(marriages ~ breakfactor(breakpoints(bp, breaks = 4)),
             data = Grossarl)
 
 plot(Grossarl$marriages)
-lines(fitted(fm.final), col = 3)
-lines(fitted(fm.bp), col = 4)
+lines(ts(fitted(fm.final), start = 1700), col = 3)
+lines(ts(fitted(fm.bp), start = 1700), col = 4)
 }
 
 \keyword{datasets}

@@ -44,11 +44,9 @@ fs <- Fstats(durab.model, data = durab, from = 0.1)
 plot(fs)
 
 ## F statistics based on heteroskadisticy-consistent covariance matrix
-if("package:sandwich" \%in\% search() || require(sandwich)) {
-  fsHC <- Fstats(durab.model, data = durab, from = 0.1,
-                 vcov = function(x, ...) vcovHC(x, type = "HC", ...))
-  plot(fsHC)
-}
+fsHC <- Fstats(durab.model, data = durab, from = 0.1,
+	       vcov = function(x, ...) vcovHC(x, type = "HC", ...))
+plot(fsHC)
 
 ## monitoring
 Durab <- window(durab, start=1964, end = c(1979, 12))
