@@ -58,6 +58,11 @@ Zeileis A., Hornik K. (2003), Generalized M-Fluctuation Tests for Parameter
 Instability, Report 80, SFB "Adaptive Information Systems and Modelling in Economics
 and Management Science", Vienna University of Economics,
 \url{http://www.wu-wien.ac.at/am/reports.htm#80}.
+
+Zeileis A. (2004), Implementing a Class of Structural Change Tests: An
+Econometric Computing Approach. Report 7, Department of Statistics and Mathematics,
+Wirtschaftsuniversität Wien, Research Report Series,
+\url{http://epub.wu-wien.ac.at/dyn/virlib/wp/mediate/epub-wu-01_750.pdf?ID=epub-wu-01_750}.
 }
 
 \seealso{\code{\link{efp}}, \code{\link{efpFunctional}}}

@@ -137,7 +137,7 @@ economic times series. Both time series are depicted in Figure
 \setkeys{Gin}{width=0.6\textwidth}
 \begin{figure}[htbp]
 \begin{center}
-<<data,fig=TRUE,height=4,width=6,echo=FALSE>>=
+<<data,fig=TRUE,height=4,width=6,echo=FALSE,results=hide>>=
 library(strucchange)
 data(USIncExp)
 plot(USIncExp, plot.type = "single", col = 1:2, ylab = "billion US$")
