@@ -9,21 +9,30 @@ Fstats <- function(formula, from = 0.15, to = NULL, data = list(),
   n <- length(y)
   e <- lm.fit(X,y)$residuals
 
+  ytsp <- NULL
+  orig.y <- NULL
   if(is.ts(data)){
       ytime <- time(data)
-      yfreq <- frequency(data)
-  }
-  else if(is.ts(y)){
-      ytime <- time(y)
-      yfreq <- frequency(y)
+      ytsp <- tsp(data)
+  } else {
+      env <- environment(formula)
+      if(missing(data)) data <- env
+      orig.y <- eval(attr(terms(formula), "variables")[[2]], data, env)
+      if(is.ts(orig.y)){
+	ytime <- time(orig.y)
+	ytsp <- tsp(orig.y)
+      }
   }
 
   ts.eps <- getOption("ts.eps")
 
-  if(length(from) == 2)
-  {
-    from <- which(abs(ytime-(from[1]+(from[2]-1)/yfreq)) < ts.eps)
-    if(!is.null(to)) to <- which(abs(ytime-(to[1]+(to[2]-1)/yfreq)) < ts.eps)
+  if(length(from) > 1) {
+    if(!is.null(ytsp) && from[2] <= ytsp[3]) {
+      from <- which(abs(ytime-(from[1]+(from[2]-1)/ytsp[3])) < ts.eps)
+      if(!is.null(to)) to <- which(abs(ytime-(to[1]+(to[2]-1)/ytsp[3])) < ts.eps)
+    } else {
+      stop(paste(sQuote("from"), "does not specify a valid time point"))
+    }
   }
   else if(from < 1)
   {
@@ -82,9 +91,9 @@ Fstats <- function(formula, from = 0.15, to = NULL, data = list(),
       stats <- ts(stats, start = time(data)[from], frequency = frequency(data))
       datatsp <- tsp(data)
   }
-  else if(is.ts(y)){
-      stats <- ts(stats, start = time(y)[from], frequency = frequency(y))
-      datatsp <- tsp(y)
+  else if(!is.null(orig.y)) {
+      stats <- ts(stats, start = time(orig.y)[from], frequency = frequency(orig.y))
+      datatsp <- tsp(orig.y)
   }
   else{
       stats <- ts(stats, start = from/n, frequency = n)

@@ -38,7 +38,7 @@ if(require(tcltk) & require(ts))
 	else {
 	  switch(dt,
           "Nile" = plot(efp(Nile ~ 1, type = tp, h = hh)),
-          "UK Seatbelt" = plot(efp(y ~ ylag1 + ylag12, type = tp, h = hh, data = seatbelt, tol = 1e-20)),
+          "UK Seatbelt" = plot(efp(y ~ ylag1 + ylag12, type = tp, h = hh, data = seatbelt)),
           "M1" = plot(efp(dm ~ dy2 + dR + dR1 + dp + ecm.res + season, type = tp, h = hh, data = GermanM1)),
           "Grossarl" = plot(efp(fraction ~ politics, type = tp, h = hh, data = Grossarl)),
           "US Durables" = plot(efp(y ~ lag, type = tp, h = hh, data = durab))

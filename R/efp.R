@@ -34,6 +34,8 @@ efp <- function(formula, data = list(),
                    datatsp = NULL,
 		   rescale = rescale)
 
+    orig.y <- NULL
+
     switch(type,
 
            ## empirical process of Standard CUSUM model
@@ -45,11 +47,13 @@ efp <- function(formula, data = list(),
                if(is.ts(data))
                    process <- ts(process, end = end(data),
                                  frequency = frequency(data))
-               else
-               {
-               if(is.ts(y))
-                   process <- ts(process, end = end(y),
-                                 frequency = frequency(y))
+               else {
+	         env <- environment(formula)
+                 if(missing(data)) data <- env
+                 orig.y <- eval(attr(terms(formula), "variables")[[2]], data, env)
+                 if(is.ts(orig.y))
+                   process <- ts(process, end = end(orig.y),
+                                 frequency = frequency(orig.y))
                }
                retval$type.name <- "Standard CUSUM test"
                retval$lim.process <- "Brownian motion"
@@ -65,11 +69,13 @@ efp <- function(formula, data = list(),
                if(is.ts(data))
                    process <- ts(process, end = end(data),
                                  frequency = frequency(data))
-               else
-               {
-               if(is.ts(y))
-                   process <- ts(process, end = end(y),
-                                 frequency = frequency(y))
+               else {
+	         env <- environment(formula)
+                 if(missing(data)) data <- env
+                 orig.y <- eval(attr(terms(formula), "variables")[[2]], data, env)
+                 if(is.ts(orig.y))
+                   process <- ts(process, end = end(orig.y),
+                                 frequency = frequency(orig.y))
                }
                retval$type.name <- "OLS-based CUSUM test"
                retval$lim.process <- "Brownian bridge"
@@ -91,16 +97,16 @@ efp <- function(formula, data = list(),
                if(is.ts(data))
                    process <- ts(process, end = time(data)[(n-floor(0.5 + nh/2))],
                                  frequency = frequency(data))
-               else
-               {
-                 if(is.ts(y))
-                   process <- ts(process,
-                                 end = time(y)[(n-floor(0.5 + nh/2))],
-                                 frequency = frequency(y))
+               else {
+	         env <- environment(formula)
+                 if(missing(data)) data <- env
+                 orig.y <- eval(attr(terms(formula), "variables")[[2]], data, env)
+                 if(is.ts(orig.y))
+                   process <- ts(process, end = time(orig.y)[(n-floor(0.5 + nh/2))],
+                                 frequency = frequency(orig.y))
                  else
-                   process <- ts(process,
-                                 end = (n-floor(0.5 + nh/2))/n,
-                                 frequency=n)
+                   process <- ts(process, end = (n-floor(0.5 + nh/2))/n,
+                                 frequency = n)
                }
                retval$par <- h
                retval$type.name <- "Recursive MOSUM test"
@@ -120,16 +126,16 @@ efp <- function(formula, data = list(),
                if(is.ts(data))
                    process <- ts(process, end = time(data)[(n-floor(0.5 + nh/2))],
                                  frequency = frequency(data))
-               else
-               {
-                 if(is.ts(y))
-                   process <- ts(process,
-                                 end = time(y)[(n-floor(0.5 + nh/2))],
-                                 frequency = frequency(y))
+               else {
+	         env <- environment(formula)
+                 if(missing(data)) data <- env
+                 orig.y <- eval(attr(terms(formula), "variables")[[2]], data, env)
+                 if(is.ts(orig.y))
+                   process <- ts(process, end = time(orig.y)[(n-floor(0.5 + nh/2))],
+                                 frequency = frequency(orig.y))
                  else
-                   process <- ts(process,
-                                 end = (n-floor(0.5 + nh/2))/n,
-                                 frequency=n)
+                   process <- ts(process, end = (n-floor(0.5 + nh/2))/n,
+                                 frequency = n)
                }
                retval$par <- h
                retval$type.name <- "OLS-based MOSUM test"
@@ -167,12 +173,13 @@ efp <- function(formula, data = list(),
                if(is.ts(data))
                    process <- ts(process, end = end(data),
                                  frequency = frequency(data))
-               else
-               {
-                 if(is.ts(y))
-                   process <- ts(process, end = end(y), frequency = frequency(y))
-                 else
-                   process <- ts(process, start = 0, frequency = nrow(process) - 1)
+               else {
+	         env <- environment(formula)
+                 if(missing(data)) data <- env
+                 orig.y <- eval(attr(terms(formula), "variables")[[2]], data, env)
+                 if(is.ts(orig.y))
+                   process <- ts(process, end = end(orig.y),
+                                 frequency = frequency(orig.y))
                }
                retval$Q12 <- Q12
                retval$type.name <- "Fluctuation test (recursive estimates test)"
@@ -210,13 +217,16 @@ efp <- function(formula, data = list(),
                if(is.ts(data))
                    process <- ts(process, end = time(data)[(n-floor(0.5 + nh/2))],
                                  frequency = frequency(data))
-               else
-               {
-                 if(is.ts(y))
-                   process <- ts(process, end = time(y)[(n-floor(0.5 + nh/2))],
-                                 frequency = frequency(y))
+               else {
+	         env <- environment(formula)
+                 if(missing(data)) data <- env
+                 orig.y <- eval(attr(terms(formula), "variables")[[2]], data, env)
+                 if(is.ts(orig.y))
+                   process <- ts(process, end = time(orig.y)[(n-floor(0.5 + nh/2))],
+                                 frequency = frequency(orig.y))
                  else
-                   process <- ts(process, end = (n-floor(0.5 + nh/2))/n, frequency = n)
+                   process <- ts(process, end = (n-floor(0.5 + nh/2))/n,
+                                 frequency = n)
                }
                retval$par <- h
                retval$Q12 <- Q12
@@ -243,11 +253,13 @@ efp <- function(formula, data = list(),
                if(is.ts(data))
                    process <- ts(process, end = end(data),
                                  frequency = frequency(data))
-               else
-               {
-               if(is.ts(y))
-                   process <- ts(process, end = end(y),
-                                 frequency = frequency(y))
+               else {
+	         env <- environment(formula)
+                 if(missing(data)) data <- env
+                 orig.y <- eval(attr(terms(formula), "variables")[[2]], data, env)
+                 if(is.ts(orig.y))
+                   process <- ts(process, end = end(orig.y),
+                                 frequency = frequency(orig.y))
                }
                retval$type.name <- "Score-based CUSUM test"
                retval$lim.process <- "Brownian bridge"
@@ -275,13 +287,16 @@ efp <- function(formula, data = list(),
                if(is.ts(data))
                    process <- ts(process, end = time(data)[(n-floor(0.5 + nh/2))],
                                  frequency = frequency(data))
-               else
-               {
-                 if(is.ts(y))
-                   process <- ts(process, end = time(y)[(n-floor(0.5 + nh/2))],
-                                 frequency = frequency(y))
+               else {
+	         env <- environment(formula)
+                 if(missing(data)) data <- env
+                 orig.y <- eval(attr(terms(formula), "variables")[[2]], data, env)
+                 if(is.ts(orig.y))
+                   process <- ts(process, end = time(orig.y)[(n-floor(0.5 + nh/2))],
+                                 frequency = frequency(orig.y))
                  else
-                   process <- ts(process, end = (n-floor(0.5 + nh/2))/n, frequency = n)
+                   process <- ts(process, end = (n-floor(0.5 + nh/2))/n,
+                                 frequency = n)
                }
                retval$par <- h
                retval$type.name <- "Score-based MOSUM test"
@@ -291,14 +306,14 @@ efp <- function(formula, data = list(),
 
 
     if(!is.ts(process))
-        process <- ts(process, start = 0, frequency = (length(process)-1))
+        process <- ts(process, start = 0, frequency = (NROW(process)-1))
 
     retval$process <- process
 
     if(is.ts(data))
         retval$datatsp <- tsp(data)
-    else if(is.ts(y))
-        retval$datatsp <- tsp(y)
+    else if(!is.null(orig.y) && is.ts(orig.y))
+        retval$datatsp <- tsp(orig.y)
     else
         retval$datatsp <- c(0, 1, n)
 
@@ -502,6 +517,12 @@ pvalue.efp <- function(x, lim.process, alt.boundary, functional = "max", h = NUL
     tablen <- dim(crit.table)[2]
     tableh <- (1:10)*0.05
     tablep <- c(0.2, 0.15, 0.1, 0.05, 0.025, 0.01)
+
+    ## crit.table gives Table 1 of Chu, Hornik, Kuan (1995)
+    ## but the corresponding test statistic is scaled differently
+    ## by a factor of sqrt(h).
+    crit.table <- crit.table * sqrt(tableh)
+
     tableipl <- numeric(tablen)
     for(i in (1:tablen)) tableipl[i] <- approx(tableh, crit.table[,i], h, rule = 2)$y
     p <- approx(c(0,tableipl), c(1,tablep), x, rule = 2)$y
@@ -572,19 +593,27 @@ sctest.formula <- function(formula, type = c("Rec-CUSUM", "OLS-CUSUM",
     k <- ncol(X)
     n <- length(y)
 
+    ytsp <- NULL
     if(is.ts(data)){
         ytime <- time(data)
-        yfreq <- frequency(data)
-    }
-    else if(is.ts(y)){
-        ytime <- time(y)
-        yfreq <- frequency(y)
+        ytsp <- tsp(data)
+    } else {
+        env <- environment(formula)
+        if(missing(data)) data <- env
+        orig.y <- eval(attr(terms(formula), "variables")[[2]], data, env)
+        if(is.ts(orig.y)){
+            ytime <- time(orig.y)
+            ytsp <- tsp(orig.y)
+        }
     }
 
     ts.eps <- getOption("ts.eps")
 
-    if(length(point)==2) {
-      point <- which(abs(ytime-(point[1]+(point[2]-1)/yfreq)) < ts.eps)
+    if(length(point) > 1) {
+      if(!is.null(ytsp) && point[2] <= ytsp[3])
+        point <- which(abs(ytime-(point[1]+(point[2]-1)/ytsp[3])) < ts.eps)
+      else
+        stop(paste(sQuote("point"), "does not specify a valid potential change point"))
     }
     else {
       if(point < 1)
