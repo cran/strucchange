@@ -9,7 +9,7 @@ framework}
 efp(formula, data, type = <<see below>>, h = 0.15, dynamic = FALSE,
   rescale = TRUE, tol = 1e-7)}
 \arguments{
-  \item{formula}{a symbolic describtion for the model to be tested.}
+  \item{formula}{a symbolic description for the model to be tested.}
   \item{data}{an optional data frame containing the variables in the model. By
      default the variables are taken from the environment which \code{efp} is
      called from.}
@@ -36,8 +36,10 @@ For the MOSUM and ME processes all estimations are done for the
 observations in a moving data window, whose size is determined by \code{h} and
 which is shifted over the whole sample.
 
-If there is a single structural change point \eqn{t^*}, the standard CUSUM path starts
-to depart from its mean 0 at \eqn{t^*}. The OLS-based CUSUM path will have its peak
+If there is a single structural change point \eqn{t^*}, the standard CUSUM path
+ starts
+to depart from its mean 0 at \eqn{t^*}. The OLS-based CUSUM path will have its
+ peak
 around \eqn{t^*}. The MOSUM path should have a strong change at \eqn{t^*}.
 
 If \code{type} is either \code{"fluctuation"} or \code{"ME"} a
@@ -45,7 +47,8 @@ If \code{type} is either \code{"fluctuation"} or \code{"ME"} a
 regressors in the model, as it is based on recursive OLS estimates of the
 regression coefficients or moving OLS estimates respectively.
 
-Both paths should have a peak around \eqn{t^*} if there is a single structural shift.
+Both paths should have a peak around \eqn{t^*} if there is a single structural
+ shift.
 }
 
 \value{
@@ -69,7 +72,7 @@ constancy, \emph{Biometrika}, \bold{82}, 603-617.
 Chu C.-S., Hornik K., Kuan C.-M. (1995), The moving-estimates test for
 parameter stability, \emph{Econometric Theory}, \bold{11}, 669-720.
 
-Kraemer W., Ploberger W., Alt R. (1988), Testing for structural change in
+Krämer W., Ploberger W., Alt R. (1988), Testing for structural change in
 dynamic models, \emph{Econometrica}, \bold{56}, 1355-1369.
 
 Kuan C.-M., Hornik K. (1995), The generalized fluctuation test: A
@@ -79,7 +82,7 @@ Kuan C.-M., Chen (1994), Implementing the fluctuation and moving estimates
 tests in dynamic econometric models, \emph{Economics Letters}, \bold{44},
 235-239.
 
-Ploberger W., Kraemer W. (1992), The CUSUM test with OLS residuals,
+Ploberger W., Krämer W. (1992), The CUSUM test with OLS residuals,
 \emph{Econometrica}, \bold{60}, 271-285. }
 
 \author{Achim Zeileis \email{zeileis@ci.tuwien.ac.at}}

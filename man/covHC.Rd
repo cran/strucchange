@@ -10,7 +10,7 @@ covHC(formula, type = c("HC2", "const", "HC", "HC1", "HC3"), tol = 1e-10,
  data=list())
 }
 \arguments{
- \item{formula}{a symbolic describtion for the model to be tested.}
+ \item{formula}{a symbolic description for the model to be tested.}
   \item{type}{a character string specifying the estimation type. For
      details see below.}
  \item{tol}{tolerance when \code{solve} is used}

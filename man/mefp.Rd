@@ -26,7 +26,7 @@ mefp(obj, ...)
 monitor(obj, data=NULL, verbose=TRUE)
 }
 \arguments{
-  \item{formula}{a symbolic describtion for the model to be tested.}
+  \item{formula}{a symbolic description for the model to be tested.}
   \item{data}{an optional data frame containing the variables in the model. By
      default the variables are taken from the environment which \code{efp} is
      called from.}

@@ -20,7 +20,8 @@
   \item{functional}{indicates which functional should be applied to the
      estimates based processes (\code{"fluctuation"} and \code{"ME"}). If set
      to \code{NULL} a multiple process is plotted.}
-  \item{main, ylim, ylab, ...}{high-level \code{\link{plot}} function parameters.}
+  \item{main, ylim, ylab, ...}{high-level \code{\link{plot}} function
+ parameters.}
 }
 
 \details{Alternative boundaries that are proportional to the standard deviation
@@ -44,7 +45,7 @@ constancy, \emph{Biometrika}, \bold{82}, 603-617.
 Chu C.-S., Hornik K., Kuan C.-M. (1995), The moving-estimates test for
 parameter stability, \emph{Econometric Theory}, \bold{11}, 669-720.
 
-Kraemer W., Ploberger W., Alt R. (1988), Testing for structural change in
+Krämer W., Ploberger W., Alt R. (1988), Testing for structural change in
 dynamic models, \emph{Econometrica}, \bold{56}, 1355-1369.
 
 Kuan C.-M., Hornik K. (1995), The generalized fluctuation test: A
@@ -54,7 +55,7 @@ Kuan C.-M., Chen (1994), Implementing the fluctuation and moving estimates
 tests in dynamic econometric models, \emph{Economics Letters}, \bold{44},
 235-239.
 
-Ploberger W., Kraemer W. (1992), The CUSUM test with OLS residuals,
+Ploberger W., Krämer W. (1992), The CUSUM test with OLS residuals,
 \emph{Econometrica}, \bold{60}, 271-285.
 
 Zeileis A. (2000), p Values and Alternative Boundaries for CUSUM Tests,

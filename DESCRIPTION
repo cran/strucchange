@@ -1,11 +1,11 @@
 Package: strucchange
-Version: 0.9-5
-Date: 2001-12-19
+Version: 0.9-6
+Date: 2002-05-08
 Title: Testing for Structural Change
 Author: Achim Zeileis, Friedrich Leisch, Bruce Hansen,
         Kurt Hornik, Christian Kleiber, Andrea Peters
 Maintainer: Achim Zeileis <zeileis@ci.tuwien.ac.at>
-Description: Testing on structural change in linear regression relationships.
+Description: Testing for structural change in linear regression relationships.
              It features tests/methods from the generalized fluctuation test
              framework as well as from the F test (Chow test) framework. This
              includes methods to fit, plot and test fluctuation processes (e.g.,
