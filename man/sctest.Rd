@@ -4,7 +4,7 @@
 \title{Structural Change Tests}
 \description{Performs tests for structural change.}
 \usage{
-\method{sctest}{formula}(formula, type = <<see below>>, h = 0.15,
+\method{sctest}{formula}(formula, type = , h = 0.15,
     alt.boundary = FALSE, functional = c("max", "range",
     "maxL2", "meanL2"), from = 0.15, to = NULL, point = 0.5,
     asymptotic = FALSE, data, ...)

@@ -3,10 +3,19 @@ efp <- function(formula, data = list(),
                 "RE", "ME", "Score-CUSUM", "Score-MOSUM", "fluctuation"),
                 h = 0.15, dynamic = FALSE, rescale = TRUE)
 {
-    mf <- model.frame(formula, data = data)
-    y <- model.response(mf)
-    modelterms <- terms(formula, data = data)
-    X <- model.matrix(modelterms, data = data)
+    if(!inherits(formula, "formula")) {
+      X <- if(is.matrix(formula$x))
+             formula$x
+           else model.matrix(terms(formula), model.frame(formula))
+      y <- if(is.vector(formula$y))
+             formula$y
+           else model.response(model.frame(formula))
+    } else {
+      mf <- model.frame(formula, data = data)
+      y <- model.response(mf)
+      X <- model.matrix(formula, data = data)
+    }  
+   
     n <- nrow(X)
     if(dynamic)
     {

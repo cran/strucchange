@@ -1,10 +1,19 @@
 Fstats <- function(formula, from = 0.15, to = NULL, data = list(),
    vcov = NULL)
 {
-  mf <- model.frame(formula, data = data)
-  y <- model.response(mf)
-  modelterms <- terms(formula, data = data)
-  X <- model.matrix(modelterms, data = data)
+  if(!inherits(formula, "formula")) {
+    X <- if(is.matrix(formula$x))
+           formula$x
+         else model.matrix(terms(formula), model.frame(formula))
+    y <- if(is.vector(formula$y))
+           formula$y
+         else model.response(model.frame(formula))
+  } else {
+    mf <- model.frame(formula, data = data)
+    y <- model.response(mf)
+    X <- model.matrix(formula, data = data)
+  }  
+
   k <- ncol(X)
   n <- length(y)
   e <- lm.fit(X,y)$residuals

@@ -15,10 +15,8 @@ recresid.formula <- function(formula, data = list(), ...)
 
 recresid.lm <- function(x, data = list(), ...)
 {
-    mf <- model.frame(x, data = data)
-    y <- model.response(mf)
-    modelterms <- terms(x, data = data)
-    X <- model.matrix(modelterms, data = data)
+    X <- if(is.matrix(x$x)) x$x else model.matrix(terms(x), model.frame(x))
+    y <- if(is.vector(x$y)) x$y else model.response(model.frame(x))
     rr <- recresid(X, y, ...)
     return(rr)
 }

@@ -9,7 +9,7 @@ framework, which includes CUSUM and MOSUM tests based on recursive
 or OLS residuals, parameter estimates or ML scores (OLS first order
 conditions).}
 \usage{
-efp(formula, data, type = <<see below>>, h = 0.15,
+efp(formula, data, type = , h = 0.15,
     dynamic = FALSE, rescale = TRUE)}
 \arguments{
   \item{formula}{a symbolic description for the model to be tested.}
