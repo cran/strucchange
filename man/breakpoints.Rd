@@ -14,6 +14,7 @@
 \alias{vcov.breakpointsfull}
 \alias{fitted.breakpointsfull}
 \alias{residuals.breakpointsfull}
+\encoding{latin1}
 \title{Dating Breaks}
 
 \description{

@@ -1,5 +1,7 @@
 \name{Grossarl}
 \alias{Grossarl}
+\docType{data}
+\encoding{latin1}
 \title{Marriages and Births in Grossarl}
 \usage{data(Grossarl)}
 \description{

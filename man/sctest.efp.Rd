@@ -1,5 +1,6 @@
 \name{sctest.efp}
 \alias{sctest.efp}
+\encoding{latin1}
 \title{Generalized Fluctuation Tests}
 \description{Performs a generalized fluctuation test.}
 \usage{

@@ -1,10 +1,10 @@
 Package: strucchange
-Version: 1.2-7
-Date: 2004-11-08
+Version: 1.2-8
+Date: 2005-01-21
 Title: Testing for Structural Change
 Author: Achim Zeileis, Friedrich Leisch, Bruce Hansen,
         Kurt Hornik, Christian Kleiber, Andrea Peters
-Maintainer: Achim Zeileis <Achim.Zeileis@wu-wien.ac.at>
+Maintainer: Achim Zeileis <Achim.Zeileis@R-project.org>
 Description: Testing, dating and monitoring of structural change in
              linear regression relationships.
              strucchange features tests/methods from the generalized
@@ -20,4 +20,4 @@ Description: Testing, dating and monitoring of structural change in
 Depends: sandwich, zoo, R (>= 1.5.0)
 Suggests: lmtest
 License: GPL
-Packaged: Mon Nov  8 19:41:07 2004; zeileis
+Packaged: Fri Jan 21 15:01:20 2005; zeileis
