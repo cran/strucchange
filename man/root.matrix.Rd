@@ -1,9 +1,11 @@
 \name{root.matrix}
 \alias{root.matrix}
+\alias{solveCrossprod}
 \title{Root of a Matrix}
 \description{Computes the root of a symmetric and positive semidefinite matrix.}
 \usage{
-root.matrix(X)}
+root.matrix(X)
+}
 \arguments{
   \item{X}{a symmetric and positive semidefinite matrix}
 }

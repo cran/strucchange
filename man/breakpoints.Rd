@@ -18,7 +18,7 @@
 }
 
 \usage{
-\method{breakpoints}{formula}(formula, h = 0.15, breaks = NULL, tol = 1e-15,
+\method{breakpoints}{formula}(formula, h = 0.15, breaks = NULL,
     data = list(), ...)
 \method{breakpoints}{breakpointsfull}(obj, breaks = NULL, ...)
 \method{summary}{breakpointsfull}(object, breaks = NULL, sort = TRUE,
@@ -34,7 +34,6 @@
     in each segment.}
   \item{breaks}{integer specifying the maximal number of breaks to be calculated.
     By default the maximal number allowed by \code{h} is used.}
-  \item{tol}{tolerance when \code{solve} is used.}
   \item{data}{an optional data frame containing the variables in the model. By
      default the variables are taken from the environment which \code{breakpoints} is
      called from.}

@@ -1,7 +1,7 @@
 efp <- function(formula, data=list(),
                 type = c("Rec-CUSUM", "OLS-CUSUM", "Rec-MOSUM", "OLS-MOSUM",
                 "RE", "ME", "Score-CUSUM", "Score-MOSUM", "fluctuation"),
-                h = 0.15, dynamic = FALSE, rescale = TRUE, tol = 1e-7)
+                h = 0.15, dynamic = FALSE, rescale = TRUE)
 {
     mf <- model.frame(formula, data = data)
     y <- model.response(mf)
@@ -39,7 +39,7 @@ efp <- function(formula, data=list(),
            ## empirical process of Standard CUSUM model
 
            "Rec-CUSUM" = {
-               w <- recresid(X, y, tol = tol)
+               w <- recresid(X, y)
                sigma <- sqrt(var(w))
                process <- cumsum(c(0,w))/(sigma*sqrt(n-k))
                if(is.ts(data))
@@ -78,7 +78,7 @@ efp <- function(formula, data=list(),
            ## empirical process of Recursive MOSUM model
 
            "Rec-MOSUM" = {
-               w <- recresid(X, y, tol = tol)
+               w <- recresid(X, y)
                nw <- n - k
                nh <- floor(nw*h)
                process <- rep(0, (nw-nh))
@@ -237,7 +237,7 @@ efp <- function(formula, data=list(),
 	       Q12 <- root.matrix(crossprod(process))
 	       process <- rbind(0, process)
                process <- apply(process, 2, cumsum)
-               process <- t(solve(Q12) %*% t(process))
+               process <- t(chol2inv(chol(Q12)) %*% t(process))
 
 	       colnames(process) <- c(names(coef(fm)), "(Variance)")
                if(is.ts(data))
@@ -269,7 +269,7 @@ efp <- function(formula, data=list(),
 	       process <- rbind(0, process)
                process <- apply(process, 2, cumsum)
                process <- process[-(1:nh),] - process[1:(n-nh+1),]
-	       process <- t(solve(Q12) %*% t(process))
+	       process <- t(chol2inv(chol(Q12)) %*% t(process))
 
 	       colnames(process) <- c(names(coef(fm)), "(Variance)")
                if(is.ts(data))
@@ -607,7 +607,7 @@ sctest.efp <- function(x, alt.boundary = FALSE, functional = c("max", "range", "
 }
 
 Fstats <- function(formula, from = 0.15, to = NULL, data = list(),
-   cov.type = c("const","HC", "HC1"), tol=1e-7)
+   cov.type = c("const","HC", "HC1"))
 {
   mf <- model.frame(formula, data = data)
   y <- model.response(mf)
@@ -674,14 +674,13 @@ Fstats <- function(formula, from = 0.15, to = NULL, data = list(),
       allX <- cbind(X1, matrix(rep(0, point[i]*k), ncol=k))
       allX <- rbind(allX, cbind(X2, X2))
       beta2 <- fm2$coefficients - fm1$coefficients
-      Q1 <- solve(crossprod(allX), tol=tol)
+      Q1 <- solveCrossprod(allX)
 
       VX <- apply(allX, 2, function(x) x * e)
-      V <- Q1 %*% t(VX) %*% VX %*% Q1
+      V <- crossprod((VX %*% Q1))
       if(cov.type == "HC1") {V <- V * (n/(n-k))}
 
-      stats[i] <- as.vector(t(beta2) %*% solve(V[-(1:k),-(1:k)],
-                    tol=tol) %*% beta2)
+      stats[i] <- as.vector(t(beta2) %*% chol2inv(chol(V[-(1:k),-(1:k)])) %*% beta2)
      }
   }
 
@@ -974,19 +973,6 @@ boundary.Fstats <- function(x, alpha = 0.05, pval = FALSE, aveF =
     return(bound)
 }
 
-root.matrix <- function(X)
-{
-    if((ncol(X)==1)&&(nrow(X)==1)) return(sqrt(X))
-    else
-    {
-        X.eigen <- eigen(X, symmetric=TRUE)
-        if(any(X.eigen$values < 0)) stop("matrix is not positive semidefinite")
-        sqomega <- sqrt(diag(X.eigen$values))
-        V <- X.eigen$vectors
-        return(V%*%sqomega%*%t(V))
-    }
-}
-
 lines.efp <- function(x, functional = "max", ...)
 {
     if(is.null(functional)) stop("lines() cannot be added for `functional = NULL'")
@@ -1034,38 +1020,3 @@ lines.Fstats <- function(x, ...)
     lines(x$Fstats, ...)
 }
 
-covHC <- function(formula, type=c("HC2", "const", "HC", "HC1", "HC3"),
- tol = 1e-10, data=list())
-{
-  mf <- model.frame(formula, data = data)
-  y <- model.response(mf)
-  X <- model.matrix(formula, data = data)
-  n <- nrow(X)
-  k <- ncol(X)
-  Q1 <- solve(crossprod(X), tol = tol)
-  res <- lm.fit(X,y)$residuals
-  sigma2 <- var(res)*(n-1)/(n-k)
-  type <- match.arg(type)
-
-  if( type == "const") {
-    V <- sigma2 * Q1 }
-  else
-  {
-    if(type == "HC2")
-    {
-      diaghat <- 1 - diag(X %*% Q1 %*% t(X))
-      res <- res/sqrt(diaghat)
-    }
-    if(type == "HC3")
-    {
-      diaghat <- 1 - diag(X %*% Q1 %*% t(X))
-      res <- res/diaghat
-      Xu <- as.vector(t(X) %*% res)
-    }
-    VX <- apply(X, 2, function(x) x * res)
-    if(type %in% c("HC", "HC1", "HC2")) {V <- Q1 %*% t(VX) %*% VX %*% Q1}
-    if(type == "HC1") {V <- V * (n/(n-k))}
-    if(type == "HC3") {V <- Q1 %*% (t(VX) %*% VX - (outer(Xu,Xu) /n)) %*% Q1 * (n-1)/n}
-  }
-  return(V)
-}

@@ -9,7 +9,7 @@ or OLS residuals, parameter estimates or ML scores (OLS first order
 conditions).}
 \usage{
 efp(formula, data, type = <<see below>>, h = 0.15,
-    dynamic = FALSE, rescale = TRUE, tol = 1e-7)}
+    dynamic = FALSE, rescale = TRUE)}
 \arguments{
   \item{formula}{a symbolic description for the model to be tested.}
   \item{data}{an optional data frame containing the variables in the model. By
@@ -26,7 +26,6 @@ efp(formula, data, type = <<see below>>, h = 0.15,
     the regressor matrix of the corresponding subsample according to Kuan & Chen
     (1994); if \code{FALSE} the whole regressor matrix will be used.
     (only if \code{type} is either \code{"RE"} or \code{"ME"})}
-  \item{tol}{tolerance when \code{solve} is used}
 }
 
 \details{If \code{type} is one of \code{"Rec-CUSUM"}, \code{"OLS-CUSUM"},

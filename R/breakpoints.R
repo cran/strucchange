@@ -16,7 +16,7 @@ breakpoints.Fstats <- function(obj, ...)
 }
 
 breakpoints.formula <- function(formula, h = 0.15, breaks = NULL,
-                                tol = 1e-15, data = list(), ...)
+                                data = list(), ...)
 {
   mf <- model.frame(formula, data = data)
   y <- model.response(mf)
@@ -36,7 +36,7 @@ breakpoints.formula <- function(formula, h = 0.15, breaks = NULL,
 
   RSSi <- function(i)
   {
-    ssr <- recresid(X[i:n,,drop = FALSE],y[i:n], tol = tol)
+    ssr <- recresid(X[i:n,,drop = FALSE],y[i:n])
     c(rep(NA, k), cumsum(ssr^2))
   }
   RSS.triang <- sapply(1:(n-h+1), RSSi)
@@ -155,8 +155,9 @@ breakpoints.breakpointsfull <- function(obj, breaks = NULL, ...)
 print.breakpoints <- function(x, format.times = NULL, ...)
 {
   if(is.null(format.times)) format.times <- ((x$datatsp[3] > 1) & (x$datatsp[3] < x$nobs))
-  cat(paste("\n\t Optimal ", length(x$breakpoints) + 1,
-            "-segment partition: \n\n", sep = ""))
+  if(is.na(x$breakpoints)) lbp <- 0
+    else lbp <- length(x$breakpoints)
+  cat(paste("\n\t Optimal ", lbp + 1, "-segment partition: \n\n", sep = ""))
   cat("Call:\n")
   print(x$call)
   cat("\nBreakpoints at observation number:\n")

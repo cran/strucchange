@@ -28,3 +28,4 @@ root.matrix             Root of a Matrix
 sctest.Fstats           supF-, aveF- and expF-Test
 sctest.formula          Structural Change Tests
 sctest.efp              Generalized Fluctuation Tests
+solveCrossprod          Inversion of X'X

@@ -7,13 +7,12 @@
 }
 \usage{
 covHC(formula, type = c("HC2", "const", "HC", "HC1", "HC3"),
-   tol = 1e-10, data=list())
+   data=list())
 }
 \arguments{
  \item{formula}{a symbolic description for the model to be fitted.}
   \item{type}{a character string specifying the estimation type. For
      details see below.}
- \item{tol}{tolerance when \code{solve} is used}
  \item{data}{an optional data frame containing the variables in the model.
     By default the variables are taken from the environment which \code{covHC}
     is called from.}
@@ -50,6 +49,6 @@ y <- 1 + x + rnorm(100)
 covHC(y~x, type="const")
 
 sigma2 <- sum(residuals(lm(y~x))^2)/98
-sigma2 * solve(crossprod(cbind(1,x)))
+sigma2 * solveCrossprod(cbind(1,x))
 }
 \keyword{htest}
