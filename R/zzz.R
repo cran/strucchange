@@ -1,4 +1,5 @@
-if(!("package:zoo" %in% search() || require(zoo))) warning("Could not load package zoo")
+if(!("package:zoo" %in% search() || require(zoo))) warning("could not load package zoo")
+if(!("package:sandwich" %in% search() || require(sandwich))) warning("could not load package sandwich")
 
 .First.lib <- function(lib, pkg) {
   if(as.numeric(R.Version()$minor) < 7) {
