@@ -48,13 +48,16 @@ regression coefficients or moving OLS estimates respectively.
 Both paths should have a peak around \eqn{t^*} if there is a single structural shift.
 }
 
-\value{\code{efp} returns an object of class \code{"efp"} which inherits
-from the class \code{"ts"} or \code{"mts"} respectively, to which a string
-with the \code{type} of the process, the number of regressors (\code{nreg}),
-the bandwidth (\code{h}) and the function call {\code{call}) are added as
-attributes. The function \code{\link{plot}} has a method to plot the empirical
-fluctuation process; with \code{sctest} the corresponding test on structural
-change can be performed.}
+\value{
+  \code{efp} returns an object of class \code{"efp"} which inherits from
+  the class \code{"ts"} or \code{"mts"} respectively, to which a string
+  with the \code{type} of the process, the number of regressors
+  (\code{nreg}), the bandwidth (\code{h}) and the function call
+  (\code{call}) are added as attributes. The function \code{\link{plot}}
+  has a method to plot the empirical fluctuation process; with
+  \code{sctest} the corresponding test on structural change can be
+  performed.
+}
 
 \references{Brown R.L., Durbin J., Evans J.M. (1975), Techniques for
 testing constancy of regression relationships over time, \emph{Journal of the
