@@ -43,7 +43,7 @@ plot(ols)
 ## F statistics
 fs <- Fstats(durab.model, data = durab, from = 0.1)
 plot(fs)
-## F statistics computed with heteroskadisticy-consisten covariance matrix
+## F statistics based on heteroskadisticy-consistent covariance matrix
 fsHC <- Fstats(durab.model, data = durab, from = 0.1, cov.type = "HC")
 plot(fsHC)
 

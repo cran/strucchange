@@ -4,8 +4,9 @@
 \title{Plot F Statistics}
 \description{Plotting method for objects of class \code{"Fstats"}}
 \usage{
-\method{plot}{Fstats}(x, pval = FALSE, asymptotic = FALSE, alpha = 0.05, boundary = TRUE,
-    aveF = FALSE, xlab = "Time", ylab = NULL, ylim = NULL, ...)
+\method{plot}{Fstats}(x, pval = FALSE, asymptotic = FALSE, alpha = 0.05,
+    boundary = TRUE, aveF = FALSE, xlab = "Time", ylab = NULL,
+    ylim = NULL, ...)
 }
 
 \arguments{
@@ -44,9 +45,9 @@ data(nhtemp)
 ## plot the data
 plot(nhtemp)
 
-## test the model null hypothesis that the average temperature remains constant
-## over the years for potential break points between 1941 (corresponds to
-## from = 0.5) and 1962 (corresponds to to = 0.85)
+## test the model null hypothesis that the average temperature remains
+## constant over the years for potential break points between 1941
+## (corresponds to from = 0.5) and 1962 (corresponds to to = 0.85)
 ## compute F statistics
 fs <- Fstats(nhtemp ~ 1, from = 0.5, to = 0.85)
 ## plot the F statistics

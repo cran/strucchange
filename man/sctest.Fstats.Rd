@@ -35,6 +35,9 @@ expF-test was written by Bruce Hansen and is available from
 Andrews D.W.K. (1993), Tests for parameter instability and structural
 change with unknown change point, \emph{Econometrica}, \bold{61}, 821-856.
 
+Andrews D.W.K., Ploberger W. (1994), Optimal tests when a nuisance parameter
+is present only under the alternative, \emph{Econometrica}, \bold{62}, 1383-1414.
+
 Hansen B. (1992), Tests for parameter instability in regressions with I(1)
 processes, \emph{Journal of Business & Economic Statistics}, \bold{10}, 321-335.
 
@@ -49,9 +52,9 @@ data(nhtemp)
 ## plot the data
 plot(nhtemp)
 
-## test the model null hypothesis that the average temperature remains constant
-## over the years for potential break points between 1941 (corresponds to
-## from = 0.5) and 1962 (corresponds to to = 0.85)
+## test the model null hypothesis that the average temperature remains
+## constant over the years for potential break points between 1941
+## (corresponds to from = 0.5) and 1962 (corresponds to to = 0.85)
 ## compute F statistics
 fs <- Fstats(nhtemp ~ 1, from = 0.5, to = 0.85)
 ## plot the F statistics

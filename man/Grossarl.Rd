@@ -9,7 +9,7 @@ births in the Austrian Alpine village Grossarl in the 18th and 19th
 century.
 }
 \format{
-\code{births} is a data frame containing 5 annual time series
+\code{Grossarl} is a data frame containing 5 annual time series
 (1700 - 1899) and 3 factors coding policy interventions.
  \describe{
     \item{marriages}{time series. Number of marriages,}
@@ -23,10 +23,10 @@ century.
 }
 }
 
-\details{The data frame contains historical demographical data from
+\details{The data frame contains historical demographic data from
 Grossarl, a village in the Alpine region of Salzburg, Austria,
 during the 18th and 19th century.
-During this period total population of Grossarl did not vary much on the whole,
+During this period, the total population of Grossarl did not vary much on the whole,
 with the very exception of the period of the protestant emigrations
 in 1731/32.
 
@@ -37,7 +37,7 @@ the proportion of illegitimate baptisms. For details see the references.}
 \source{Parish registers provide the basic
 demographic series of baptisms (which is almost equivalent to births
 in the study area) and marriages. For
-closer information see Veichtlbauer et al. (2002).}
+more information see Veichtlbauer et al. (2002).}
 
 \references{
 Veichtlbauer O., Hanser E., Zeileis A., Leisch F. (2002),
@@ -60,12 +60,14 @@ data(Grossarl)
 ## lm + MOSUM
 plot(Grossarl$fraction)
 fm.min <- lm(fraction ~ politics, data = Grossarl)
-fm.max <- lm(fraction ~ politics + morals + nuptiality + lag.marriages, data = Grossarl)
+fm.max <- lm(fraction ~ politics + morals + nuptiality + lag.marriages,
+             data = Grossarl)
 fm.final <- step(fm.max)
 lines(ts(fitted(fm.min), start = 1700), col = 3)
 lines(ts(fitted(fm.final), start = 1700), col = 4)
 mos.min <- efp(fraction ~ politics, data = Grossarl, type = "OLS-MOSUM")
-mos.final <- efp(fraction ~ politics + morals + nuptiality, data = Grossarl, type = "OLS-MOSUM")
+mos.final <- efp(fraction ~ politics + morals + nuptiality, data = Grossarl,
+                 type = "OLS-MOSUM")
 plot(mos.min)
 lines(mos.final, lty = 2)
 
@@ -87,7 +89,8 @@ plot(0:8, AIC(bp), type = "b")
 ## m = 6       1734 1754 1785           1821 1856 1878
 ##              6    2    5              1    4    3
 
-fm.bp <- lm(fraction ~ breakfactor(breakpoints(bp, breaks = 6)), data = Grossarl)
+fm.bp <- lm(fraction ~ breakfactor(breakpoints(bp, breaks = 6)),
+            data = Grossarl)
 
 plot(Grossarl$fraction)
 lines(fitted(fm.final), col = 3)
@@ -104,7 +107,8 @@ fm.final <- lm(marriages ~ politics + morals + nuptiality, data = Grossarl)
 lines(ts(fitted(fm.min), start = 1700), col = 3)
 lines(ts(fitted(fm.final), start = 1700), col = 4)
 mos.min <- efp(marriages ~ politics, data = Grossarl, type = "OLS-MOSUM")
-mos.final <- efp(marriages ~ politics + morals + nuptiality, data = Grossarl, type = "OLS-MOSUM")
+mos.final <- efp(marriages ~ politics + morals + nuptiality, data = Grossarl,
+                 type = "OLS-MOSUM")
 plot(mos.min)
 lines(mos.final, lty = 2)
 
@@ -125,7 +129,8 @@ plot(0:8, AIC(bp), type = "b")
 ## m = 3       1738                     1813      1875
 ## m = 4       1738      1794           1814      1875
 ##              2         4              1         3
-fm.bp <- lm(marriages ~ breakfactor(breakpoints(bp, breaks = 4)), data = Grossarl)
+fm.bp <- lm(marriages ~ breakfactor(breakpoints(bp, breaks = 4)),
+            data = Grossarl)
 
 plot(Grossarl$marriages)
 lines(fitted(fm.final), col = 3)

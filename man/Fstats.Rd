@@ -65,7 +65,8 @@ require(ts)
 data(Nile)
 plot(Nile)
 
-## test the null hypothesis that the annual flow remains constant over the years
+## test the null hypothesis that the annual flow remains constant
+## over the years
 fs.nile <- Fstats(Nile ~ 1)
 plot(fs.nile)
 sctest(fs.nile)
@@ -91,7 +92,8 @@ plot(seatbelt[,"y"], ylab = expression(log[10](casualties)))
 ## compute F statistics
 fs <- Fstats(y ~ ylag1 + ylag12, data = seatbelt, from = 0.1)
 ## this gives the same result
-fs <- Fstats(y ~ ylag1 + ylag12, data = seatbelt, from = c(1971, 6), to = c(1983, 6))
+fs <- Fstats(y ~ ylag1 + ylag12, data = seatbelt, from = c(1971, 6),
+             to = c(1983, 6))
 ## plot the F statistics
 plot(fs, alpha = 0.01)
 ## plot F statistics with aveF boundary

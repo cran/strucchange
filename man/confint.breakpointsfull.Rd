@@ -43,7 +43,7 @@
   The distribution function used for the computation of confidence
   intervals of breakpoints is given in Bai (1997). The procedure, in
   particular the usage of heterogenous regressors and/or errors, is
-  more closely described in Bai & Perron (2002).
+  described in more detail in Bai & Perron (2003).
 
   The breakpoints should be computed from a formula with \code{breakpoints},
   then the confidence intervals for the breakpoints can be derived by
@@ -60,8 +60,8 @@
 Bai J. (1997), Estimation of a Change Point in Multiple Regression Models,
   \emph{Review of Economics and Statistics}, \bold{79}, 551-563.
 
-Bai J., Perron P. (2002), Computation and Analysis of Multiple Structural Change
-  Models, \emph{Journal of Applied Econometrics}, forthcoming.
+Bai J., Perron P. (2003), Computation and Analysis of Multiple Structural Change
+  Models, \emph{Journal of Applied Econometrics}, \bold{18}, 1-22.
 }
 
 \seealso{\code{\link{breakpoints}}}

@@ -1,2 +1,2 @@
-inst/doc/strucchange-intro.pdf: strucchange: An R Package for Testing for
-    Structural Change in Linear Regression Models
+strucchange-intro.pdf: strucchange: An R Package for Testing for Structural
+    Change in Linear Regression Models

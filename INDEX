@@ -1,3 +1,4 @@
+BostonHomicide          Youth Homicides in Boston
 Fstats                  F Statistics
 GermanM1                German M1 Money Demand
 Grossarl                Marriages and Births in Grossarl
@@ -12,8 +13,8 @@ breakfactor             Factor Coding of Segmentations
 breakpoints             Dating Breaks
 confint.breakpointsfull
                         Confidence Intervals for Breakpoints
-covHC                   Heteroskedasticity-Consistent Covariance Matrix
-                        Estimation
+covHC                   Heteroskedasticity-Consistent Covariance
+                        Matrix Estimation
 durab                   US Labor Productivity
 efp                     Empirical Fluctuation Processes
 logLik.breakpoints      Log Likelihood and Information Criteria for
@@ -27,4 +28,3 @@ root.matrix             Root of a Matrix
 sctest.Fstats           supF-, aveF- and expF-Test
 sctest.formula          Structural Change Tests
 sctest.efp              Generalized Fluctuation Tests
-strucchange.internal    Internal strucchange objects

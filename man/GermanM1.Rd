@@ -37,7 +37,7 @@ the unification. All three data frames contain the variables
 }
 
 \details{
-Lütkepohl et al. (2002) investigate the linearity and
+Lütkepohl et al. (1999) investigate the linearity and
 stability of German M1 money demand: they find a stable regression relation
 for the time before the monetary union on 1990-06-01 but a clear structural
 instability afterwards.

@@ -3,23 +3,26 @@
 \title{Generalized Fluctuation Tests}
 \description{Performs a generalized fluctuation test.}
 \usage{
-\method{sctest}{efp}(x, alt.boundary = FALSE, functional = c("max", "range"),
-   ...)
+\method{sctest}{efp}(x, alt.boundary = FALSE,
+    functional = c("max", "range", "maxL2", "meanL2"), ...)
 }
 
 \arguments{
   \item{x}{an object of class \code{"efp"}.}
   \item{alt.boundary}{logical. If set to \code{TRUE} alternative boundaries
  (instead of
-     the standard linear boundaries) will be used (for CUSUM processes only).}
+     the standard linear boundaries) will be used (for CUSUM
+     processes only).}
   \item{functional}{indicates which functional should be applied to the
-     estimates based processes (\code{"fluctuation"} and \code{"ME"}).}
+     empirical fluctuation process.}
   \item{...}{currently not used.}
 }
 
 \details{The critical values for the MOSUM tests and the ME test are just
 tabulated for confidence levels between 0.1 and 0.01, thus the p
-value approximations will be poor for other p values.}
+value approximations will be poor for other p values. Similarly the
+critical values for the maximum and mean squared Euclidian norm (\code{"maxL2"}
+and \code{"meanL2"}) are tabulated for confidence levels between 0.2 and 0.005.}
 
 \value{an object of class \code{"htest"} containing:
 \itemize
@@ -65,8 +68,8 @@ data(nhtemp)
 ## plot the data
 plot(nhtemp)
 
-## test the model null hypothesis that the average temperature remains constant
-## over the years compute OLS-CUSUM fluctuation process
+## test the model null hypothesis that the average temperature remains
+## constant over the years compute OLS-CUSUM fluctuation process
 temp.cus <- efp(nhtemp ~ 1, type = "OLS-CUSUM")
 ## plot the process with alternative boundaries
 plot(temp.cus, alpha = 0.01, alt.boundary = TRUE)

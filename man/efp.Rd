@@ -4,10 +4,12 @@
 \title{Empirical Fluctuation Processes}
 \description{Computes an empirical fluctuation process according
 to a specified method from the generalized fluctuation test
-framework, which includes CUSUM, MOSUM and estimates-based tests.}
+framework, which includes CUSUM and MOSUM tests based on recursive
+or OLS residuals, parameter estimates or ML scores (OLS first order
+conditions).}
 \usage{
-efp(formula, data, type = <<see below>>, h = 0.15, dynamic = FALSE,
-    rescale = TRUE, tol = 1e-7)}
+efp(formula, data, type = <<see below>>, h = 0.15,
+    dynamic = FALSE, rescale = TRUE, tol = 1e-7)}
 \arguments{
   \item{formula}{a symbolic description for the model to be tested.}
   \item{data}{an optional data frame containing the variables in the model. By
@@ -44,11 +46,15 @@ estimates test is also called fluctuation test, therefore setting \code{type}
 to \code{"fluctuation"} was used to specify it in earlier versions of
 strucchange. It still can be used now, but will be forced to \code{"RE"}.
 
+If \code{type} is \code{"Score-CUSUM"} or \code{"Score-MOSUM"} a \emph{k+1}-dimensional
+process will be returned, one for each score of the regression coefficients and one for
+the scores of the variance. The process gives the decorrelated cumulative sums of the ML
+scores (in a gaussian model) or first order conditions respectively (in an OLS framework).
+
 If there is a single structural change point \eqn{t^*}, the recursive CUSUM path
-starts to depart from its mean 0 at \eqn{t^*}. The OLS-based CUSUM and the RE path
-(which are equivalent if there is only a constant regressor)
+starts to depart from its mean 0 at \eqn{t^*}. The Brownian bridge type paths
 will have their respective peaks around \eqn{t^*}.
-The MOSUM and ME paths should have a strong change at \eqn{t^*}.
+The Brownian bridge increments type paths should have a strong change at \eqn{t^*}.
 
 The function \code{\link{plot}}
 has a method to plot the empirical fluctuation process; with
@@ -77,6 +83,12 @@ constancy, \emph{Biometrika}, \bold{82}, 603-617.
 Chu C.-S., Hornik K., Kuan C.-M. (1995), The moving-estimates test for
 parameter stability, \emph{Econometric Theory}, \bold{11}, 669-720.
 
+Hansen B. (1992), Testing for Parameter Instability in Linear Models,
+\emph{Journal of Policy Modeling}, \bold{14}, 517-533.
+
+Hjort N.L., Koning A. (2002), Tests for Constancy of Model Parameters
+Over Time, \emph{Nonparametric Statistics}, \bold{14}, 113-132.
+
 Krämer W., Ploberger W., Alt R. (1988), Testing for structural change in
 dynamic models, \emph{Econometrica}, \bold{56}, 1355-1369.
 
@@ -93,6 +105,11 @@ Ploberger W., Krämer W. (1992), The CUSUM test with OLS residuals,
 Zeileis A., Leisch F., Hornik K., Kleiber C. (2002), \code{strucchange}:
 An R Package for Testing for Structural Change in Linear Regression Models,
 \emph{Journal of Statistical Software}, \bold{7}(2), 1-38.
+
+Zeileis A., Hornik K. (2003), Generalized M-Fluctuation Tests for Parameter
+Instability, Report 80, SFB "Adaptive Information Systems and Modelling in Economics
+and Management Science", Vienna University of Economics,
+\url{http://www.wu-wien.ac.at/am/reports.htm#80}.
 }
 
 \seealso{\code{\link{plot.efp}}, \code{\link{print.efp}},
@@ -106,8 +123,9 @@ require(ts)
 data(Nile)
 plot(Nile)
 
-## test the null hypothesis that the annual flow remains constant over the years
-## comput OLS-based CUSUM process and plot
+## test the null hypothesis that the annual flow remains constant
+## over the years
+## compute OLS-based CUSUM process and plot
 ## with standard and alternative boundaries
 ocus.nile <- efp(Nile ~ 1, type = "OLS-CUSUM")
 plot(ocus.nile)

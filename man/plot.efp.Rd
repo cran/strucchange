@@ -2,11 +2,12 @@
 \alias{plot.efp}
 \alias{lines.efp}
 \title{Plot Empirical Fluctuation Process}
-\description{Plotting method for objects of class \code{"efp"}}
+\description{Plot and lines method for objects of class \code{"efp"}}
 \usage{
 \method{plot}{efp}(x, alpha = 0.05, alt.boundary = FALSE, boundary = TRUE,
     functional = "max", main = NULL,  ylim = NULL,
     ylab = "empirical fluctuation process", ...)
+\method{lines}{efp}(x, functional = "max", ...)
 }
 
 \arguments{
@@ -19,21 +20,27 @@
   \item{boundary}{logical. If set to \code{FALSE} the boundary will be computed
      but not plotted.}
   \item{functional}{indicates which functional should be applied to the
-     estimates based processes (\code{"fluctuation"} and \code{"ME"}). If set
-     to \code{NULL} a multiple process is plotted.}
+     process before plotting and which boundaries should be used. If set to \code{NULL}
+     a multiple process with boundaries for the \code{"max"} functional is plotted.
+     For more details see below.}
   \item{main, ylim, ylab, ...}{high-level \code{\link{plot}} function
  parameters.}
 }
 
-\details{Alternative boundaries that are proportional to the standard deviation
-of the corresponding limiting process are available for the CUSUM-type
-processes.
+\details{Plots are available for the \code{"max"} functional for all process types.
+For Brownian bridge type processes the maximum or mean squared Euclidian norm
+(\code{"maxL2"} and \code{"meanL2"}) can be used for aggregating before plotting.
+No plots are available for the \code{"range"} functional.
+
+Alternative boundaries that are proportional to the standard deviation
+of the corresponding limiting process are available for processes with Brownian
+motion or Brownian bridge limiting processes.
 }
 
 \value{\code{\link{efp}} returns an object of class \code{"efp"} which inherits
 from the class \code{"ts"} or \code{"mts"} respectively. The function
 \code{\link{plot}} has a method to plot the
-empirical fluctuation process; with \code{sctest} the corresponding test on
+empirical fluctuation process; with \code{sctest} the corresponding test for
 structural change can be performed.}
 
 \references{Brown R.L., Durbin J., Evans J.M. (1975), Techniques for
@@ -74,8 +81,8 @@ data(nhtemp)
 ## plot the data
 plot(nhtemp)
 
-## test the model null hypothesis that the average temperature remains constant
-## over the years
+## test the model null hypothesis that the average temperature remains
+## constant over the years
 ## compute Rec-CUSUM fluctuation process
 temp.cus <- efp(nhtemp ~ 1)
 ## plot the process

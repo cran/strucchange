@@ -5,27 +5,26 @@
 \description{Performs tests for structural change.}
 \usage{
 \method{sctest}{formula}(formula, type = <<see below>>, h = 0.15,
-    alt.boundary = FALSE, functional = c("max", "range"),
-    from = 0.15, to = NULL, point = 0.5, asymptotic = FALSE, data, ...)
+    alt.boundary = FALSE, functional = c("max", "range",
+    "maxL2", "meanL2"), from = 0.15, to = NULL, point = 0.5,
+    asymptotic = FALSE, data, ...)
 }
 
 \arguments{
   \item{formula}{a formula describing the model to be tested.}
   \item{type}{a character string specifying the structural change test that ist
      to be performed. Besides the tests types described in \code{\link{efp}}
-     and \code{\link{sctest.Fstats}} the Chow test is can be performed by
-     setting type to \code{"Chow"}.}
+     and \code{\link{sctest.Fstats}}. The Chow test and the Nyblom-Hansen test
+     can be performed by setting type to \code{"Chow"} or \code{"Nyblom-Hansen"},
+     respectively.}
   \item{h}{numeric from interval (0,1) specifying the bandwidth. Determins the
      size of the data window relative to sample size (for MOSUM and ME tests
      only).}
-  \item{dynamic}{logical. If \code{TRUE} the lagged observations are included as
-     a regressor (for generalized fluctuation tests only).}
-  \item{tol}{tolerance when \code{solve} is used}
   \item{alt.boundary}{logical. If set to \code{TRUE} alternative boundaries
      (instead of the standard linear boundaries) will be used (for CUSUM
      processes only).}
-  \item{functional}{indicates which functional should be applied to the
-     estimates based processes (\code{"fluctuation"} and \code{"ME"}).}
+  \item{functional}{indicates which functional should be used to aggregate
+     the empirical fluctuation processes to a test statistic.}
  \item{from, to}{numerics. If \code{from} is smaller than 1 they are
      interpreted as percentages of data and by default \code{to} is taken to be
      the 1 - \code{from}. F statistics will be calculated for the observations
@@ -48,7 +47,7 @@
 \details{\code{sctest.formula} is mainly a wrapper for \code{\link{sctest.efp}}
 and \code{\link{sctest.Fstats}} as it fits an empirical fluctuation process
 first or computes the F statistics respectively and subsequently performs the
-corresponding test. The Chow test is available explicitely here.}
+corresponding test. The Chow test and the Nyblom-Hansen test are available explicitely here.}
 
 \value{an object of class \code{"htest"} containing:
 \itemize
@@ -65,8 +64,8 @@ data(nhtemp)
 ## plot the data
 plot(nhtemp)
 
-## test the model null hypothesis that the average temperature remains constant
-## over the years with the Standard CUSUM test
+## test the model null hypothesis that the average temperature remains
+## constant over the years with the Standard CUSUM test
 sctest(nhtemp ~ 1)
 ## with the Chow test (under the alternative that there is a change 1941)
 sctest(nhtemp ~ 1, type = "Chow", point = c(1941,1))

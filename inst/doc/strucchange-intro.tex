@@ -3,9 +3,10 @@
 \newcommand{\ui}{\underline{i}}
 \newcommand{\oi}{\overline{\imath}}
 
+\usepackage{/usr/local/lib/R/share/texmf/Sweave}
 \begin{document}
 
-\SweaveOpts{engine=R,eps=FALSE}
+
 %\VignetteIndexEntry{strucchange: An R Package for Testing for Structural Change in Linear Regression Models}
 %\VignetteDepends{strucchange}
 %\VignetteKeywords{structural change, CUSUM, MOSUM, recursive estimates, moving estimates, monitoring, R, S}
@@ -136,13 +137,7 @@ economic times series. Both time series are depicted in Figure
 \setkeys{Gin}{width=0.6\textwidth}
 \begin{figure}[htbp]
 \begin{center}
-<<data,fig=TRUE,height=4,width=6,echo=FALSE>>=
-library(strucchange)
-data(USIncExp)
-plot(USIncExp, plot.type = "single", col = 1:2, ylab = "billion US$")
-legend(1960, max(USIncExp), c("income", "expenditures"),
-       lty = c(1,1), col = 1:2, bty = "n")
-@
+\includegraphics{strucchange-intro-data}
 \caption{\label{fig:USIncExp} Personal income and personal consumption
 expenditures in the US}
 \end{center}
@@ -151,12 +146,14 @@ expenditures in the US}
 The data is
 available in the {\tt strucchange} package: it can be loaded and a
 suitable subset chosen by
-<<subset>>=
-library(strucchange)
-data(USIncExp)
-library(ts)
-USIncExp2 <- window(USIncExp, start = c(1985,12))
-@
+\begin{Schunk}
+\begin{Sinput}
+> library(strucchange)
+> data(USIncExp)
+> library(ts)
+> USIncExp2 <- window(USIncExp, start = c(1985, 12))
+\end{Sinput}
+\end{Schunk}
 
 We use a simple error correction model (ECM) for the consumption function
 similar to \cite{sc:Hansen:1992a}:
@@ -172,24 +169,26 @@ expenditure and the regressors are the cointegration residuals and the
 increments of income (and a constant).
 To compute the cointegration residuals
 and set up the model equation we need the following steps in \textsf{R}:
-<<ecm-setup>>=
-coint.res <- residuals(lm(expenditure ~ income, data = USIncExp2))
-coint.res <- lag(ts(coint.res, start = c(1985,12), freq = 12), k = -1)
-USIncExp2 <- cbind(USIncExp2, diff(USIncExp2), coint.res)
-USIncExp2 <- window(USIncExp2, start = c(1986,1), end = c(2001,2))
-colnames(USIncExp2) <- c("income", "expenditure", "diff.income",
-                         "diff.expenditure", "coint.res")
-ecm.model <- diff.expenditure ~ coint.res + diff.income
-@
+\begin{Schunk}
+\begin{Sinput}
+> coint.res <- residuals(lm(expenditure ~ income, data = USIncExp2))
+> coint.res <- lag(ts(coint.res, start = c(1985, 12), freq = 12), 
++     k = -1)
+> USIncExp2 <- cbind(USIncExp2, diff(USIncExp2), coint.res)
+> USIncExp2 <- window(USIncExp2, start = c(1986, 1), end = c(2001, 
++     2))
+> colnames(USIncExp2) <- c("income", "expenditure", "diff.income", 
++     "diff.expenditure", "coint.res")
+> ecm.model <- diff.expenditure ~ coint.res + diff.income
+\end{Sinput}
+\end{Schunk}
 
 Figure~\ref{fig:ts} shows the transformed time series necessary for estimation
 of equation (\ref{ecm.model}).
 
 \begin{figure}[htbp]
 \begin{center}
-<<ts-used,fig=TRUE,echo=FALSE>>=
-plot(USIncExp2[,3:5], main = "")
-@
+\includegraphics{strucchange-intro-ts-used}
 \caption{\label{fig:ts} Time series used -- first differences and
 cointegration residuals} \end{center}
 \end{figure}
@@ -341,10 +340,12 @@ returned.\\
 All six processes may be fitted using the function {\tt efp}.
 For our example we want to fit an OLS-based CUSUM process, and a moving
 estimates (ME) process with bandwidth $h = 0.2$. The commands are simply
-<<efp>>=
-ocus <- efp(ecm.model, type="OLS-CUSUM", data=USIncExp2)
-me <- efp(ecm.model, type="ME", data=USIncExp2, h=0.2)
-@
+\begin{Schunk}
+\begin{Sinput}
+> ocus <- efp(ecm.model, type = "OLS-CUSUM", data = USIncExp2)
+> me <- efp(ecm.model, type = "ME", data = USIncExp2, h = 0.2)
+\end{Sinput}
+\end{Schunk}
 These return objects of class {\tt "efp"} which contain mainly the
 empirical fluctuation processes and a few further attributes like the process
 type. The process itself is of class {\tt "ts"} (the basic time series class in
@@ -408,18 +409,23 @@ for structural changes early and late in the sample period.\\
 Given a fitted empirical fluctuation process the boundaries can be
 computed very easily using the function {\tt boundary}, which returns a time
 series object with the same time properties as the given fluctuation process:
-<<efp-boundary>>=
-bound.ocus <- boundary(ocus, alpha=0.05)
-@
+\begin{Schunk}
+\begin{Sinput}
+> bound.ocus <- boundary(ocus, alpha = 0.05)
+\end{Sinput}
+\end{Schunk}
 It is also rather convenient to plot the process with its boundaries for some
 confidence level $\alpha$ (by default 0.05) to see whether the path exceeds the
 boundaries or not: This is demonstrated in Figure~\ref{fig:ocus}.
 
 \begin{figure}[hbtp]
 \begin{center}
-<<OLS-CUSUM,fig=TRUE,height=4,width=6>>=
-plot(ocus)
-@
+\begin{Schunk}
+\begin{Sinput}
+> plot(ocus)
+\end{Sinput}
+\end{Schunk}
+\includegraphics{strucchange-intro-OLS-CUSUM}
 \caption{\label{fig:ocus} OLS-based CUSUM process}
 \end{center}
 \end{figure}
@@ -431,11 +437,13 @@ end of 1998.\\
 
 It is also possible to suppress the boundaries and add them afterwards, e.g. in
 another color
-<<efp-boundary2,eval=FALSE>>=
-plot(ocus, boundary = FALSE)
-lines(bound.ocus, col = 4)
-lines(-bound.ocus, col = 4)
-@
+\begin{Schunk}
+\begin{Sinput}
+> plot(ocus, boundary = FALSE)
+> lines(bound.ocus, col = 4)
+> lines(-bound.ocus, col = 4)
+\end{Sinput}
+\end{Schunk}
 For estimates-based processes it is only sensible to use time series plots if
 the functional `max' is used because it is equivalent to rejecting the null
 hypothesis when $\max_{i=1, \dots, k} ||\mathit{efp}(t)||$ gets large or when
@@ -447,9 +455,12 @@ be plotted by specifying the parameter {\tt functional} (which defaults to {\tt
 
 \begin{figure}[h]
 \begin{center}
-<<ME-null,fig=TRUE>>=
-plot(me, functional = NULL)
-@
+\begin{Schunk}
+\begin{Sinput}
+> plot(me, functional = NULL)
+\end{Sinput}
+\end{Schunk}
+\includegraphics{strucchange-intro-ME-null}
 \caption{\label{fig:me-null} 3-dimensional moving estimates process}
 \end{center}
 \end{figure}
@@ -490,13 +501,23 @@ linear boundary for the Recursive CUSUM test for example has shape $f(t) = 1 +
 It is either possible to supply {\tt sctest} with a fitted
 empirical fluctuation process or with a formula describing the model that should
 be tested. Thus, the commands
-<<efp-sctest,eval=FALSE>>=
-sctest(ocus)
-@
+\begin{Schunk}
+\begin{Sinput}
+> sctest(ocus)
+\end{Sinput}
+\end{Schunk}
 and
-<<efp-sctest2>>=
-sctest(ecm.model, type="OLS-CUSUM", data=USIncExp2)
-@
+\begin{Schunk}
+\begin{Sinput}
+> sctest(ecm.model, type = "OLS-CUSUM", data = USIncExp2)
+\end{Sinput}
+\begin{Soutput}
+	OLS-based CUSUM test
+
+data:  ecm.model 
+S0 = 1.5511, p-value = 0.01626
+\end{Soutput}
+\end{Schunk}
 lead to equivalent results.
 {\tt sctest} is a generic function which has methods not only for
 fluctuation tests, but all
@@ -551,9 +572,11 @@ also be specified by fractions of the sample; the default is to take {\tt from =
 0.15} and implicitly {\tt to = 0.85}. To compute the $F$ test statistics for all
 potential change points between January 1990 and June 1999 the appropriate
 command would be:
-<<Fstats>>=
-fs <- Fstats(ecm.model, from = c(1990, 1), to = c(1999,6), data = USIncExp2)
-@
+\begin{Schunk}
+\begin{Sinput}
+> fs <- Fstats(ecm.model, from = c(1990, 1), to = c(1999, 6), data = USIncExp2)
+\end{Sinput}
+\end{Schunk}
 This returns an object of class {\tt "Fstats"} which mainly contains a time
 series of $F$ statistics. Analogously to the empiricial fluctuation processes
 these objects can be printed, plotted and tested.
@@ -568,9 +591,12 @@ statistics $F_i$ (for $\ui \le i \le \oi$) exceeds this boundary is $\alpha$.
 So the following command
 \begin{figure}[htbp]
 \begin{center}
-<<Fstats-plot,fig=TRUE,height=4,width=6>>=
-plot(fs)
-@
+\begin{Schunk}
+\begin{Sinput}
+> plot(fs)
+\end{Sinput}
+\end{Schunk}
+\includegraphics{strucchange-intro-Fstats-plot}
 \caption{\label{fig:Fstats} $F$ statistics}
 \end{center}
 \end{figure}
@@ -584,14 +610,18 @@ respectively, that also indicated a break in the late 1990s.\\
 
 It is also possible to plot the $p$ values instead of
 the $F$ statistics themselves by
-<<pval-plot,eval=FALSE>>=
-plot(fs, pval=TRUE)
-@
+\begin{Schunk}
+\begin{Sinput}
+> plot(fs, pval = TRUE)
+\end{Sinput}
+\end{Schunk}
 which leads to equivalent results. Furthermore it is also possible to set up
 the boundaries for the average instead of the supremum by:
-<<aveF-plot,eval=FALSE>>=
-plot(fs, aveF=TRUE)
-@
+\begin{Schunk}
+\begin{Sinput}
+> plot(fs, aveF = TRUE)
+\end{Sinput}
+\end{Schunk}
 In this case another dashed line for the observed mean of the $F$ statistics
 will be drawn.
 
@@ -618,13 +648,23 @@ The tests can be carried out
 in the same way as the fluctuation tests: either by supplying the fitted {\tt
 Fstats} object or by a formula that describes the model to be tested. Hence the
 commands
-<<Fstats-sctest,eval=FALSE>>=
-sctest(fs, type="expF")
-@
+\begin{Schunk}
+\begin{Sinput}
+> sctest(fs, type = "expF")
+\end{Sinput}
+\end{Schunk}
 and
-<<Fstats-sctest2>>=
-sctest(ecm.model, type = "expF", from = 49, to = 162, data = USIncExp2)
-@
+\begin{Schunk}
+\begin{Sinput}
+> sctest(ecm.model, type = "expF", from = 49, to = 162, data = USIncExp2)
+\end{Sinput}
+\begin{Soutput}
+	expF test
+
+data:  ecm.model 
+exp.F = 8.9955, p-value = 0.001311
+\end{Soutput}
+\end{Schunk}
 lead to equivalent output.
 
 The $p$ values are computed based on \cite{Z:Hansen:1997}.\footnote{The authors
@@ -677,10 +717,13 @@ Consider that we want to monitor our ECM during the
 1990s for structural change, using years 1986--1989 as the history
 period. First we cut the historic sample from the complete data set
 and create an object of class \texttt{"mefp"}:
-<<mefp>>=
-USIncExp3 <- window(USIncExp2, start = c(1986, 1), end = c(1989,12))
-me.mefp <- mefp(ecm.model, type = "ME", data = USIncExp3, alpha = 0.05)
-@
+\begin{Schunk}
+\begin{Sinput}
+> USIncExp3 <- window(USIncExp2, start = c(1986, 1), end = c(1989, 
++     12))
+> me.mefp <- mefp(ecm.model, type = "ME", data = USIncExp3, alpha = 0.05)
+\end{Sinput}
+\end{Schunk}
 Because monitoring is a sequential test procedure, the
 significance level has to be specified \emph{in advance}, i.e., when
 the object of class \texttt{"mefp"} is created. The \texttt{"mefp"}
@@ -691,17 +734,49 @@ Let us assume we get new observations for the year 1990. Calling function
 monitoring object for the new observations and runs a sequential test
 for structural change on each new observation (no structural break is
 detected in 1990):
-<<monitor1>>=
-USIncExp3 <- window(USIncExp2, start = c(1986, 1), end = c(1990,12))
-me.mefp <- monitor(me.mefp)
-@
+\begin{Schunk}
+\begin{Sinput}
+> USIncExp3 <- window(USIncExp2, start = c(1986, 1), end = c(1990, 
++     12))
+> me.mefp <- monitor(me.mefp)
+\end{Sinput}
+\end{Schunk}
 Then new data for the years 1991--2001 arrive and we repeat the
 monitoring:
-<<monitor2>>=
-USIncExp3 <- window(USIncExp2, start = c(1986, 1))
-me.mefp <- monitor(me.mefp)
-me.mefp
-@
+\begin{Schunk}
+\begin{Sinput}
+> USIncExp3 <- window(USIncExp2, start = c(1986, 1))
+> me.mefp <- monitor(me.mefp)
+\end{Sinput}
+\begin{Soutput}
+Break detected at observation # 72 
+\end{Soutput}
+\begin{Sinput}
+> me.mefp
+\end{Sinput}
+\begin{Soutput}
+Monitoring with ME test (moving estimates test) 
+
+Initial call:
+  mefp.formula(formula = ecm.model, type = "ME", data = USIncExp3,      alpha = 0.05) 
+
+Last call:
+  monitor(obj = me.mefp) 
+
+Significance level   :  0.05 
+Critical value       :  3.109524 
+History size         :  48 
+Last point evaluated :  182 
+Structural break at  :  72 
+
+Parameter estimate on history :
+(Intercept)   coint.res diff.income 
+ 18.9299679  -0.3893141   0.3156597 
+Last parameter estimate :
+(Intercept)   coint.res diff.income 
+27.94869106  0.00983451  0.13314662 
+\end{Soutput}
+\end{Schunk}
 The software informs us that a structural break has been detected at
 observation \#72, which corresponds to December 1991. Boundary and
 plotting methods for \texttt{"mefp"} objects work (almost) exactly as
@@ -712,26 +787,32 @@ their \texttt{"efp"} counterparts, only the significance level
 
 \begin{figure}[htbp]
 \begin{center}
-<<monitor-plot,fig=TRUE,echo=FALSE,height=4,width=6>>=
-plot(me.mefp)
-@
+\includegraphics{strucchange-intro-monitor-plot}
 \caption{\label{fig:monitor} Monitoring structural change with bandwidth $h=1$}
 \end{center}
 \end{figure}
 
 Instead of creating an {\tt "mefp"} object using the formula interface like
 above, it could also be done re-using an existing \texttt{"efp"} object, e.g.:
-<<mefp2>>=
-USIncExp3 <- window(USIncExp2, start = c(1986, 1), end = c(1989,12))
-me.efp <- efp(ecm.model, type = "ME", data = USIncExp3, h = 0.5)
-me.mefp <- mefp(me.efp, alpha=0.05)
-@
+\begin{Schunk}
+\begin{Sinput}
+> USIncExp3 <- window(USIncExp2, start = c(1986, 1), end = c(1989, 
++     12))
+> me.efp <- efp(ecm.model, type = "ME", data = USIncExp3, h = 0.5)
+> me.mefp <- mefp(me.efp, alpha = 0.05)
+\end{Sinput}
+\end{Schunk}
 If now again the new observations up to February 2001 arrive, we can monitor
 the data
-<<monitor3>>=
-USIncExp3 <- window(USIncExp2, start = c(1986, 1))
-me.mefp <- monitor(me.mefp)
-@
+\begin{Schunk}
+\begin{Sinput}
+> USIncExp3 <- window(USIncExp2, start = c(1986, 1))
+> me.mefp <- monitor(me.mefp)
+\end{Sinput}
+\begin{Soutput}
+Break detected at observation # 70 
+\end{Soutput}
+\end{Schunk}
 and discover the structural change even two observations earlier as we used
 the bandwidth {\tt h=0.5} instead of {\tt h=1}. Due to this we have not one
 history estimate that is being compared with the new moving estimates, but we
@@ -741,9 +822,7 @@ Figure~\ref{fig:monitor2}. This plot can simply be generated by
 
 \begin{figure}[htbp]
 \begin{center}
-<<monitor-plot2,fig=TRUE,height=4,width=6,echo=FALSE>>=
-plot(me.mefp)
-@
+\includegraphics{strucchange-intro-monitor-plot2}
 \caption{\label{fig:monitor2} Monitoring structural change with
 bandwidth $h=0.5$} \end{center}
 \end{figure}

@@ -12,7 +12,7 @@ breakfactor(obj, breaks = NULL, labels = NULL, ...)
   \item{obj}{An object of class \code{"breakpoints"} or
     \code{"breakpointsfull"} respectively.}
   \item{breaks}{an integer specifying the number of breaks
-    to extract (only if \code{obj} is of class {"breakpointsfull"}),
+    to extract (only if \code{obj} is of class \code{"breakpointsfull"}),
     by default the minimum BIC partition is used.}
   \item{labels}{a vector of labels for the returned factor,
     by default the segments are numbered starting from

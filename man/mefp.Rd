@@ -7,23 +7,23 @@
 \title{Monitoring of Empirical Fluctuation Processes}
 \description{
   Online monitoring of structural breaks in a linear regression model. A
-  parameter estimate based on a historical sample is compared with
-  estimates based on newly arriving data; a sequential test on the
-  difference between the two parameter estimates signals structural breaks.
+  sequential fluctuation test based on parameter estimates or OLS residualas
+  signals structural breaks.
 }
 \usage{
 mefp(obj, ...)
 
 \method{mefp}{formula}(formula, type = c("OLS-CUSUM", "OLS-MOSUM", "RE", "ME",
-     "fluctuation"), data, h=1, alpha=0.05, functional = c("max", "range"),
-    period=10, tolerance=.Machine$double.eps^0.5,
-    CritvalTable=NULL, rescale=NULL, border=NULL, ...)
+    "fluctuation"), data, h = 1, alpha = 0.05,
+    functional = c("max", "range"), period = 10,
+    tolerance = .Machine$double.eps^0.5, CritvalTable = NULL,
+    rescale = NULL, border = NULL, ...)
 
 \method{mefp}{efp}(obj, alpha=0.05, functional = c("max", "range"),
-    period=10, tolerance=.Machine$double.eps^0.5,
-    CritvalTable=NULL, rescale=NULL, border=NULL, ...)
+    period = 10, tolerance = .Machine$double.eps^0.5,
+    CritvalTable = NULL, rescale = NULL, border = NULL, ...)
 
-monitor(obj, data=NULL, verbose=TRUE)
+monitor(obj, data = NULL, verbose = TRUE)
 }
 \arguments{
   \item{formula}{a symbolic description for the model to be tested.}
@@ -90,9 +90,14 @@ monitor(obj, data=NULL, verbose=TRUE)
 }
 \seealso{\code{\link{plot.mefp}}, \code{\link{boundary.mefp}}}
 \references{
-  Friedrich Leisch, Kurt Hornik, and Chung-Ming Kuan. Monitoring
-  structural changes with the generalized fluctuation test.
-  Econometric Theory, 16:835-854, 2000.
+  Leisch F., Hornik K., Kuan C.-M. (2000), Monitoring
+  Structural Changes with the Generalized Fluctuation Test,
+  \emph{Econometric Theory}, \bold{16}, 835-854.
+
+  Zeileis A., Leisch F., Kleiber C., Hornik K. (2003), Monitoring Structural Change
+  in Dynamic Econometric Models, Report 64, SFB "Adaptive Information Systems and
+  Modelling in Economics and Management Science", Vienna University of Economics,
+  \url{http://www.wu-wien.ac.at/am/reports.htm#64}.
 }
 \examples{
 df1 <- data.frame(y=rnorm(300))

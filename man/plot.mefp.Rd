@@ -9,8 +9,8 @@
   corresponding to the significance level of the monitoring procedure.
 }
 \usage{
-\method{plot}{mefp}(x, boundary=TRUE, functional="max", main=NULL,
-    ylab="empirical fluctuation process", ylim=NULL, ...)
+\method{plot}{mefp}(x, boundary = TRUE, functional = "max", main = NULL,
+    ylab = "empirical fluctuation process", ylim = NULL, ...)
 }
 \arguments{
   \item{x}{an object of class \code{"mefp"}.}
