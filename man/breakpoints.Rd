@@ -182,7 +182,7 @@ Zeileis A., Kleiber C., Krämer W., Hornik K. (2003), Testing and Dating of
 }
 
 \examples{
-require(ts)
+if(! "package:stats" \%in\% search()) library(ts)
 
 ## Nile data with one breakpoint: the annual flows drop in 1898
 ## because the first Ashwan dam was built

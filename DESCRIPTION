@@ -1,10 +1,10 @@
 Package: strucchange
-Version: 1.1-1
-Date: 2003-11-21
+Version: 1.1-2
+Date: 2004-01-05
 Title: Testing for Structural Change
 Author: Achim Zeileis, Friedrich Leisch, Bruce Hansen,
         Kurt Hornik, Christian Kleiber, Andrea Peters
-Maintainer: Achim Zeileis <zeileis@ci.tuwien.ac.at>
+Maintainer: Achim Zeileis <Achim.Zeileis@wu-wien.ac.at>
 Description: Testing, dating and monitoring of structural change in
              linear regression relationships.
              strucchange features tests/methods from the generalized
@@ -17,5 +17,5 @@ Description: Testing, dating and monitoring of structural change in
              Finally, the breakpoints in regression models with structural
              changes can be estimated together with confidence intervals.
              Emphasis is always given to methods for visualizing the data.
-Depends: R (>= 1.4.0)
+Depends: R (>= 1.5.0)
 License: GPL

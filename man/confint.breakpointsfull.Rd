@@ -67,7 +67,7 @@ Bai J., Perron P. (2003), Computation and Analysis of Multiple Structural Change
 \seealso{\code{\link{breakpoints}}}
 
 \examples{
-require(ts)
+if(! "package:stats" \%in\% search()) library(ts)
 
 ## Nile data with one breakpoint: the annual flows drop in 1898
 ## because the first Ashwan dam was built

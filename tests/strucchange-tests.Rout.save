@@ -13,11 +13,8 @@ Type `demo()' for some demos, `help()' for on-line help, or
 `help.start()' for a HTML browser interface to help.
 Type `q()' to quit R.
 
-> require(strucchange)
-Loading required package: strucchange 
-[1] TRUE
-> require(ts)
-[1] TRUE
+> library(strucchange)
+> if(! "package:stats" %in% search()) library(ts)
 > 
 > ## Nile data
 > data(Nile)

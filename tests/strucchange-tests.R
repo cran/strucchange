@@ -1,5 +1,5 @@
-require(strucchange)
-require(ts)
+library(strucchange)
+if(! "package:stats" %in% search()) library(ts)
 
 ## Nile data
 data(Nile)

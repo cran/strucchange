@@ -57,7 +57,7 @@ tests, \emph{Journal of Business & Economic Statistics}, \bold{15}, 60-67. }
 \code{\link{boundary.Fstats}}}
 
 \examples{
-require(ts)
+if(! "package:stats" \%in\% search()) library(ts)
 
 ## Nile data with one breakpoint: the annual flows drop in 1898
 ## because the first Ashwan dam was built

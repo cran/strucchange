@@ -7,7 +7,7 @@ root.matrix <- function(X)
         if(any(X.eigen$values < 0)) stop("matrix is not positive semidefinite")
         sqomega <- sqrt(diag(X.eigen$values))
         V <- X.eigen$vectors
-        return(V%*%sqomega%*%t(V))
+        return(V %*% sqomega %*% t(V))
     }
 }
 
@@ -29,9 +29,8 @@ covHC <- function(formula, type = c("HC2", "const", "HC", "HC1", "HC3"), data = 
   type <- match.arg(type)
 
   if( type == "const") {
-    V <- sigma2 * Q1 }
-  else
-  {
+    V <- sigma2 * Q1
+  } else {
     if(type == "HC2")
     {
       diaghat <- 1 - diag(X %*% Q1 %*% t(X))
@@ -43,10 +42,10 @@ covHC <- function(formula, type = c("HC2", "const", "HC", "HC1", "HC3"), data = 
       res <- res/diaghat
       Xu <- as.vector(t(X) %*% res)
     }
-    VX <- apply(X, 2, function(x) x * res)
-    if(type %in% c("HC", "HC1", "HC2")) {V <- Q1 %*% t(VX) %*% VX %*% Q1}
+    VX <- res * X
+    if(type %in% c("HC", "HC1", "HC2")) { V <- crossprod(crossprod(t(VX), Q1)) }
     if(type == "HC1") {V <- V * (n/(n-k))}
-    if(type == "HC3") {V <- Q1 %*% (t(VX) %*% VX - (outer(Xu,Xu) /n)) %*% Q1 * (n-1)/n}
+    if(type == "HC3") {V <- Q1 %*% (crossprod(VX) - (outer(Xu,Xu) /n)) %*% Q1 * (n-1)/n}
   }
   return(V)
 }

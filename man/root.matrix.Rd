@@ -1,6 +1,5 @@
 \name{root.matrix}
 \alias{root.matrix}
-\alias{solveCrossprod}
 \title{Root of a Matrix}
 \description{Computes the root of a symmetric and positive semidefinite matrix.}
 \usage{

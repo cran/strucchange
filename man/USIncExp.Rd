@@ -40,7 +40,7 @@ legend(1960, max(USIncExp), c("income", "expenditures"),
 ###################################################
 library(strucchange)
 data(USIncExp)
-library(ts)
+if(! "package:stats" \%in\% search()) library(ts)
 USIncExp2 <- window(USIncExp, start = c(1985,12))
 
 
