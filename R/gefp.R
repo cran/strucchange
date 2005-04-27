@@ -12,9 +12,9 @@ gefp <- function(...,
       else fm <- do.call("fit", c(..., fitArgs, list(data = data)))
   }
     
-  psi <- as.matrix(scores(fm))
-  n <- nrow(psi)
-  k <- ncol(psi)
+  psi <- scores(fm)
+  n <- NROW(psi)
+  k <- NCOL(psi)
 
   if(!is.null(order.by))
   {
@@ -57,6 +57,8 @@ gefp <- function(...,
           } else z <- index/n
     order.name <- "Time"
   }
+  
+  psi <- as.matrix(psi)
 
   if(inherits(z, "POSIXt"))
     z <- c(z[1] + as.numeric(difftime(z[1], z[2], units = "secs")), z)

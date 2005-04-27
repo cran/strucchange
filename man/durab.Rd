@@ -22,17 +22,16 @@ see Hansen (2001).}
 \references{
 Hansen B. (2001), The New Econometrics of Structural Change:
 Dating Breaks in U.S. Labor Productivity,
-\emph{Journal of Economic Perspectives}, \bold{15}, 117-128.
+\emph{Journal of Economic Perspectives}, \bold{15}, 117--128.
 
-Zeileis A., Leisch F., Kleiber C., Hornik K. (2002), Monitoring
+Zeileis A., Leisch F., Kleiber C., Hornik K. (2005), Monitoring
 Structural Change in Dynamic Econometric Models,
-Report 64, SFB "Adaptive Information Systems and Modelling in Economics
-and Management Science", Vienna University of Economics,
-\url{http://www.wu-wien.ac.at/am/reports.htm#78}.}
+\emph{Journal of Applied Econometrics}, \bold{20}, 99--121.
+}
 
 \examples{
 data(durab)
-## use AR(1) model as in Hansen (2001) and Zeileis et al. (2002)
+## use AR(1) model as in Hansen (2001) and Zeileis et al. (2005)
 durab.model <- y ~ lag
 
 ## historical tests

@@ -92,11 +92,11 @@ monitor(obj, data = NULL, verbose = TRUE)
 \references{
   Leisch F., Hornik K., Kuan C.-M. (2000), Monitoring
   Structural Changes with the Generalized Fluctuation Test,
-  \emph{Econometric Theory}, \bold{16}, 835-854.
+  \emph{Econometric Theory}, \bold{16}, 835--854.
 
-  Zeileis A., Leisch F., Kleiber C., Hornik K. (2004), Monitoring Structural Change
-  in Dynamic Econometric Models, \emph{Journal of Applied Econometrics}, 
-  forthcoming. \url{http://www.ci.tuwien.ac.at/~zeileis/papers/Zeileis+Leisch+Kleiber-2003.pdf}.
+  Zeileis A., Leisch F., Kleiber C., Hornik K. (2005), Monitoring
+  Structural Change in Dynamic Econometric Models,
+  \emph{Journal of Applied Econometrics}, \bold{20}, 99--121.
 }
 \examples{
 df1 <- data.frame(y=rnorm(300))

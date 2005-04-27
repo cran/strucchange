@@ -67,7 +67,12 @@ and Management Science", Vienna University of Economics,
 Zeileis A. (2004), Implementing a Class of Structural Change Tests: An
 Econometric Computing Approach. Report 7, Department of Statistics and Mathematics,
 Wirtschaftsuniversität Wien, Research Report Series,
-\url{http://epub.wu-wien.ac.at/dyn/virlib/wp/mediate/epub-wu-01_750.pdf?ID=epub-wu-01_750}.
+\url{http://epub.wu-wien.ac.at/dyn/openURL?id=oai:epub.wu-wien.ac.at:epub-wu-01_750}.
+
+Zeileis A. (2004), A Unified Approach to Structural Change Tests Based on
+F Statistics, OLS Residuals, and ML Scores. Report 13, Department of Statistics
+and Mathematics, Wirtschaftsuniversität Wien, Research Report Series,
+\url{http://epub.wu-wien.ac.at/dyn/openURL?id=oai:epub.wu-wien.ac.at:epub-wu-01_7d1}.
 }
 
 \seealso{\code{\link{efp}}, \code{\link{efpFunctional}}}

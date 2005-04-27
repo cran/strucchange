@@ -59,15 +59,20 @@ corresponding test. The Chow test and the Nyblom-Hansen test are available expli
 \seealso{\code{\link{sctest.efp}}, \code{\link{sctest.Fstats}}}
 
 \examples{
-## Load dataset "nhtemp" with average yearly temperatures in New Haven
-data(nhtemp)
-## plot the data
-plot(nhtemp)
+## Example 7.4 from Greene (1993), "Econometric Analysis"
+## Chow test on Longley data
+data(longley)
+sctest(Employed ~ Year + GNP.deflator + GNP + Armed.Forces, data = longley,
+  type = "Chow", point = 7)
 
-## test the model null hypothesis that the average temperature remains
-## constant over the years with the Standard CUSUM test
-sctest(nhtemp ~ 1)
-## with the Chow test (under the alternative that there is a change 1941)
-sctest(nhtemp ~ 1, type = "Chow", point = c(1941,1))
+## which is equivalent to segmenting the regression via
+fac <- factor(c(rep(1, 7), rep(2, 9)))
+fm0 <- lm(Employed ~ Year + GNP.deflator + GNP + Armed.Forces, data = longley)
+fm1 <- lm(Employed ~ fac/(Year + GNP.deflator + GNP + Armed.Forces), data = longley)
+anova(fm0, fm1)
+
+## estimates from Table 7.5 in Greene (1993)
+summary(fm0)
+summary(fm1)
 }
 \keyword{htest}

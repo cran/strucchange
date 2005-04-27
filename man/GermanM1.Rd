@@ -43,7 +43,7 @@ stability of German M1 money demand: they find a stable regression relation
 for the time before the monetary union on 1990-06-01 but a clear structural
 instability afterwards.
 
-Zeileis et al. (2002) use a model with
+Zeileis et al. (2005) use a model with
 \code{ecm.res} instead of \code{m1}, \code{y1} and \code{R1}, which
 leads to equivalent results in the history period but slightly
 different results in the monitoring period. The reason for the
@@ -62,17 +62,16 @@ Lütkepohl H., Teräsvirta T., Wolters J. (1999), Investigating
 Stability and Linearity of a German M1 Money Demand Function,
 \emph{Journal of Applied Econometrics}, \bold{14}, 511-525.
 
-Zeileis A., Leisch F., Kleiber C., Hornik K. (2002), Monitoring
+Zeileis A., Leisch F., Kleiber C., Hornik K. (2005), Monitoring
 Structural Change in Dynamic Econometric Models,
-Report 64, SFB "Adaptive Information Systems and Modelling in Economics
-and Management Science", Vienna University of Economics,
-\url{http://www.wu-wien.ac.at/am/reports.htm#78}.}
+\emph{Journal of Applied Econometrics}, \bold{20}, 99--121.
+}
 
 \examples{
 data(GermanM1)
 ## Lütkepohl et al. (1999) use the following model
 LTW.model <- dm ~ dy2 + dR + dR1 + dp + m1 + y1 + R1 + season
-## Zeileis et al. (2002) use
+## Zeileis et al. (2005) use
 M1.model <- dm ~ dy2 + dR + dR1 + dp + ecm.res + season
 
 

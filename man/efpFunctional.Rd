@@ -11,6 +11,8 @@
 \alias{rangeBB}
 \alias{rangeBMI}
 \alias{rangeBBI}
+\alias{supLM}
+\encoding{latin1}
 \title{Functionals for Fluctuation Processes}
 \description{Computes an object for aggregating, plotting and testing
 empirical fluctuation processes.}
@@ -62,6 +64,12 @@ efpFunctional(functional = list(comp = function(x) max(abs(x)), time = max),
     \item{plotProcess}{should take two arguments: an object of class \code{"gefp"}
       and \code{alpha} the level of significance for any boundaries or critical
       values to be visualized.}}
+
+  \code{efpFunctional}s for many frequently used test statistics are provided:
+  \code{maxBB} for the double maximum function, \code{meanL2BB} for the Cramer-von Mises
+  statistic, or \code{rangeBB} for the range statistic. Furthermore, \code{supLM}
+  generates an object of class \code{"efpFunctional"} for a certain trimming parameter,
+  see the examples. More details can be found in Zeileis (2004).  
 }
 
 \value{
@@ -78,6 +86,16 @@ Zeileis A., Hornik K. (2003), Generalized M-Fluctuation Tests for Parameter
 Instability, Report 80, SFB "Adaptive Information Systems and Modelling in Economics
 and Management Science", Vienna University of Economics,
 \url{http://www.wu-wien.ac.at/am/reports.htm#80}.
+
+Zeileis A. (2004), Implementing a Class of Structural Change Tests: An
+Econometric Computing Approach. Report 7, Department of Statistics and Mathematics,
+Wirtschaftsuniversität Wien, Research Report Series,
+\url{http://epub.wu-wien.ac.at/dyn/openURL?id=oai:epub.wu-wien.ac.at:epub-wu-01_750}.
+
+Zeileis A. (2005), A Unified Approach to Structural Change Tests Based on
+F Statistics, OLS Residuals, and ML Scores. Report 13, Department of Statistics
+and Mathematics, Wirtschaftsuniversität Wien, Research Report Series,
+\url{http://epub.wu-wien.ac.at/dyn/openURL?id=oai:epub.wu-wien.ac.at:epub-wu-01_7d1}.
 }
 
 \seealso{\code{\link{efp}}, \code{\link{efpFunctional}}}
@@ -92,5 +110,37 @@ if("package:sandwich" \%in\% search() || require(sandwich)) {
   gcus
   sctest(gcus, functional = meanL2BB)
 }
+
+y <- rnorm(1000)
+x1 <- runif(1000)
+x2 <- runif(1000)
+
+## supWald statistic computed by Fstats()
+fs <- Fstats(y ~ x1 + x2, from = 0.1)
+plot(fs)
+sctest(fs)
+
+## compare with supLM statistic
+scus <- gefp(y ~ x1 + x2, fit = lm)
+plot(scus, functional = supLM(0.1))
+sctest(scus, functional = supLM(0.1))
+
+## seatbelt data
+data(UKDriverDeaths)
+seatbelt <- log10(UKDriverDeaths)
+seatbelt <- cbind(seatbelt, lag(seatbelt, k = -1), lag(seatbelt, k = -12))
+colnames(seatbelt) <- c("y", "ylag1", "ylag12")
+seatbelt <- window(seatbelt, start = c(1970, 1), end = c(1984,12))
+
+scus.seat <- gefp(y ~ ylag1 + ylag12, data = seatbelt)
+
+## double maximum test
+plot(scus.seat)
+## range test
+plot(scus.seat, functional = rangeBB)
+## Cramer-von Mises statistic (Nyblom-Hansen test)
+plot(scus.seat, functional = meanL2BB)
+## supLM test
+plot(scus.seat, functional = supLM(0.1))
 }
 \keyword{regression}
