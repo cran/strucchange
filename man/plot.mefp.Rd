@@ -10,7 +10,7 @@
 }
 \usage{
 \method{plot}{mefp}(x, boundary = TRUE, functional = "max", main = NULL,
-    ylab = "empirical fluctuation process", ylim = NULL, ...)
+    ylab = "Empirical fluctuation process", ylim = NULL, ...)
 }
 \arguments{
   \item{x}{an object of class \code{"mefp"}.}

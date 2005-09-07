@@ -29,6 +29,8 @@ breakpoints.formula <- function(formula, h = 0.15, breaks = NULL,
   if(h < 1) h <- floor(n*h)
   if(h <= k)
     stop("minimum segment size must be greater than the number of regressors")
+  if(h > floor(n/2))
+    stop("minimum segment size must be smaller than half the number of observations")
   if(is.null(breaks)) breaks <- ceiling(n/h) - 2
 
   ## compute ith row of the RSS diagonal matrix, i.e,
@@ -108,7 +110,7 @@ breakpoints.formula <- function(formula, h = 0.15, breaks = NULL,
       if(missing(data)) data <- env
       orig.y <- eval(attr(terms(formula), "variables")[[2]], data, env)
       if(is.ts(orig.y)) datatsp <- tsp(orig.y)
-        else datatsp <- c(0, 1, n)
+        else datatsp <- c(1/n, 1, n)
   }
 
   RVAL <- list(breakpoints = opt,
@@ -256,7 +258,10 @@ summary.breakpointsfull <- function(object, breaks = NULL,
     bd[1,pos] <- breakdates(bpm, format.times = format.times)
     RSS[m+1] <- bpm$RSS
     BIC[m+1] <- AIC(bpm, k = log(n))
-  }}
+  }} else {
+    bp <- as.matrix(bp)
+    bd <- as.matrix(bd)
+  }
   rownames(bp) <- as.character(1:breaks)
   colnames(bp) <- rep("", breaks)
   rownames(bd) <- as.character(1:breaks)
@@ -392,6 +397,8 @@ confint.breakpointsfull <- function(object, parm = NULL, level = 0.95, breaks = 
   myprod <- function(delta, mat) as.vector(crossprod(delta, mat) %*% delta)
 
   bp <- breakpoints(object, breaks = breaks)$breakpoints
+  if(any(is.na(bp))) stop("cannot compute confidence interval when `breaks = 0'")
+  
   nbp <- length(bp)
   upper <- rep(0, nbp)
   lower <- rep(0, nbp)
@@ -468,19 +475,23 @@ confint.breakpointsfull <- function(object, parm = NULL, level = 0.95, breaks = 
       else phi2 <- sqrt(sigma2)
  
     p0 <- pargmaxV(0, phi1 = phi1, phi2 = phi2, xi = xi)
-    if(p0 < a2 || p0 > (1-a2))
-      stop(paste("Confidence interval cannot be computed: P(argmax V <= 0) =", round(p0, digits = 4)))
-    ub <- lb <- 0
-    while(pargmaxV(ub, phi1 = phi1, phi2 = phi2, xi = xi) < (1 - a2)) ub <- ub + 1000
-    while(pargmaxV(lb, phi1 = phi1, phi2 = phi2, xi = xi) > a2) lb <- lb - 1000
+    if(is.nan(p0) || p0 < a2 || p0 > (1-a2)) {
+      warning(paste("Confidence interval", as.integer(i-1),
+        "cannot be computed: P(argmax V <= 0) =", round(p0, digits = 4)))
+      upper[i-1] <- NA
+      lower[i-1] <- NA
+    } else {
+      ub <- lb <- 0
+      while(pargmaxV(ub, phi1 = phi1, phi2 = phi2, xi = xi) < (1 - a2)) ub <- ub + 1000
+      while(pargmaxV(lb, phi1 = phi1, phi2 = phi2, xi = xi) > a2) lb <- lb - 1000
 
-    upper[i-1] <- uniroot(myfun, c(0, ub), level = (1-a2), xi = xi, phi1 = phi1, phi2 = phi2)$root
-    lower[i-1] <- uniroot(myfun, c(lb, 0), level = a2, xi = xi, phi1 = phi1, phi2 = phi2)$root
+      upper[i-1] <- uniroot(myfun, c(0, ub), level = (1-a2), xi = xi, phi1 = phi1, phi2 = phi2)$root
+      lower[i-1] <- uniroot(myfun, c(lb, 0), level = a2, xi = xi, phi1 = phi1, phi2 = phi2)$root
     
-    upper[i-1] <- upper[i-1] * phi1^2 / Qprod1
-    lower[i-1] <- lower[i-1] * phi1^2 / Qprod1
+      upper[i-1] <- upper[i-1] * phi1^2 / Qprod1
+      lower[i-1] <- lower[i-1] * phi1^2 / Qprod1
+    }
   }
-  
   bp <- bp[-c(1, nbp+2)]
   bp <- cbind(bp - ceiling(upper), bp, bp - floor(lower))
   #V.BP# bp <- cbind(floor(bp - upper) - 1, bp, floor(bp - lower) + 1)
@@ -608,6 +619,8 @@ fitted.breakpointsfull <- function(object, breaks = NULL, ...)
     y2 <- y[(bp[i]+1):bp[i+1]]
     rval <- c(rval, lm.fit(X2, y2)$fitted.values)
   }
+  rval <- ts(as.vector(rval))
+  tsp(rval) <- object$datatsp
   
   return(rval)
 }
@@ -633,7 +646,9 @@ residuals.breakpointsfull <- function(object, breaks = NULL, ...)
     y2 <- y[(bp[i]+1):bp[i+1]]
     rval <- c(rval, lm.fit(X2, y2)$residuals)
   }
-  
+  rval <- ts(as.vector(rval))
+  tsp(rval) <- object$datatsp
+    
   return(rval)
 }
 

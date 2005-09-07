@@ -30,7 +30,7 @@ Loading required package: sandwich
 > Nile.me <- efp(Nile ~ 1, type = "ME", h = 0.5)
 > sctest(Nile.rcus)
 
-	Standard CUSUM test
+	Recursive CUSUM test
 
 data:  Nile.rcus 
 S = 2.0669, p-value = 7.487e-08
@@ -157,7 +157,7 @@ Corresponding to breakdates:
 > seat.me <- efp(y ~ ylag1 + ylag12, data = seatbelt, type = "ME", h = 0.5)
 > sctest(seat.rcus)
 
-	Standard CUSUM test
+	Recursive CUSUM test
 
 data:  seat.rcus 
 S = 1.1599, p-value = 0.008572

@@ -154,7 +154,7 @@ sctest.Fstats <- function(x, type = c("supF", "aveF", "expF"), asymptotic = FALS
     if((x$par == 1) & !(type == "expF") & !asymptotic)
     {
         METHOD <- "Chow test"
-        PVAL <- 1 - pf(STATISTIC, k, (n-2*k))
+        PVAL <- 1 - pf(STATISTIC, x$nreg, (x$nobs-2*x$nreg))
     }
     else
         PVAL <- pvalue.Fstats(STATISTIC, type = type,

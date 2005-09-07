@@ -17,7 +17,7 @@ efp(formula, data, type = , h = 0.15,
      default the variables are taken from the environment which \code{efp} is
      called from.}
   \item{type}{specifies which type of fluctuation process will be
-     computed. For details see below.}
+     computed, the default is \code{"Rec-CUSUM"}. For details see below.}
   \item{h}{a numeric from interval (0,1) sepcifying the bandwidth. determins the
      size of the data window relative to sample size (for MOSUM and ME processes
      only).}

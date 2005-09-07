@@ -47,7 +47,7 @@ efp <- function(formula, data = list(),
 
     switch(type,
 
-           ## empirical process of Standard CUSUM model
+           ## empirical process of Recursive CUSUM model
 
            "Rec-CUSUM" = {
                w <- recresid(X, y)
@@ -64,7 +64,7 @@ efp <- function(formula, data = list(),
                    process <- ts(process, end = end(orig.y),
                                  frequency = frequency(orig.y))
                }
-               retval$type.name <- "Standard CUSUM test"
+               retval$type.name <- "Recursive CUSUM test"
                retval$lim.process <- "Brownian motion"
            },
 
@@ -336,7 +336,7 @@ efp <- function(formula, data = list(),
 
 plot.efp <- function(x, alpha = 0.05, alt.boundary = FALSE, boundary = TRUE,
                      functional = "max", main = NULL,  ylim = NULL,
-                     ylab = "empirical fluctuation process", ...)
+                     ylab = "Empirical fluctuation process", ...)
 {
     if(is.null(functional)) fun <- "max"
       else fun <- match.arg(functional, c("max", "range", "maxL2", "meanL2"))

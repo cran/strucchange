@@ -163,13 +163,14 @@
   elements:
   \describe{
    \item{breakpoints}{the breakpoints of the optimal partition with the
-     number of breaks specified,}
+     number of breaks specified (set to \code{NA} if the optimal 1-segment
+     solution is reported),}
    \item{RSS}{the associated RSS,}
    \item{nobs}{the number of observations,}
    \item{nreg}{the number of regressors,}
    \item{call}{the function call,}
    \item{datatsp}{the time series properties \code{tsp} of the data,
-     if any, \code{c(0, 1, nobs)} otherwise.}
+     if any, \code{c(1/nobs, 1, nobs)} otherwise.}
   }
 
   If applied to a \code{formula} as first argument, \code{breakpoints} returns an object of class

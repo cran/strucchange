@@ -341,7 +341,7 @@ print.mefp <- function(x, ...){
 }
 
 plot.mefp <- function(x, boundary=TRUE, functional="max", main=NULL,
-                      ylab="empirical fluctuation process", ylim=NULL, ...){
+                      ylab="Empirical fluctuation process", ylim=NULL, ...){
 
     if(x$last>x$histsize){
         proc <- rbind(as.matrix(x$efpprocess),

@@ -13,7 +13,8 @@
 \arguments{
   \item{formula}{a formula describing the model to be tested.}
   \item{type}{a character string specifying the structural change test that ist
-     to be performed. Besides the tests types described in \code{\link{efp}}
+     to be performed, the default is \code{"Rec-CUSUM"}. Besides the test
+     types described in \code{\link{efp}}
      and \code{\link{sctest.Fstats}}. The Chow test and the Nyblom-Hansen test
      can be performed by setting type to \code{"Chow"} or \code{"Nyblom-Hansen"},
      respectively.}

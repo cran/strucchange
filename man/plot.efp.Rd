@@ -7,7 +7,7 @@
 \usage{
 \method{plot}{efp}(x, alpha = 0.05, alt.boundary = FALSE, boundary = TRUE,
     functional = "max", main = NULL,  ylim = NULL,
-    ylab = "empirical fluctuation process", ...)
+    ylab = "Empirical fluctuation process", ...)
 \method{lines}{efp}(x, functional = "max", ...)
 }
 

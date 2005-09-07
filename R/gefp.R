@@ -295,7 +295,7 @@ efpFunctional <- function(functional = list(comp = function(x) max(abs(x)), time
             if(aggregate) {
 	      proc <- zoo(apply(as.matrix(x$process), 1, functional[[1]]), time(x))
 	    
-              if(is.null(ylab)) ylab <- "empirical fluctuation process"
+              if(is.null(ylab)) ylab <- "Empirical fluctuation process"
 	      if(is.null(ylim)) ylim <- range(c(range(proc), range(bound)))
 	    
 	      plot(proc, xlab = xlab, ylab = ylab, main = main, ylim = ylim, ...)
@@ -303,7 +303,7 @@ efpFunctional <- function(functional = list(comp = function(x) max(abs(x)), time
 	      lines(bound, col = 2)	    
 	    } else {
 	      if(is.null(ylim) & NCOL(x$process) < 2) ylim <- range(c(range(x$process), range(bound), range(-bound)))
-	      if(is.null(ylab) & NCOL(x$process) < 2) ylab <- "empirical fluctuation process"
+	      if(is.null(ylab) & NCOL(x$process) < 2) ylab <- "Empirical fluctuation process"
 
 	      panel <- function(x, ...)
 	      {
@@ -339,7 +339,7 @@ efpFunctional <- function(functional = list(comp = function(x) max(abs(x)), time
 	    if(aggregate) {
 	      proc <- zoo(apply(as.matrix(x$process), 1, functional[[1]]), time(x))
 	    
-	      if(is.null(ylab)) ylab <- "empirical fluctuation process"
+	      if(is.null(ylab)) ylab <- "Empirical fluctuation process"
 	      if(is.null(ylim)) ylim <- range(c(range(proc), range(bound), range(stat)))
 	    
 	      plot(proc, xlab = xlab, ylab = ylab, main = main, ylim = ylim, ...)
