@@ -1,5 +1,10 @@
 pvalue.Fstats <- function(x, type = c("supF", "aveF", "expF"), k, lambda)
 {
+  if(k > 40) {
+    k <- 40
+    warning("no p-values available for k > 40 regressors, k = 40 used")
+  }
+
   switch(match.arg(type),
   supF = {
     beta <- get("sc.beta.sup")
@@ -10,6 +15,7 @@ pvalue.Fstats <- function(x, type = c("supF", "aveF", "expF"), k, lambda)
   expF = {
     beta <- get("sc.beta.exp")
   })
+
   m <- ncol(beta)-1
   if(lambda<1) tau <- lambda
   else tau <- 1/(1+sqrt(lambda))

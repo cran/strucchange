@@ -205,6 +205,7 @@ breakfactor <- function(obj, breaks = NULL, labels = NULL, ...)
 {
   if("breakpointsfull" %in% class(obj)) obj <- breakpoints(obj, breaks = breaks)
   breaks <- obj$breakpoints
+  if(all(is.na(breaks))) return(factor(rep("segment1", obj$nobs)))
   nbreaks <- length(breaks)
   fac <- rep(1:(nbreaks + 1), c(breaks[1], diff(c(breaks, obj$nobs))))
   if(is.null(labels)) labels <- paste("segment", 1:(nbreaks+1), sep = "")
@@ -380,7 +381,7 @@ pargmaxV <- function(x, xi = 1, phi1 = 1, phi2 = 1)
 }
 
 confint.breakpointsfull <- function(object, parm = NULL, level = 0.95, breaks = NULL,
-                                    het.reg = TRUE, het.err = TRUE, vcov = NULL, sandwich = TRUE, ...)
+                                    het.reg = TRUE, het.err = TRUE, vcov. = NULL, sandwich = TRUE, ...)
 {
   X <- object$X
   y <- object$y
@@ -408,15 +409,15 @@ confint.breakpointsfull <- function(object, parm = NULL, level = 0.95, breaks = 
   sigma1 <- sigma2 <- sum(res^2)/n
   Q1 <- Q2 <- crossprod(X)/n
 
-  if(is.null(vcov))
+  if(is.null(vcov.))
     Omega1 <- Omega2 <- sigma1 * Q1
   else {
     y.nb <- rowSums(X) + res
     fm <- lm(y.nb ~ 0 + X)
     if(sandwich) {
-      Omega1 <- Omega2 <- n * crossprod(Q1, vcov(fm)) %*% Q1
+      Omega1 <- Omega2 <- n * crossprod(Q1, vcov.(fm)) %*% Q1
     } else {
-      Omega1 <- Omega2 <- vcov(fm)
+      Omega1 <- Omega2 <- vcov.(fm)
     }
   }
 
@@ -429,11 +430,11 @@ confint.breakpointsfull <- function(object, parm = NULL, level = 0.95, breaks = 
   if(het.reg) Q2 <- crossprod(X2)/nrow(X2)
   if(het.err) {
     sigma2 <- sum(residuals(fm2)^2)/nrow(X2)
-    if(is.null(vcov))
+    if(is.null(vcov.))
       Omega2 <- sigma2 * Q2
     else {
-      if(sandwich) Omega2 <- nrow(X2) * crossprod(Q2, vcov(fm2)) %*% Q2
-        else Omega2 <- vcov(fm2)
+      if(sandwich) Omega2 <- nrow(X2) * crossprod(Q2, vcov.(fm2)) %*% Q2
+        else Omega2 <- vcov.(fm2)
     }
   }
 
@@ -455,11 +456,11 @@ confint.breakpointsfull <- function(object, parm = NULL, level = 0.95, breaks = 
     if(het.reg) Q2 <- crossprod(X2)/nrow(X2)
     if(het.err) {
       sigma2 <- sum(residuals(fm2)^2)/nrow(X2)
-      if(is.null(vcov))
+      if(is.null(vcov.))
         Omega2 <- sigma2 * Q2
       else {
-        if(sandwich) Omega2 <- nrow(X2) * crossprod(Q2, vcov(fm2)) %*% Q2
-          else Omega2 <- vcov(fm2)
+        if(sandwich) Omega2 <- nrow(X2) * crossprod(Q2, vcov.(fm2)) %*% Q2
+          else Omega2 <- vcov.(fm2)
       }
     }
         
@@ -469,9 +470,9 @@ confint.breakpointsfull <- function(object, parm = NULL, level = 0.95, breaks = 
     Qprod2 <- myprod(delta, Q2)
 
     if(het.reg) xi <- Qprod2/Qprod1
-    if(!is.null(vcov)) phi1 <- sqrt(Oprod1/Qprod1)
+    if(!is.null(vcov.)) phi1 <- sqrt(Oprod1/Qprod1)
       else phi1 <- sqrt(sigma1)
-    if(!is.null(vcov)) phi2 <- sqrt(Oprod2/Qprod2)
+    if(!is.null(vcov.)) phi2 <- sqrt(Oprod2/Qprod2)
       else phi2 <- sqrt(sigma2)
  
     p0 <- pargmaxV(0, phi1 = phi1, phi2 = phi2, xi = xi)
@@ -653,7 +654,7 @@ residuals.breakpointsfull <- function(object, breaks = NULL, ...)
 }
 
 vcov.breakpointsfull <- function(object, breaks = NULL, names = NULL, het.reg = TRUE,
-                                 het.err = TRUE, vcov = NULL, sandwich = TRUE, ...)
+                                 het.err = TRUE, vcov. = NULL, sandwich = TRUE, ...)
 {
   X <- object$X
   y <- object$y
@@ -686,16 +687,16 @@ vcov.breakpointsfull <- function(object, breaks = NULL, names = NULL, het.reg = 
   sigma2 <- sum(res^2)/n
   Q2 <- crossprod(X)/n
 
-  if(is.null(vcov))
+  if(is.null(vcov.))
     Omega2 <- sigma2 * solve(Q2) / n
   else {
     y.nb <- rowSums(X) + res
     fm <- lm(y.nb ~ 0 + X)
     if(sandwich) {
-      Omega2 <- vcov(fm)
+      Omega2 <- vcov.(fm)
     } else {
       modelv <- summary(fm)$cov.unscaled
-      Omega2 <- n * modelv %*% vcov(fm) %*% modelv
+      Omega2 <- n * modelv %*% vcov.(fm) %*% modelv
     }
   }
   rownames(Omega2) <- colnames(Omega2) <- colnames(X)
@@ -711,14 +712,14 @@ vcov.breakpointsfull <- function(object, breaks = NULL, names = NULL, het.reg = 
     if(het.reg) Q2 <- crossprod(X2)/nrow(X2)
     if(het.err) {
       sigma2 <- sum(residuals(fm2)^2)/nrow(X2)
-      if(is.null(vcov))
+      if(is.null(vcov.))
         Omega2 <- sigma2 * solve(Q2) / nrow(X2)
       else {
         if(sandwich) {
-          Omega2 <- vcov(fm2)
+          Omega2 <- vcov.(fm2)
         } else {
           modelv <- summary(fm2)$cov.unscaled
-          Omega2 <- n * modelv %*% vcov(fm2) %*% modelv
+          Omega2 <- n * modelv %*% vcov.(fm2) %*% modelv
         }
       }
       rownames(Omega2) <- colnames(Omega2) <- colnames(X)
@@ -727,5 +728,12 @@ vcov.breakpointsfull <- function(object, breaks = NULL, names = NULL, het.reg = 
   }
     
   names(rval) <- names
+  return(rval)
+}
+
+df.residual.breakpointsfull <- function(object, ...)
+{
+  rval <- table(breakfactor(object, ...)) - object$nreg
+  names(rval) <- rownames(coef(object, ...))
   return(rval)
 }

@@ -8,7 +8,7 @@
 }
 \usage{
 \method{confint}{breakpointsfull}(object, parm = NULL, level = 0.95,
-    breaks = NULL, het.reg = TRUE, het.err = TRUE, vcov = NULL, sandwich = TRUE, ...)
+    breaks = NULL, het.reg = TRUE, het.err = TRUE, vcov. = NULL, sandwich = TRUE, ...)
 \method{lines}{confint.breakpoints}(x, col = 2, angle = 90, length = 0.05,
     code = 3, at = NULL, breakpoints = TRUE, ...)
 }
@@ -26,9 +26,9 @@
   \item{het.err}{logical. Should heterogenous errors be assumed? If set
     to \code{FALSE} the distribution of the errors is assumed to be
     homogenous over the segments.}
-  \item{vcov}{a function to extract the covariance matrix
+  \item{vcov.}{a function to extract the covariance matrix
      for the coefficients of a fitted model of class \code{"lm"}.}
-  \item{sandwich}{logical. Is the function \code{vcov} the sandwich
+  \item{sandwich}{logical. Is the function \code{vcov.} the sandwich
      estimator or only the middle part?}
   \item{x}{an object of class \code{"confint.breakpoints"} as returned by
     \code{confint}.}

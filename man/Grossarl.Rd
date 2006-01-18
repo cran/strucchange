@@ -2,21 +2,22 @@
 \alias{Grossarl}
 \docType{data}
 \encoding{latin1}
-\title{Marriages and Births in Grossarl}
-\usage{data(Grossarl)}
+\title{Marriages, Births and Deaths in Grossarl}
+\usage{data("Grossarl")}
 \description{
-Data about the number of marriages and illegitimate and legitimate
-births in the Austrian Alpine village Grossarl in the 18th and 19th
-century.
+Data about the number of marriages, illegitimate and legitimate
+births, and deaths in the Austrian Alpine village Grossarl during the
+18th and 19th century.
 }
 \format{
-\code{Grossarl} is a data frame containing 5 annual time series
+\code{Grossarl} is a data frame containing 6 annual time series
 (1700 - 1899), 3 factors coding policy interventions and 1 vector
 with the year (plain numeric).
  \describe{
     \item{marriages}{time series. Number of marriages,}
     \item{illegitimate}{time series. Number of illegitimate births,}
     \item{legitimate}{time series. Number of legitimate births,}
+    \item{legitimate}{time series. Number of deaths,}
     \item{fraction}{time series. Fraction of illegitimate births,}
     \item{lag.marriages}{time series. Number of marriages in the previous year,}
     \item{politics}{ordered factor coding 4 different political regimes,}
@@ -37,13 +38,12 @@ Especially
 during the archbishopric, moral interventions aimed at lowering
 the proportion of illegitimate baptisms. For details see the references.}
 
-\source{Parish registers provide the basic
-demographic series of baptisms (which is almost equivalent to births
-in the study area) and marriages. For
-more information see Veichtlbauer et al. (2002).}
+\source{Parish registers provide the basic demographic series of baptisms 
+and burials (which is almost equivalent to births and deaths in the study
+area) and marriages. For more information see Veichtlbauer et al. (2006).}
 
 \references{
-Veichtlbauer O., Hanser E., Zeileis A., Leisch F. (2002),
+Veichtlbauer O., Zeileis A., Leisch F. (2006),
 The Impact Of Policy Interventions on a Pre-Industrial
 Population System in the Austrian Alps, forthcoming.
 
@@ -56,23 +56,31 @@ A Structural Change Analysis, In R. Dutter (ed.),
 }
 
 \examples{
-data(Grossarl)
+data("Grossarl")
+
+## time series of births, deaths, marriages
+###########################################
+
+with(Grossarl, plot(cbind(deaths, illegitimate + legitimate, marriages),
+  plot.type = "single", col = grey(c(0.7, 0, 0)), lty = c(1, 1, 3),
+  lwd = 1.5, ylab = "annual Grossarl series"))
+legend("topright", c("deaths", "births", "marriages"), col = grey(c(0.7, 0, 0)),
+  lty = c(1, 1, 3), bty = "n")
 
 ## illegitimate births
 ######################
 ## lm + MOSUM
 plot(Grossarl$fraction)
 fm.min <- lm(fraction ~ politics, data = Grossarl)
-fm.max <- lm(fraction ~ politics + morals + nuptiality + lag.marriages,
-             data = Grossarl)
-fm.final <- step(fm.max)
-lines(ts(fitted(fm.min), start = 1700), col = 3)
-lines(ts(fitted(fm.final), start = 1700), col = 4)
+fm.ext <- lm(fraction ~ politics + morals + nuptiality + marriages,
+  data = Grossarl)
+lines(ts(fitted(fm.min), start = 1700), col = 2)
+lines(ts(fitted(fm.ext), start = 1700), col = 4)
 mos.min <- efp(fraction ~ politics, data = Grossarl, type = "OLS-MOSUM")
-mos.final <- efp(fraction ~ politics + morals + nuptiality, data = Grossarl,
-                 type = "OLS-MOSUM")
+mos.ext <- efp(fraction ~ politics + morals + nuptiality + marriages,
+  data = Grossarl, type = "OLS-MOSUM")
 plot(mos.min)
-lines(mos.final, lty = 2)
+lines(mos.ext, lty = 2)
 
 ## dating
 bp <- breakpoints(fraction ~ 1, data = Grossarl, h = 0.1)
@@ -81,7 +89,7 @@ summary(bp)
 plot(bp)
 plot(0:8, AIC(bp), type = "b")
 
-## probably use 5 (or maybe 6) breakpoints and compare with
+## probably use 5 or 6 breakpoints and compare with
 ## coding of the factors as used by us
 ##
 ## politics                   1803      1816 1850
@@ -92,13 +100,11 @@ plot(0:8, AIC(bp), type = "b")
 ## m = 6       1734 1754 1785           1821 1856 1878
 ##              6    2    5              1    4    3
 
-fm.bp <- lm(fraction ~ breakfactor(breakpoints(bp, breaks = 6)),
-            data = Grossarl)
-
+## fitted models
+coef(bp, breaks = 6)
 plot(Grossarl$fraction)
-lines(ts(fitted(fm.final), start = 1700), col = 3)
-lines(ts(fitted(fm.bp), start = 1700), col = 4)
-
+lines(fitted(bp, breaks = 6), col = 2)
+lines(ts(fitted(fm.ext), start = 1700), col = 4)
 
 
 ## marriages
@@ -106,14 +112,14 @@ lines(ts(fitted(fm.bp), start = 1700), col = 4)
 ## lm + MOSUM
 plot(Grossarl$marriages)
 fm.min <- lm(marriages ~ politics, data = Grossarl)
-fm.final <- lm(marriages ~ politics + morals + nuptiality, data = Grossarl)
-lines(ts(fitted(fm.min), start = 1700), col = 3)
-lines(ts(fitted(fm.final), start = 1700), col = 4)
+fm.ext <- lm(marriages ~ politics + morals + nuptiality, data = Grossarl)
+lines(ts(fitted(fm.min), start = 1700), col = 2)
+lines(ts(fitted(fm.ext), start = 1700), col = 4)
 mos.min <- efp(marriages ~ politics, data = Grossarl, type = "OLS-MOSUM")
-mos.final <- efp(marriages ~ politics + morals + nuptiality, data = Grossarl,
-                 type = "OLS-MOSUM")
+mos.ext <- efp(marriages ~ politics + morals + nuptiality, data = Grossarl,
+  type = "OLS-MOSUM")
 plot(mos.min)
-lines(mos.final, lty = 2)
+lines(mos.ext, lty = 2)
 
 ## dating
 bp <- breakpoints(marriages ~ 1, data = Grossarl, h = 0.1)
@@ -122,7 +128,7 @@ summary(bp)
 plot(bp)
 plot(0:8, AIC(bp), type = "b")
 
-## probably use 3 (or maybe 4) breakpoints and compare with
+## probably use 3 or 4 breakpoints and compare with
 ## coding of the factors as used by us
 ##
 ## politics                   1803      1816 1850
@@ -132,12 +138,12 @@ plot(0:8, AIC(bp), type = "b")
 ## m = 3       1738                     1813      1875
 ## m = 4       1738      1794           1814      1875
 ##              2         4              1         3
-fm.bp <- lm(marriages ~ breakfactor(breakpoints(bp, breaks = 4)),
-            data = Grossarl)
 
+## fitted models
+coef(bp, breaks = 4)
 plot(Grossarl$marriages)
-lines(ts(fitted(fm.final), start = 1700), col = 3)
-lines(ts(fitted(fm.bp), start = 1700), col = 4)
+lines(fitted(bp, breaks = 4), col = 2)
+lines(ts(fitted(fm.ext), start = 1700), col = 4)
 }
 
 \keyword{datasets}

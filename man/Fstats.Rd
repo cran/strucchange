@@ -4,7 +4,7 @@
 \title{F Statistics}
 \description{Computes a series of F statistics for a specified data window.}
 \usage{
-Fstats(formula, from = 0.15, to = NULL, data = list(), vcov = NULL)}
+Fstats(formula, from = 0.15, to = NULL, data = list(), vcov. = NULL)}
 \arguments{
  \item{formula}{a symbolic description for the model to be tested}
  \item{from, to}{numeric. If \code{from} is smaller than 1 they are
@@ -18,7 +18,7 @@ Fstats(formula, from = 0.15, to = NULL, data = list(), vcov = NULL)}
  \item{data}{an optional data frame containing the variables in the model. By
      default the variables are taken from the environment which \code{Fstats} is
      called from.}
-  \item{vcov}{a function to extract the covariance matrix
+  \item{vcov.}{a function to extract the covariance matrix
      for the coefficients of a fitted model of class \code{"lm"}.}
 }
 \details{For every potential change point in \code{from:to} a F statistic (Chow

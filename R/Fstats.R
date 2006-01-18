@@ -1,5 +1,4 @@
-Fstats <- function(formula, from = 0.15, to = NULL, data = list(),
-   vcov = NULL)
+Fstats <- function(formula, from = 0.15, to = NULL, data = list(), vcov. = NULL)
 {
   if(!inherits(formula, "formula")) {
     X <- if(is.matrix(formula$x))
@@ -73,7 +72,7 @@ Fstats <- function(formula, from = 0.15, to = NULL, data = list(),
     X1 <- as.matrix(X[(1:point[i]),])
     X2 <- as.matrix(X[((point[i]+1):n),])
 
-    if(is.null(vcov)) {
+    if(is.null(vcov.)) {
       fm1 <- lm.fit(X1,y[1:point[i]])
       fm2 <- lm.fit(X2,y[((point[i]+1):n)])
       u <- c(fm1$residuals, fm2$residuals)
@@ -85,13 +84,13 @@ Fstats <- function(formula, from = 0.15, to = NULL, data = list(),
       allX <- rbind(allX, cbind(X2, X2))
       fm2 <- lm(y ~ 0 + allX)
       beta2 <- coef(fm2)[-(1:k)]
-      V <- vcov(fm2)
+      V <- vcov.(fm2)
       stats[i] <- as.vector(t(beta2) %*% chol2inv(chol(V[-(1:k),-(1:k)])) %*% beta2)
      }
   }
 
   sup.point <- which.max(stats) + from - 1
-  if(is.null(vcov))
+  if(is.null(vcov.))
     min.RSS <- sume2/(1 + max(stats)/(n - 2*k))
   else
     min.RSS <- NA

@@ -14,6 +14,7 @@
 \alias{vcov.breakpointsfull}
 \alias{fitted.breakpointsfull}
 \alias{residuals.breakpointsfull}
+\alias{df.residual.breakpointsfull}
 \encoding{latin1}
 \title{Dating Breaks}
 
@@ -34,7 +35,7 @@
 \method{fitted}{breakpointsfull}(object, breaks = NULL, \dots)
 \method{residuals}{breakpointsfull}(object, breaks = NULL, \dots)
 \method{vcov}{breakpointsfull}(object, breaks = NULL, names = NULL,
-    het.reg = TRUE, het.err = TRUE, vcov = NULL, sandwich = TRUE, \dots)
+    het.reg = TRUE, het.err = TRUE, vcov. = NULL, sandwich = TRUE, \dots)
 }
 
 \arguments{
@@ -65,9 +66,9 @@
   \item{het.err}{logical. Should heterogenous errors be assumed? If set
     to \code{FALSE} the distribution of the errors is assumed to be
     homogenous over the segments.}
-  \item{vcov}{a function to extract the covariance matrix
+  \item{vcov.}{a function to extract the covariance matrix
      for the coefficients of a fitted model of class \code{"lm"}.}
-  \item{sandwich}{logical. Is the function \code{vcov} the sandwich
+  \item{sandwich}{logical. Is the function \code{vcov.} the sandwich
      estimator or only the middle part?}
 }
 

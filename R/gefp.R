@@ -3,6 +3,9 @@ gefp <- function(...,
   decorrelate = TRUE, sandwich = TRUE,
   order.by = NULL, fitArgs = NULL, parm = NULL, data = list())
 {
+  ## avoid name clashes of vcov argument and vcov() function
+  vcov. <- vcov
+
   if(is.null(fit)) {
     fm <- list(...)
     if(length(fm) > 1) warning("more than one argument supplied in `...', only the first is used")
@@ -67,14 +70,14 @@ gefp <- function(...,
 
   process <- psi/sqrt(n)
 
-  if(is.null(vcov))
+  if(is.null(vcov.))
     J12 <- root.matrix(crossprod(process))
   else {
     if(sandwich) {
       Q <- chol2inv(chol(summary(fm)$cov.unscaled))
-      J12 <- root.matrix((Q %*% vcov(fm, order.by = order.by, data = data) %*% Q)/n)
+      J12 <- root.matrix((Q %*% vcov.(fm, order.by = order.by, data = data) %*% Q)/n)
     } else {
-      J12 <- root.matrix(vcov(fm, order.by = order.by, data = data))
+      J12 <- root.matrix(vcov.(fm, order.by = order.by, data = data))
     }
   }
 
