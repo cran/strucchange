@@ -138,8 +138,8 @@ economic times series. Both time series are depicted in Figure
 \begin{figure}[htbp]
 \begin{center}
 <<data,fig=TRUE,height=4,width=6,echo=FALSE,results=hide>>=
-library(strucchange)
-data(USIncExp)
+library("strucchange")
+data("USIncExp")
 plot(USIncExp, plot.type = "single", col = 1:2, ylab = "billion US$")
 legend(1960, max(USIncExp), c("income", "expenditures"),
        lty = c(1,1), col = 1:2, bty = "n")
@@ -153,9 +153,8 @@ The data is
 available in the {\tt strucchange} package: it can be loaded and a
 suitable subset chosen by
 <<subset>>=
-library(strucchange)
-data(USIncExp)
-if(! "package:stats" %in% search()) library(ts)
+library("strucchange")
+data("USIncExp")
 USIncExp2 <- window(USIncExp, start = c(1985,12))
 @
 

@@ -1,7 +1,7 @@
 \name{PhillipsCurve}
 \alias{PhillipsCurve}
 \title{UK Phillips Curve Equation Data}
-\usage{data(PhillipsCurve)}
+\usage{data("PhillipsCurve")}
 \description{
 Macroeconomic time series from the United Kingdom with variables
 for estimating the Phillips curve equation.
@@ -35,7 +35,7 @@ Bai J., Perron P. (2003), Computation and Analysis of Multiple Structural Change
 
 \examples{
 ## load and plot data
-data(PhillipsCurve)
+data("PhillipsCurve")
 uk <- window(PhillipsCurve, start = 1948)
 plot(uk[, "dp"])
 

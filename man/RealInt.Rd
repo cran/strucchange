@@ -5,7 +5,7 @@
 US ex-post real interest rate: the three-month treasury bill
 deflated by the CPI inflation rate.
 }
-\usage{data(RealInt)}
+\usage{data("RealInt")}
 \format{
 A quarterly time series from 1961(1) to 1986(3).
 }
@@ -20,10 +20,8 @@ Bai J., Perron P. (2003), Computation and Analysis of Multiple Structural Change
 }
 
 \examples{
-if("package:sandwich" \%in\% search() || require(sandwich)) {
-
 ## load and plot data
-data(RealInt)
+data("RealInt")
 plot(RealInt)
 
 ## estimate breakpoints
@@ -52,7 +50,6 @@ confint(bp.ri, breaks = 3, vcov = vcov.ri)
 plot(RealInt)
 lines(as.vector(time(RealInt)), fitted(fm.ri), col = 4)
 lines(confint(bp.ri, breaks = 3, vcov = vcov.ri))
-}
 }
 
 \keyword{datasets}

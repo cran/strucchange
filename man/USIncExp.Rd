@@ -4,7 +4,7 @@
 \description{Personal income and personal
 consumption expenditures in the US between January 1959 and
 February 2001 (seasonally adjusted at annual rates).}
-\usage{data(USIncExp)}
+\usage{data("USIncExp")}
 \format{
  A multivariate monthly time series from 1959(1) to 2001(2) with variables
  \describe{
@@ -28,8 +28,8 @@ Regression Models.
 ###################################################
 ### chunk number 1: data
 ###################################################
-library(strucchange)
-data(USIncExp)
+library("strucchange")
+data("USIncExp")
 plot(USIncExp, plot.type = "single", col = 1:2, ylab = "billion US$")
 legend(1960, max(USIncExp), c("income", "expenditures"),
        lty = c(1,1), col = 1:2, bty = "n")
@@ -38,9 +38,8 @@ legend(1960, max(USIncExp), c("income", "expenditures"),
 ###################################################
 ### chunk number 2: subset
 ###################################################
-library(strucchange)
-data(USIncExp)
-if(! "package:stats" \%in\% search()) library(ts)
+library("strucchange")
+data("USIncExp")
 USIncExp2 <- window(USIncExp, start = c(1985,12))
 
 

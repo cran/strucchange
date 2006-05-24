@@ -1,7 +1,7 @@
 \name{durab}
 \alias{durab}
 \title{US Labor Productivity}
-\usage{data(durab)}
+\usage{data("durab")}
 \description{
 US labor productivity in the manufacturing/durables sector.
 }
@@ -30,7 +30,7 @@ Structural Change in Dynamic Econometric Models,
 }
 
 \examples{
-data(durab)
+data("durab")
 ## use AR(1) model as in Hansen (2001) and Zeileis et al. (2005)
 durab.model <- y ~ lag
 

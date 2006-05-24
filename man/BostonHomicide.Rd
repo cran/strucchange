@@ -1,7 +1,7 @@
 \name{BostonHomicide}
 \alias{BostonHomicide}
 \title{Youth Homicides in Boston}
-\usage{data(BostonHomicide)}
+\usage{data("BostonHomicide")}
 \description{
 Data about the number of youth homicides in Boston during the
 `Boston Gun Project'---a policing initiative aiming at lowering
@@ -51,7 +51,7 @@ Serious Youth Offenders, and a Use-Reduction Strategy, \emph{Law and Contemporar
 }
 
 \examples{
-data(BostonHomicide)
+data("BostonHomicide")
 attach(BostonHomicide)
 
 ## data from Table 1

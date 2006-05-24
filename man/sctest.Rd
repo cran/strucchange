@@ -62,7 +62,7 @@ corresponding test. The Chow test and the Nyblom-Hansen test are available expli
 \examples{
 ## Example 7.4 from Greene (1993), "Econometric Analysis"
 ## Chow test on Longley data
-data(longley)
+data("longley")
 sctest(Employed ~ Year + GNP.deflator + GNP + Armed.Forces, data = longley,
   type = "Chow", point = 7)
 

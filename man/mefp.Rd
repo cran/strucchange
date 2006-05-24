@@ -121,7 +121,7 @@ plot(me3)
 
 ## Load dataset "USIncExp" with income and expenditure in the US
 ## and choose a suitable subset for the history period
-data(USIncExp)
+data("USIncExp")
 USIncExp3 <- window(USIncExp, start=c(1969,1), end=c(1971,12))
 ## initialize the monitoring with the formula interface
 me.mefp <- mefp(expenditure~income, type="ME", rescale=TRUE,

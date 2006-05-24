@@ -110,17 +110,19 @@ Zeileis A., Hornik K. (2003), Generalized M-Fluctuation Tests for Parameter
 Instability, Report 80, SFB "Adaptive Information Systems and Modelling in Economics
 and Management Science", Vienna University of Economics,
 \url{http://www.wu-wien.ac.at/am/reports.htm#80}.
+
+Zeileis A. (2005), A Unified Approach to Structural Change Tests Based on
+ML Scores, F Statistics, and OLS Residuals. \emph{Econometric Reviews}, 24,
+445--466.
 }
 
-\seealso{\code{\link{plot.efp}}, \code{\link{print.efp}},
+\seealso{\code{\link{gefp}}, \code{\link{plot.efp}}, \code{\link{print.efp}},
 \code{\link{sctest.efp}}, \code{\link{boundary.efp}}}
 
 \examples{
-if(! "package:stats" \%in\% search()) library(ts)
-
 ## Nile data with one breakpoint: the annual flows drop in 1898
 ## because the first Ashwan dam was built
-data(Nile)
+data("Nile")
 plot(Nile)
 
 ## test the null hypothesis that the annual flow remains constant
@@ -138,7 +140,7 @@ sctest(ocus.nile)
 ## breakpoints - one in 1973 associated with the oil crisis and
 ## one in 1983 due to the introduction of compulsory
 ## wearing of seatbelts in the UK.
-data(UKDriverDeaths)
+data("UKDriverDeaths")
 seatbelt <- log10(UKDriverDeaths)
 seatbelt <- cbind(seatbelt, lag(seatbelt, k = -1), lag(seatbelt, k = -12))
 colnames(seatbelt) <- c("y", "ylag1", "ylag12")

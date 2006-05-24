@@ -307,19 +307,20 @@ plot.breakpointsfull <- function(x, breaks = NULL, ...)
   plot(summary(x, breaks = breaks), ...)
 }
 
-plot.summary.breakpointsfull <- function(x, type = "b", col = c(1,4), legend = TRUE, ...)
+plot.summary.breakpointsfull <- function(x, type = "b", col = c(1,4), legend = TRUE,
+  xlab = "Number of breakpoints", ylab = "", main = "BIC and Residual Sum of Squares", ...)
 {
   breaks <- as.numeric(colnames(x$RSS))
   RSS <- x$RSS["RSS",]
   BIC <- x$RSS["BIC",]
-  plot(breaks, BIC, ylab = "", xlab = "Number of breakpoints",
-       main = "BIC and Residual Sum of Squares", type = type, col = col[1], ...)
+  col <- rep(col, length.out = 2)
+  plot(breaks, BIC, ylab = "", xlab = xlab, main = main, type = type, col = col[1], ...)
+  onew <- getOption("new")
   par(new = TRUE)
-  plot(breaks, RSS, type = type, axes = FALSE, col = col[2],
-       xlab = "", ylab = "")
-  if(legend) legend(floor(length(breaks)*0.75), RSS[1], c("BIC", "RSS"), lty = rep(1,2), col = col, bty = "n")
+  plot(breaks, RSS, type = type, axes = FALSE, col = col[2], xlab = "", ylab = "")
+  if(legend) legend("topright", c("BIC", "RSS"), lty = rep(1, 2), col = col, bty = "n")
   axis(4)
-  par(new = FALSE)
+  par(new = onew)
 }
 
 

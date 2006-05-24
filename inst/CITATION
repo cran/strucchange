@@ -40,18 +40,16 @@ citEntry(entry="Article",
 	 header = "If methods related to breakpoints() are used also cite:"
 )
 
-citEntry(entry        = "TechReport",
+citEntry(entry        = "Article",
          title        = "Implementing a Class of Structural Change Tests: An Econometric Computing Approach",
          author       = "Achim Zeileis", 
-         institution  = "Department of Statistics and Mathematics, Wirtschaftsuniversität Wien, Research Report Series",
-         year         = "2004",
-	 number       = "7",
-	 url          = "http://epub.wu-wien.ac.at/",
+         journal      = "Computational Statistics and Data Analysis",
+         year         = "2006",
+	 note         = "Forthcoming",
          
          textVersion = 
-         paste("Achim Zeileis (2004).", 
+         paste("Achim Zeileis (2006).", 
                "Implementing a Class of Structural Change Tests: An Econometric Computing Approach.",
-               "Department of Statistics and Mathematics, Wirtschaftsuniversität Wien, Research Report Series, Report 7",
-	       "URL http://epub.wu-wien.ac.at/"),
+               "Computational Statistics and Data Analysis, Forthcoming."),
          header = "If methods related to gefp() and efpFunctional() are used also cite:"
 )

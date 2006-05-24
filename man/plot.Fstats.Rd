@@ -41,7 +41,7 @@ tests, \emph{Journal of Business & Economic Statistics}, \bold{15}, 60-67. }
 
 \examples{
 ## Load dataset "nhtemp" with average yearly temperatures in New Haven
-data(nhtemp)
+data("nhtemp")
 ## plot the data
 plot(nhtemp)
 

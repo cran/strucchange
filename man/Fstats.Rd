@@ -53,11 +53,9 @@ tests, \emph{Journal of Business & Economic Statistics}, \bold{15}, 60-67. }
 \code{\link{boundary.Fstats}}}
 
 \examples{
-if(! "package:stats" \%in\% search()) library(ts)
-
 ## Nile data with one breakpoint: the annual flows drop in 1898
 ## because the first Ashwan dam was built
-data(Nile)
+data("Nile")
 plot(Nile)
 
 ## test the null hypothesis that the annual flow remains constant
@@ -74,7 +72,7 @@ lines(breakpoints(fs.nile))
 ## breakpoints - one in 1973 associated with the oil crisis and
 ## one in 1983 due to the introduction of compulsory
 ## wearing of seatbelts in the UK.
-data(UKDriverDeaths)
+data("UKDriverDeaths")
 seatbelt <- log10(UKDriverDeaths)
 seatbelt <- cbind(seatbelt, lag(seatbelt, k = -1), lag(seatbelt, k = -12))
 colnames(seatbelt) <- c("y", "ylag1", "ylag12")

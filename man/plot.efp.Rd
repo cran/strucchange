@@ -78,7 +78,7 @@ and Management Science", Vienna University of Economics,
 
 \examples{
 ## Load dataset "nhtemp" with average yearly temperatures in New Haven
-data(nhtemp)
+data("nhtemp")
 ## plot the data
 plot(nhtemp)
 

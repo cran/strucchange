@@ -5,7 +5,7 @@
 \docType{data}
 \encoding{latin1}
 \title{German M1 Money Demand}
-\usage{data(GermanM1)}
+\usage{data("GermanM1")}
 \description{
 German M1 money demand.
 }
@@ -68,7 +68,7 @@ Structural Change in Dynamic Econometric Models,
 }
 
 \examples{
-data(GermanM1)
+data("GermanM1")
 ## Lütkepohl et al. (1999) use the following model
 LTW.model <- dm ~ dy2 + dR + dR1 + dp + m1 + y1 + R1 + season
 ## Zeileis et al. (2005) use

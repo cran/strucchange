@@ -4,7 +4,7 @@
 \newcommand{\oi}{\overline{\imath}}
 
 
-\usepackage{/usr/lib/R/share/texmf/Sweave}
+\usepackage{/usr/share/R/share/texmf/Sweave}
 \begin{document}
 
 
@@ -149,9 +149,8 @@ available in the {\tt strucchange} package: it can be loaded and a
 suitable subset chosen by
 \begin{Schunk}
 \begin{Sinput}
-> library(strucchange)
-> data(USIncExp)
-> if (!"package:stats" %in% search()) library(ts)
+> library("strucchange")
+> data("USIncExp")
 > USIncExp2 <- window(USIncExp, start = c(1985, 12))
 \end{Sinput}
 \end{Schunk}

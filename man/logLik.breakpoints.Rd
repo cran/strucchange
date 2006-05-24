@@ -44,11 +44,9 @@
 \seealso{\code{\link{breakpoints}}}
 
 \examples{
-if(! "package:stats" \%in\% search()) library(ts)
-
 ## Nile data with one breakpoint: the annual flows drop in 1898
 ## because the first Ashwan dam was built
-data(Nile)
+data("Nile")
 plot(Nile)
 
 bp.nile <- breakpoints(Nile ~ 1)

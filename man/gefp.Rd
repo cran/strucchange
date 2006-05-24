@@ -29,8 +29,8 @@ gefp(\dots, fit = glm, scores = estfun, vcov = NULL,
      for the coefficients of the fitted model:
      \code{vcov(fm, order.by = order.by, data = data)}.}
   \item{decorrelate}{logical. Should the process be decorrelated?}
-  \item{sandwich}{logical. Is the function \code{vcov} the sandwich
-     estimator or only the middle part?}
+  \item{sandwich}{logical. Is the function \code{vcov} the full sandwich
+     estimator or only the meat?}
   \item{order.by}{Either a vector \code{z} or a formula with a single explanatory
     variable like \code{~ z}. The observations in the model
     are ordered by the size of \code{z}. If set to \code{NULL} (the
@@ -64,30 +64,23 @@ Instability, Report 80, SFB "Adaptive Information Systems and Modelling in Econo
 and Management Science", Vienna University of Economics,
 \url{http://www.wu-wien.ac.at/am/reports.htm#80}.
 
-Zeileis A. (2004), Implementing a Class of Structural Change Tests: An
-Econometric Computing Approach. Report 7, Department of Statistics and Mathematics,
-Wirtschaftsuniversität Wien, Research Report Series,
-\url{http://epub.wu-wien.ac.at/dyn/openURL?id=oai:epub.wu-wien.ac.at:epub-wu-01_750}.
+Zeileis A. (2005), A Unified Approach to Structural Change Tests Based on
+ML Scores, F Statistics, and OLS Residuals. \emph{Econometric Reviews}, 24,
+445--466.
 
-Zeileis A. (2004), A Unified Approach to Structural Change Tests Based on
-F Statistics, OLS Residuals, and ML Scores. Report 13, Department of Statistics
-and Mathematics, Wirtschaftsuniversität Wien, Research Report Series,
-\url{http://epub.wu-wien.ac.at/dyn/openURL?id=oai:epub.wu-wien.ac.at:epub-wu-01_7d1}.
+Zeileis A. (2006), Implementing a Class of Structural Change Tests: An
+Econometric Computing Approach. Computational Statistics & Data Analysis, Forthcoming.
 }
 
 \seealso{\code{\link{efp}}, \code{\link{efpFunctional}}}
 
 \examples{
-
-if("package:sandwich" \%in\% search() || require(sandwich)) {
-  data(BostonHomicide)
-  gcus <- gefp(homicides ~ 1, family = poisson, vcov = kernHAC,
-               data = BostonHomicide)
-  plot(gcus, aggregate = FALSE)	   
-  gcus
-  sctest(gcus)
-}
-
+data("BostonHomicide")
+gcus <- gefp(homicides ~ 1, family = poisson, vcov = kernHAC,
+	     data = BostonHomicide)
+plot(gcus, aggregate = FALSE)	 
+gcus
+sctest(gcus)
 }
 \concept{M-fluctuation}
 \concept{fluctuation test}
