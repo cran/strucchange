@@ -1,17 +1,16 @@
 Package: strucchange
-Version: 1.2-13
-Date: 2006-05-24
-Title: Testing for Structural Change
+Version: 1.3-0
+Date: 2006-08-11
+Title: Testing, Monitoring and Dating Structural Changes
 Author: Achim Zeileis, Friedrich Leisch, Bruce Hansen,
-        Kurt Hornik, Christian Kleiber, Andrea Peters
+        Kurt Hornik, Christian Kleiber
 Maintainer: Achim Zeileis <Achim.Zeileis@R-project.org>
-Description: Testing, dating and monitoring of structural change in
-             linear regression relationships.
-             strucchange features tests/methods from the generalized
-             fluctuation test framework as well as from the F test (Chow
-             test) framework. This includes methods to fit, plot and test
-             fluctuation processes (e.g., CUSUM, MOSUM, recursive/moving
-             estimates) and F statistics, respectively.
+Description: Testing, monitoring and dating structural changes in (linear)
+             regression models. strucchange features tests/methods from
+	     the generalized fluctuation test framework as well as from
+	     the F test (Chow test) framework. This includes methods to
+	     fit, plot and test fluctuation processes (e.g., CUSUM, MOSUM,
+	     recursive/moving estimates) and F statistics, respectively.
              It is possible to monitor incoming data online using
              fluctuation processes.
              Finally, the breakpoints in regression models with structural
@@ -19,7 +18,8 @@ Description: Testing, dating and monitoring of structural change in
              Emphasis is always given to methods for visualizing the data.
 LazyLoad: yes
 LazyData: yes
-Depends: R (>= 2.1.0), zoo, sandwich
+Depends: R (>= 2.1.0), graphics, stats, zoo, sandwich
 Suggests: lmtest, car, dynlm, e1071, tseries
+Imports: graphics, stats
 License: GPL
-Packaged: Tue May 23 23:58:12 2006; zeileis
+Packaged: Sat Aug 12 00:55:18 2006; zeileis

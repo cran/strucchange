@@ -191,7 +191,7 @@ efp <- function(formula, data = list(),
                                  frequency = frequency(orig.y))
                }
                retval$Q12 <- Q12
-               retval$type.name <- "Fluctuation test (recursive estimates test)"
+               retval$type.name <- "RE test (recursive estimates test)"
                retval$lim.process <- "Brownian bridge"
            },
 

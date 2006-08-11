@@ -65,11 +65,12 @@ and Management Science", Vienna University of Economics,
 \url{http://www.wu-wien.ac.at/am/reports.htm#80}.
 
 Zeileis A. (2005), A Unified Approach to Structural Change Tests Based on
-ML Scores, F Statistics, and OLS Residuals. \emph{Econometric Reviews}, 24,
+ML Scores, F Statistics, and OLS Residuals. \emph{Econometric Reviews}, \bold{24},
 445--466.
 
 Zeileis A. (2006), Implementing a Class of Structural Change Tests: An
-Econometric Computing Approach. Computational Statistics & Data Analysis, Forthcoming.
+Econometric Computing Approach. \emph{Computational Statistics & Data Analysis}, 
+\bold{50}, 2987--3008.
 }
 
 \seealso{\code{\link{efp}}, \code{\link{efpFunctional}}}

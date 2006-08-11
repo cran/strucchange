@@ -37,7 +37,7 @@ normlm <- function(formula, data = list()) {
 }
 estfun.normlm <- function(obj) {
   res <- residuals(obj)
-  ef <- estfun.lm(obj)
+  ef <- NextMethod(obj)
   sigma2 <- mean(res^2)
   rval <- cbind(ef, res^2 - sigma2)
   colnames(rval) <- c(colnames(ef), "(Variance)")

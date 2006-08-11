@@ -51,22 +51,21 @@ S0 = 6.5741, p-value = 1e-04
 
 > sctest(Nile.re)
 
-	Fluctuation test (recursive estimates test)
+	RE test (recursive estimates test)
 
 data:  Nile.re 
 FL = 2.9518, p-value = 5.409e-08
 
 > sctest(Nile.re, alt = TRUE)
 
-	Fluctuation test (recursive estimates test) with alternative
-	boundaries
+	RE test (recursive estimates test) with alternative boundaries
 
 data:  Nile.re 
 FL = 6.5741, p-value = 1e-04
 
 > sctest(Nile.re, fun = "range")
 
-	Fluctuation test (recursive estimates test) with range norm
+	RE test (recursive estimates test) with range norm
 
 data:  Nile.re 
 FL = 2.9518, p-value = 1.831e-06
@@ -178,22 +177,21 @@ S0 = 3.4082, p-value = 0.04502
 
 > sctest(seat.re)
 
-	Fluctuation test (recursive estimates test)
+	RE test (recursive estimates test)
 
 data:  seat.re 
 FL = 1.6311, p-value = 0.02904
 
 > sctest(seat.re, alt = TRUE)
 
-	Fluctuation test (recursive estimates test) with alternative
-	boundaries
+	RE test (recursive estimates test) with alternative boundaries
 
 data:  seat.re 
 FL = 4.7365, p-value = 0.0003000
 
 > sctest(seat.re, fun = "range")
 
-	Fluctuation test (recursive estimates test) with range norm
+	RE test (recursive estimates test) with range norm
 
 data:  seat.re 
 FL = 1.9303, p-value = 0.04762
@@ -293,22 +291,21 @@ S0 = 1.6288, p-value = 0.9704
 
 > sctest(M1.re)
 
-	Fluctuation test (recursive estimates test)
+	RE test (recursive estimates test)
 
 data:  M1.re 
 FL = 1.9821, p-value = 0.008475
 
 > sctest(M1.re, fun = "range")
 
-	Fluctuation test (recursive estimates test) with range norm
+	RE test (recursive estimates test) with range norm
 
 data:  M1.re 
 FL = 2.2386, p-value = 0.01844
 
 > sctest(M1.re, alt = TRUE)
 
-	Fluctuation test (recursive estimates test) with alternative
-	boundaries
+	RE test (recursive estimates test) with alternative boundaries
 
 data:  M1.re 
 FL = 5.4937, p-value = 0.001099

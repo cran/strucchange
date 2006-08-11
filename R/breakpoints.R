@@ -304,7 +304,9 @@ print.summary.breakpointsfull <- function(x, ...)
 
 plot.breakpointsfull <- function(x, breaks = NULL, ...)
 {
-  plot(summary(x, breaks = breaks), ...)
+  rval <- summary(x, breaks = breaks)
+  plot(rval, ...)
+  invisible(rval)
 }
 
 plot.summary.breakpointsfull <- function(x, type = "b", col = c(1,4), legend = TRUE,
@@ -321,6 +323,7 @@ plot.summary.breakpointsfull <- function(x, type = "b", col = c(1,4), legend = T
   if(legend) legend("topright", c("BIC", "RSS"), lty = rep(1, 2), col = col, bty = "n")
   axis(4)
   par(new = onew)
+  invisible(x)
 }
 
 
