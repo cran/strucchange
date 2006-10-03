@@ -1,12 +1,12 @@
-\name{SP500}
-\alias{SP500}
+\name{SP2001}
+\alias{SP2001}
 \title{S\&P 500 Stock Prices}
 \description{
   A multivariate series of all S\&P 500 stock prices in the
   second half of the year 2001, i.e., before and after the
   terrorist attacks of 2001-09-11. 
 }
-\usage{data("SP500")}
+\usage{data("SP2001")}
 \format{
  A multivariate daily \code{"zoo"} series with \code{"Date"} index 
  from 2001-07-31 to 2001-12-31 (103 observations) of all 500 S\&P
@@ -25,8 +25,8 @@ Structural Change in Dynamic Econometric Models,
 \examples{
 ## load and transform data
 ## (DAL: Delta Air Lines, LU: Lucent Technologies)
-data("SP500")
-stock.prices <- SP500[, c("DAL", "LU")]
+data("SP2001")
+stock.prices <- SP2001[, c("DAL", "LU")]
 stock.returns <- diff(log(stock.prices))
 
 ## price and return series
