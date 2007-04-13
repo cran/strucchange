@@ -8,8 +8,8 @@ Data about the number of youth homicides in Boston during the
 homicide victimization among young people in Boston.
 }
 \format{
-A data frame containing 2 monthly time series
-and a factor coding seasonality.
+A data frame containing 6 monthly time series
+and two factors coding seasonality and year, respectively.
  \describe{
     \item{homicides}{time series. Number of youth homicides.}
     \item{population}{time series. Boston population (aged 25-44),

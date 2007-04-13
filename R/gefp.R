@@ -64,9 +64,9 @@ gefp <- function(...,
   psi <- as.matrix(psi)
 
   if(inherits(z, "POSIXt"))
-    z <- c(z[1] + as.numeric(difftime(z[1], z[2], units = "secs")), z)
+    z <- suppressWarnings(c(z[1] + as.numeric(difftime(z[1], z[2], units = "secs")), z))
   else
-    z <- c(z[1] - diff(z[1:2]), z)
+    z <- suppressWarnings(c(z[1] - diff(z[1:2]), z))
 
   process <- psi/sqrt(n)
 
@@ -93,7 +93,7 @@ gefp <- function(...,
   colnames(process) <- colnames(psi)
   if(!is.null(parm)) process <- process[, parm]
 
-  retval <- list(process = zoo(process, z),
+  retval <- list(process = suppressWarnings(zoo(process, z)),
                  nreg = k,
                  nobs = n,
                  call = match.call(),
@@ -289,14 +289,14 @@ efpFunctional <- function(functional = list(comp = function(x) max(abs(x)), time
 	  {
             n <- x$nobs
 	    bound <- computeCritval(alpha = alpha, nproc = NCOL(x$process)) * boundary(0:n/n)
-	    bound <- zoo(bound, time(x))
+	    bound <- suppressWarnings(zoo(bound, time(x)))
             if(is.null(xlab)) {
 	      if(!is.null(x$order.name)) xlab <- x$order.name
 	        else xlab <- "Time"
             }
 
             if(aggregate) {
-	      proc <- zoo(apply(as.matrix(x$process), 1, functional[[1]]), time(x))
+	      proc <- suppressWarnings(zoo(apply(as.matrix(x$process), 1, functional[[1]]), time(x)))
 	    
               if(is.null(ylab)) ylab <- "Empirical fluctuation process"
 	      if(is.null(ylim)) ylim <- range(c(range(proc), range(bound)))
@@ -331,16 +331,16 @@ efpFunctional <- function(functional = list(comp = function(x) max(abs(x)), time
 	  {
             n <- x$nobs
 	    bound <- computeCritval(alpha = alpha, nproc = NCOL(x$process)) * boundary(0:n/n)
-	    bound <- zoo(bound, time(x))
+	    bound <- suppressWarnings(zoo(bound, time(x)))
             stat <- computeStatistic(x$process)
-	    stat <- zoo(rep(stat, length(time(x))), time(x))
+	    stat <- suppressWarnings(zoo(rep(stat, length(time(x))), time(x)))
             if(is.null(xlab)) {
 	      if(!is.null(x$order.name)) xlab <- x$order.name
 	        else xlab <- "Time"
             }
 
 	    if(aggregate) {
-	      proc <- zoo(apply(as.matrix(x$process), 1, functional[[1]]), time(x))
+	      proc <- suppressWarnings(zoo(apply(as.matrix(x$process), 1, functional[[1]]), time(x)))
 	    
 	      if(is.null(ylab)) ylab <- "Empirical fluctuation process"
 	      if(is.null(ylim)) ylim <- range(c(range(proc), range(bound), range(stat)))

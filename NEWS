@@ -1,3 +1,9 @@
+Changes in Version 1.3-2
+
+  o added new data set with bibliographic information about
+    structural change publications
+
+
 Changes in Version 1.3-1
 
   o renamed SP500 to SP2001 to avoid conflicts with MASS
