@@ -12,14 +12,14 @@
 
 \arguments{
   \item{formula}{a formula describing the model to be tested.}
-  \item{type}{a character string specifying the structural change test that ist
+  \item{type}{a character string specifying the structural change test that is
      to be performed, the default is \code{"Rec-CUSUM"}. Besides the test
      types described in \code{\link{efp}}
-     and \code{\link{sctest.Fstats}}. The Chow test and the Nyblom-Hansen test
+     and \code{\link{sctest.Fstats}} the Chow test and the Nyblom-Hansen test
      can be performed by setting type to \code{"Chow"} or \code{"Nyblom-Hansen"},
      respectively.}
   \item{h}{numeric from interval (0,1) specifying the bandwidth. Determins the
-     size of the data window relative to sample size (for MOSUM and ME tests
+     size of the data window relative to the sample size (for MOSUM and ME tests
      only).}
   \item{alt.boundary}{logical. If set to \code{TRUE} alternative boundaries
      (instead of the standard linear boundaries) will be used (for CUSUM
@@ -48,7 +48,7 @@
 \details{\code{sctest.formula} is mainly a wrapper for \code{\link{sctest.efp}}
 and \code{\link{sctest.Fstats}} as it fits an empirical fluctuation process
 first or computes the F statistics respectively and subsequently performs the
-corresponding test. The Chow test and the Nyblom-Hansen test are available explicitely here.}
+corresponding test. The Chow test and the Nyblom-Hansen test are available explicitly here.}
 
 \value{an object of class \code{"htest"} containing:
 \itemize

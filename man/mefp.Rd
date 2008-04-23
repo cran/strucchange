@@ -97,6 +97,7 @@ monitor(obj, data = NULL, verbose = TRUE)
   Zeileis A., Leisch F., Kleiber C., Hornik K. (2005), Monitoring
   Structural Change in Dynamic Econometric Models,
   \emph{Journal of Applied Econometrics}, \bold{20}, 99--121.
+  doi:10.1002/jae.776.
 }
 \examples{
 df1 <- data.frame(y=rnorm(300))

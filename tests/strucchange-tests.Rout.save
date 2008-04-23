@@ -17,14 +17,6 @@ Type 'q()' to quit R.
 
 > library(strucchange)
 Loading required package: zoo 
-
-Attaching package: 'zoo'
-
-
-        The following object(s) are masked from package:base :
-
-         rapply 
-
 Loading required package: sandwich 
 > if(! "package:stats" %in% search()) library(ts)
 > 
@@ -63,21 +55,21 @@ S0 = 6.5741, p-value = 1e-04
 	RE test (recursive estimates test)
 
 data:  Nile.re 
-FL = 2.9518, p-value = 5.409e-08
+RE = 2.9518, p-value = 5.409e-08
 
 > sctest(Nile.re, alt = TRUE)
 
 	RE test (recursive estimates test) with alternative boundaries
 
 data:  Nile.re 
-FL = 6.5741, p-value = 1e-04
+RE = 6.5741, p-value = 1e-04
 
 > sctest(Nile.re, fun = "range")
 
 	RE test (recursive estimates test) with range norm
 
 data:  Nile.re 
-FL = 2.9518, p-value = 1.831e-06
+RE = 2.9518, p-value = 1.831e-06
 
 > sctest(Nile.rmos)
 
@@ -91,14 +83,14 @@ M = 5.097, p-value = 0.01
 	OLS-based MOSUM test
 
 data:  Nile.omos 
-ME = 2.4237, p-value = 0.01
+M0 = 2.4237, p-value = 0.01
 
 > sctest(Nile.omos, fun = "range")
 
 	OLS-based MOSUM test with range norm
 
 data:  Nile.omos 
-ME = 4.3433, p-value = 5.615e-05
+M0 = 4.3433, p-value = 5.615e-05
 
 > sctest(Nile.me)
 
@@ -189,21 +181,21 @@ S0 = 3.4082, p-value = 0.04502
 	RE test (recursive estimates test)
 
 data:  seat.re 
-FL = 1.6311, p-value = 0.02904
+RE = 1.6311, p-value = 0.02904
 
 > sctest(seat.re, alt = TRUE)
 
 	RE test (recursive estimates test) with alternative boundaries
 
 data:  seat.re 
-FL = 4.7365, p-value = 0.0003000
+RE = 4.7365, p-value = 0.0003000
 
 > sctest(seat.re, fun = "range")
 
 	RE test (recursive estimates test) with range norm
 
 data:  seat.re 
-FL = 1.9303, p-value = 0.04762
+RE = 1.9303, p-value = 0.04762
 
 > sctest(seat.rmos)
 
@@ -217,14 +209,14 @@ M = 2.0539, p-value = 0.04259
 	OLS-based MOSUM test
 
 data:  seat.omos 
-ME = 0.9162, p-value = 0.4004
+M0 = 0.9162, p-value = 0.4004
 
 > sctest(seat.omos, fun = "range")
 
 	OLS-based MOSUM test with range norm
 
 data:  seat.omos 
-ME = 1.4949, p-value = 0.5175
+M0 = 1.4949, p-value = 0.5175
 
 > sctest(seat.me)
 
@@ -303,21 +295,21 @@ S0 = 1.6288, p-value = 0.9704
 	RE test (recursive estimates test)
 
 data:  M1.re 
-FL = 1.9821, p-value = 0.008475
+RE = 1.9821, p-value = 0.008475
 
 > sctest(M1.re, fun = "range")
 
 	RE test (recursive estimates test) with range norm
 
 data:  M1.re 
-FL = 2.2386, p-value = 0.01844
+RE = 2.2386, p-value = 0.01844
 
 > sctest(M1.re, alt = TRUE)
 
 	RE test (recursive estimates test) with alternative boundaries
 
 data:  M1.re 
-FL = 5.4937, p-value = 0.001099
+RE = 5.4937, p-value = 0.001099
 
 > sctest(M1.fs, type = "supF")
 

@@ -82,18 +82,17 @@ efpFunctional(functional = list(comp = function(x) max(abs(x)), time = max),
 }
 
 \references{
-Zeileis A., Hornik K. (2003), Generalized M-Fluctuation Tests for Parameter
-Instability, Report 80, SFB "Adaptive Information Systems and Modelling in Economics
-and Management Science", Vienna University of Economics,
-\url{http://www.wu-wien.ac.at/am/reports.htm#80}.
-
 Zeileis A. (2005), A Unified Approach to Structural Change Tests Based on
 ML Scores, F Statistics, and OLS Residuals. \emph{Econometric Reviews}, \bold{24},
-445--466.
+445--466. doi:10.1080/07474930500406053.
 
 Zeileis A. (2006), Implementing a Class of Structural Change Tests: An
 Econometric Computing Approach. \emph{Computational Statistics & Data Analysis}, 
-\bold{50}, 2987--3008.
+\bold{50}, 2987--3008. doi:10.1016/j.csda.2005.07.001.
+
+Zeileis A., Hornik K. (2007), Generalized M-Fluctuation Tests for Parameter
+Instability, \emph{Statistica Neerlandica}, \bold{61}, 488--508.
+doi:10.1111/j.1467-9574.2007.00371.x.
 }
 
 \seealso{\code{\link{efp}}, \code{\link{efpFunctional}}}

@@ -1,4 +1,4 @@
-if(require(tcltk) & require(ts))
+if(require("tcltk"))
 {
     data(Nile)
     data(UKDriverDeaths)

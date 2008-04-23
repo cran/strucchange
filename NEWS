@@ -1,3 +1,11 @@
+Changes in Version 1.3-3
+
+  o enhanced references in the vignette, CITATION and 
+    man pages
+
+  o fixed some outdated information in the vignette
+
+
 Changes in Version 1.3-2
 
   o added new data set with bibliographic information about

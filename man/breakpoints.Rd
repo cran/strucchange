@@ -205,7 +205,7 @@ Bai J., Perron P. (2003), Computation and Analysis of Multiple Structural Change
 
 Zeileis A., Kleiber C., Krämer W., Hornik K. (2003), Testing and Dating of
   Structural Changes in Practice, \emph{Computational Statistics and Data Analysis},
-  \bold{44}, 109-123.
+  \bold{44}, 109-123. doi:10.1016/S0167-9473(03)00030-6.
 }
 
 \examples{

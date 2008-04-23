@@ -28,7 +28,7 @@ citEntry(entry="Article",
 	                     as.person("Christian Kleiber"),
                              as.person("Walter Krämer"),
 			     as.person("Kurt Hornik")),
-         journal      = "Computational Statistics and Data Analysis",
+         journal      = "Computational Statistics \\& Data Analysis",
          year         = "2003",
 	 volume       = "44",
 	 pages        = "109--123",
@@ -36,14 +36,14 @@ citEntry(entry="Article",
          textVersion = 
          paste("Achim Zeileis, Christian Kleiber, Walter Krämer and Kurt Hornik (2003).", 
                "Testing and Dating of Structural Changes in Practice.",
-               "Computational Statistics and Data Analysis, 44, 109-123."),
+               "Computational Statistics & Data Analysis, 44, 109-123."),
 	 header = "If methods related to breakpoints() are used also cite:"
 )
 
 citEntry(entry        = "Article",
          title        = "Implementing a Class of Structural Change Tests: An Econometric Computing Approach",
          author       = "Achim Zeileis", 
-         journal      = "Computational Statistics and Data Analysis",
+         journal      = "Computational Statistics \\& Data Analysis",
          year         = "2006",
 	 volume       = "50",
 	 pages        = "2987--3008",
@@ -51,6 +51,6 @@ citEntry(entry        = "Article",
          textVersion = 
          paste("Achim Zeileis (2006).", 
                "Implementing a Class of Structural Change Tests: An Econometric Computing Approach.",
-               "Computational Statistics and Data Analysis, 50, 2987-3008."),
+               "Computational Statistics & Data Analysis, 50, 2987-3008."),
          header = "If methods related to gefp() and efpFunctional() are used also cite:"
 )

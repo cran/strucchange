@@ -55,10 +55,13 @@ tests in dynamic econometric models, \emph{Economics Letters}, \bold{44},
 Ploberger W., Krämer W. (1992), The CUSUM Test with OLS Residuals,
 \emph{Econometrica}, \bold{60}, 271-285.
 
-Zeileis A. (2000), p Values and Alternative Boundaries for CUSUM Tests,
-Working Paper 78, SFB "Adaptive Information Systems and Modelling in Economics
-and Management Science", Vienna University of Economics,
-\url{http://www.wu-wien.ac.at/am/wp00.htm#78}.
+Zeileis A., Leisch F., Hornik K., Kleiber C. (2002), \code{strucchange}:
+An R Package for Testing for Structural Change in Linear Regression Models,
+\emph{Journal of Statistical Software}, \bold{7}(2), 1-38.
+URL \url{http://www.jstatsoft.org/v07/i02/}.
+
+Zeileis A. (2004), Alternative Boundaries for CUSUM Tests,
+\emph{Statistical Papers}, \bold{45}, 123--131.
 }
 
 \seealso{\code{\link{efp}}, \code{\link{plot.efp}}}

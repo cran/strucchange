@@ -707,7 +707,7 @@ sctest.efp <- function(x, alt.boundary = FALSE, functional = c("max", "range", "
       "max" = { STAT <- max(abs(x)) },
       "range" = {
         myrange <- function(y) diff(range(y))
-        STAT <- max(apply(x,2,myrange))
+        STAT <- max(apply(x, 2, myrange))
         METHOD <- paste(METHOD, "with range norm")
       },
       "maxL2" = {
@@ -723,8 +723,8 @@ sctest.efp <- function(x, alt.boundary = FALSE, functional = c("max", "range", "
       "Rec-CUSUM" = { names(STAT) <- "S" },
       "OLS-CUSUM" = { names(STAT) <- "S0" },
       "Rec-MOSUM" = { names(STAT) <- "M" },
-      "OLS-MOSUM" = { names(STAT) <- "ME" },
-      "RE" = { names(STAT) <- "FL" },
+      "OLS-MOSUM" = { names(STAT) <- "M0" },
+      "RE" = { names(STAT) <- "RE" },
       "ME" = { names(STAT) <- "ME" },
       names(STAT) <- "f(efp)")
 

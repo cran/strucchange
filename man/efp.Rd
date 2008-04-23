@@ -73,7 +73,9 @@ performed.
   \item{par}{the bandwidth \code{h} used.}
 }
 
-\references{Brown R.L., Durbin J., Evans J.M. (1975), Techniques for
+\references{
+
+Brown R.L., Durbin J., Evans J.M. (1975), Techniques for
 testing constancy of regression relationships over time, \emph{Journal of the
 Royal Statistal Society}, B, \bold{37}, 149-163.
 
@@ -105,15 +107,19 @@ Ploberger W., Krämer W. (1992), The CUSUM test with OLS residuals,
 Zeileis A., Leisch F., Hornik K., Kleiber C. (2002), \code{strucchange}:
 An R Package for Testing for Structural Change in Linear Regression Models,
 \emph{Journal of Statistical Software}, \bold{7}(2), 1-38.
-
-Zeileis A., Hornik K. (2003), Generalized M-Fluctuation Tests for Parameter
-Instability, Report 80, SFB "Adaptive Information Systems and Modelling in Economics
-and Management Science", Vienna University of Economics,
-\url{http://www.wu-wien.ac.at/am/reports.htm#80}.
+URL \url{http://www.jstatsoft.org/v07/i02/}.
 
 Zeileis A. (2005), A Unified Approach to Structural Change Tests Based on
-ML Scores, F Statistics, and OLS Residuals. \emph{Econometric Reviews}, 24,
-445--466.
+ML Scores, F Statistics, and OLS Residuals. \emph{Econometric Reviews}, \bold{24},
+445--466. doi:10.1080/07474930500406053.
+
+Zeileis A. (2006), Implementing a Class of Structural Change Tests: An
+Econometric Computing Approach. \emph{Computational Statistics & Data Analysis}, 
+\bold{50}, 2987--3008. doi:10.1016/j.csda.2005.07.001.
+
+Zeileis A., Hornik K. (2007), Generalized M-Fluctuation Tests for Parameter
+Instability, \emph{Statistica Neerlandica}, \bold{61}, 488--508.
+doi:10.1111/j.1467-9574.2007.00371.x.
 }
 
 \seealso{\code{\link{gefp}}, \code{\link{plot.efp}}, \code{\link{print.efp}},

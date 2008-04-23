@@ -18,7 +18,7 @@ monitorMECritvalData <- function(n, end=10, frequency=1000, h=1,
         if(verbose){
             cat("  Loop:    ",k,"\r")
         }
-        b <- as.vector(rbridge(e,frequency))
+        b <- as.vector(e1071::rbridge(e,frequency))
         for(hh in 1:length(h)){
             bh <- c(rep(0, length=H[hh]), diff(b, lag=H[hh]))
             bh <- bh[(frequency+1):length(bh)]
@@ -69,7 +69,7 @@ monitorRECritvalData <- function(n, end=10, frequency=1000,
         if(verbose){
             cat("  Loop:    ",k,"\r")
         }
-        b <- as.vector(rbridge(e,frequency))[-(1:frequency)]
+        b <- as.vector(e1071::rbridge(e,frequency))[-(1:frequency)]
         if(linear)
 #            b <- b/pmax(1, 0.5*t+0.25)
             b <- b / t
