@@ -26,7 +26,7 @@ citEntry(entry="Article",
          title = "Testing and Dating of Structural Changes in Practice",
          author = personList(as.person("Achim Zeileis"), 
 	                     as.person("Christian Kleiber"),
-                             as.person("Walter Krämer"),
+                             as.person("Walter Kr\\\"amer"),
 			     as.person("Kurt Hornik")),
          journal      = "Computational Statistics \\& Data Analysis",
          year         = "2003",
@@ -34,7 +34,7 @@ citEntry(entry="Article",
 	 pages        = "109--123",
          
          textVersion = 
-         paste("Achim Zeileis, Christian Kleiber, Walter Krämer and Kurt Hornik (2003).", 
+         paste("Achim Zeileis, Christian Kleiber, Walter Kraemer and Kurt Hornik (2003).", 
                "Testing and Dating of Structural Changes in Practice.",
                "Computational Statistics & Data Analysis, 44, 109-123."),
 	 header = "If methods related to breakpoints() are used also cite:"

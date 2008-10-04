@@ -1,5 +1,26 @@
 \documentclass[10pt,a4paper]{article}
-\usepackage{a4wide,Z}
+\usepackage{a4wide}
+\usepackage{graphicx,color,alltt}
+\usepackage[authoryear,round,longnamesfirst]{natbib}
+\usepackage{hyperref}
+
+\definecolor{Red}{rgb}{0.7,0,0}
+\definecolor{Blue}{rgb}{0,0,0.8}
+\definecolor{hellgrau}{rgb}{0.55,0.55,0.55}
+
+\newcommand{\E}{\mbox{$\mathsf{E}$}}
+\newcommand{\VAR}{\mbox{$\mathsf{VAR}$}}
+\newcommand{\COV}{\mbox{$\mathsf{COV}$}}
+\newcommand{\p}{\mbox{$\mathsf{P}$}}
+\newcommand{\email}[1]{\href{mailto:#1}{\normalfont\texttt{#1}}}
+\newenvironment{smallexample}{\begin{alltt}\small}{\end{alltt}}
+
+\setlength{\parskip}{0.5ex plus0.1ex minus0.1ex}
+\setlength{\parindent}{0em}
+
+\bibpunct{(}{)}{;}{a}{}{,}
+
+
 \newcommand{\ui}{\underline{i}}
 \newcommand{\oi}{\overline{\imath}}
 
