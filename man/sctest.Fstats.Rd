@@ -24,12 +24,13 @@ expF-test was written by Bruce Hansen and is available from
 \url{http://www.ssc.wisc.edu/~bhansen/}. R port by Achim Zeileis.
 }
 
-\value{an object of class \code{"htest"} containing:
-\itemize
-\item{statistic}{the test statistic}
-\item{p.value}{the corresponding p value}
-\item{method}{a character string with the method used}
-\item{data.name}{a character string with the data name}}
+\value{
+  An object of class \code{"htest"} containing:
+  \item{statistic}{the test statistic,}
+  \item{p.value}{the corresponding p value,}
+  \item{method}{a character string with the method used,}
+  \item{data.name}{a character string with the data name.}
+}
 
 \references{
 Andrews D.W.K. (1993), Tests for parameter instability and structural

@@ -25,12 +25,13 @@ value approximations will be poor for other p values. Similarly the
 critical values for the maximum and mean squared Euclidian norm (\code{"maxL2"}
 and \code{"meanL2"}) are tabulated for confidence levels between 0.2 and 0.005.}
 
-\value{an object of class \code{"htest"} containing:
-\itemize
-\item{statistic}{the test statistic}
-\item{p.value}{the corresponding p value}
-\item{method}{a character string with the method used}
-\item{data.name}{a character string with the data name}}
+\value{
+  An object of class \code{"htest"} containing:
+  \item{statistic}{the test statistic,}
+  \item{p.value}{the corresponding p value,}
+  \item{method}{a character string with the method used,}
+  \item{data.name}{a character string with the data name.}
+}
 
 \references{Brown R.L., Durbin J., Evans J.M. (1975), Techniques for
 testing constancy of regression relationships over time, \emph{Journal of the

@@ -1,6 +1,6 @@
 
-R version 2.5.0 Under development (unstable) (2006-10-02 r39559)
-Copyright (C) 2006 The R Foundation for Statistical Computing
+R version 2.8.0 (2008-10-20)
+Copyright (C) 2008 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -15,13 +15,20 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
-> library(strucchange)
-Loading required package: zoo 
-Loading required package: sandwich 
-> if(! "package:stats" %in% search()) library(ts)
+> library("strucchange")
+Loading required package: zoo
+
+Attaching package: 'zoo'
+
+
+	The following object(s) are masked from package:base :
+
+	 as.Date.numeric 
+
+Loading required package: sandwich
 > 
 > ## Nile data
-> data(Nile)
+> data("Nile")
 > 
 > Nile.rcus <- efp(Nile ~ 1, type = "Rec-CUSUM")
 > Nile.ocus <- efp(Nile ~ 1, type = "OLS-CUSUM")
@@ -143,7 +150,7 @@ Corresponding to breakdates:
 1898 
 > 
 > ## Seatbelt data
-> data(UKDriverDeaths)
+> data("UKDriverDeaths")
 > seatbelt <- log10(UKDriverDeaths)
 > seatbelt <- cbind(seatbelt, lag(seatbelt, k = -1), lag(seatbelt, k = -12))
 > colnames(seatbelt) <- c("y", "ylag1", "ylag12")
@@ -269,7 +276,7 @@ Corresponding to breakdates:
 1973(10) 
 > 
 > ## German M1 data
-> data(GermanM1)
+> data("GermanM1")
 > LTW.model <- dm ~ dy2 + dR + dR1 + dp + m1 + y1 + R1 + season
 > M1.model <- dm ~ dy2 + dR + dR1 + dp + ecm.res + season
 > 
@@ -385,7 +392,7 @@ Parameter estimate on history :
 -0.13330148 -0.01559447 -0.10906796 
 > 
 > ## Grossarl data
-> data(Grossarl)
+> data("Grossarl")
 > Grossarl.bp <- breakpoints(fraction ~ 1, data = Grossarl, h = 0.1)
 > summary(Grossarl.bp)
 

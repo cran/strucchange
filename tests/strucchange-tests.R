@@ -1,8 +1,7 @@
-library(strucchange)
-if(! "package:stats" %in% search()) library(ts)
+library("strucchange")
 
 ## Nile data
-data(Nile)
+data("Nile")
 
 Nile.rcus <- efp(Nile ~ 1, type = "Rec-CUSUM")
 Nile.ocus <- efp(Nile ~ 1, type = "OLS-CUSUM")
@@ -29,7 +28,7 @@ sctest(Nile.fs, type = "expF")
 breakpoints(Nile.fs)
 
 ## Seatbelt data
-data(UKDriverDeaths)
+data("UKDriverDeaths")
 seatbelt <- log10(UKDriverDeaths)
 seatbelt <- cbind(seatbelt, lag(seatbelt, k = -1), lag(seatbelt, k = -12))
 colnames(seatbelt) <- c("y", "ylag1", "ylag12")
@@ -60,7 +59,7 @@ sctest(seat.fs, type = "expF")
 breakpoints(seat.fs)
 
 ## German M1 data
-data(GermanM1)
+data("GermanM1")
 LTW.model <- dm ~ dy2 + dR + dR1 + dp + m1 + y1 + R1 + season
 M1.model <- dm ~ dy2 + dR + dR1 + dp + ecm.res + season
 
@@ -88,7 +87,7 @@ ols.mon
 ols.mon2
 
 ## Grossarl data
-data(Grossarl)
+data("Grossarl")
 Grossarl.bp <- breakpoints(fraction ~ 1, data = Grossarl, h = 0.1)
 summary(Grossarl.bp)
 confint(Grossarl.bp)

@@ -63,8 +63,7 @@ performed.
 }
 
 \value{
-  \code{efp} returns a list of class \code{"efp"} with components inlcuding
-  \itemize
+  \code{efp} returns a list of class \code{"efp"} with components inlcuding:
   \item{process}{the fitted empirical fluctuation process of class
     \code{"ts"} or \code{"mts"} respectively,}
   \item{type}{a string with the \code{type} of the process fitted,}

@@ -20,9 +20,25 @@
 
 \bibpunct{(}{)}{;}{a}{}{,}
 
-
 \newcommand{\ui}{\underline{i}}
 \newcommand{\oi}{\overline{\imath}}
+
+\RequirePackage{color}
+\definecolor{Red}{rgb}{0.5,0,0}
+\definecolor{Blue}{rgb}{0,0,0.5}
+\definecolor{hellgrau}{rgb}{0.55,0.55,0.55}
+
+\hypersetup{%
+hyperindex,%
+colorlinks,%
+linktocpage,%
+plainpages=false,%
+linkcolor=Blue,%
+citecolor=Blue,%
+urlcolor=Red,%
+pdfstartview=Fit,%
+pdfview={XYZ null null null}%
+}
 
 
 \begin{document}
@@ -47,7 +63,7 @@ reviews tests for structural change in linear regression models from
 the generalized fluctuation test framework as well as from the $F$ test (Chow
 test) framework. Since \cite{Z-papers:Zeileis+Leisch+Hornik:2002} various extensions
 were added to the package, in particular related to breakpoint estimation
-\citep[also know as ``dating'', discussed in][]{Z-papers:Zeileis:Kleiber+Kraemer:2003}
+\citep[also know as ``dating'', discussed in][]{Z-papers:Zeileis+Kleiber+Kraemer:2003}
 and to structural change tests in other parametric models \citep{Z-papers:Zeileis:2006}.
 
 Here, we focus on the linear regression model and
@@ -795,8 +811,16 @@ statistics with the corresponding boundary can be computed, plotted and tested.
 Finally the methods for estimates-based fluctuation processes have extensions to
 monitor incoming data.
 
+In addition to these methods for the linear regression model, the \texttt{strucchange}
+package contains infrastructure for testing, monitoring, and dating structural
+changes in other parametric models, e.g., estimated by maximum likelihood. Details
+about the underlying theory can be found in \cite{Z-papers:Zeileis:2005},
+\cite{Z-papers:Zeileis+Hornik:2007}, and \cite{Z-reports:Zeileis+Shah+Patnaik:2008}.
+The corresponding functions in \texttt{strucchange} are presented in
+\cite{Z-papers:Zeileis+Kleiber+Kraemer:2003} and \cite{Z-papers:Zeileis:2006}.
 
-\section*{Acknowledgements}
+
+\section*{Acknowledgments}
 
 The research of Achim Zeileis, Friedrich Leisch and Kurt Hornik was supported
 by the Austrian Science Foundation (FWF) under grant SFB\#010 (`Adaptive
@@ -804,9 +828,7 @@ Information Systems and Modeling in Economics and Management Science').\\
 The work of Christian Kleiber was supported by the
 Deutsche Forschungsgemeinschaft, Sonderforschungsbereich 475.
 
-\newpage
-
-\bibliography{Z,Zo,sc,Z-papers}
+\bibliography{strucchange}
 \bibliographystyle{abbrvnat}
 
 \newpage

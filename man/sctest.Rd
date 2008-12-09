@@ -50,12 +50,13 @@ and \code{\link{sctest.Fstats}} as it fits an empirical fluctuation process
 first or computes the F statistics respectively and subsequently performs the
 corresponding test. The Chow test and the Nyblom-Hansen test are available explicitly here.}
 
-\value{an object of class \code{"htest"} containing:
-\itemize
-\item{statistic}{the test statistic}
-\item{p.value}{the corresponding p value}
-\item{method}{a character string with the method used}
-\item{data.name}{a character string with the data name}}
+\value{
+  An object of class \code{"htest"} containing:
+  \item{statistic}{the test statistic,}
+  \item{p.value}{the corresponding p value,}
+  \item{method}{a character string with the method used,}
+  \item{data.name}{a character string with the data name.}
+}
 
 \seealso{\code{\link{sctest.efp}}, \code{\link{sctest.Fstats}}}
 
