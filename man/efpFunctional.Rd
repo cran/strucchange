@@ -49,27 +49,29 @@ efpFunctional(functional = list(comp = function(x) max(abs(x)), time = max),
     critical values should be tabulated.}
 }
 
-\details{\code{efpFunctional} computes an object of class \code{"efpFunctional"}
+\details{
+  \code{efpFunctional} computes an object of class \code{"efpFunctional"}
   which should know how to do inference based on empirical fluctuation processes
   (currently only for \code{\link{gefp}} objects and not yet for \code{\link{efp}}
-  objects) and how to visualize the corresponding processes. In particular, it has
-  slots for the functions \code{computeStatistic}, \code{computePval} and \code{plotProcess}.
-  These should have the following interfaces:
-  {\itemize
-    \item{computeStatistic}{should take a single argument which is the process
-      itself, i.e., essentially a n x k matrix where n is the number of
-      observations and k the number of processes (regressors).}
-    \item{computePval}{should take two arguments: a scalar test statistic and the
-      number of processes k}
-    \item{plotProcess}{should take two arguments: an object of class \code{"gefp"}
-      and \code{alpha} the level of significance for any boundaries or critical
-      values to be visualized.}}
+  objects) and how to visualize the corresponding processes.   
 
   \code{efpFunctional}s for many frequently used test statistics are provided:
   \code{maxBB} for the double maximum function, \code{meanL2BB} for the Cramer-von Mises
   statistic, or \code{rangeBB} for the range statistic. Furthermore, \code{supLM}
   generates an object of class \code{"efpFunctional"} for a certain trimming parameter,
-  see the examples. More details can be found in Zeileis (2004).  
+  see the examples. More details can be found in Zeileis (2006).    
+
+  For setting up an \code{efpFunctional}, the functions
+  \code{computeStatistic}, \code{computePval}, and \code{plotProcess} need to be
+  supplied. These should have the following interfaces:
+  \code{computeStatistic} should take a single argument which is the process
+    itself, i.e., essentially a n x k matrix where n is the number of
+    observations and k the number of processes (regressors).
+  \code{computePval} should take two arguments: a scalar test statistic and the
+    number of processes k.
+  \code{plotProcess} should take two arguments: an object of class \code{"gefp"}
+    and \code{alpha} the level of significance for any boundaries or critical
+    values to be visualized.
 }
 
 \value{
