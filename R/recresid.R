@@ -21,10 +21,12 @@ recresid.lm <- function(x, data = list(), ...)
     return(rr)
 }
 
-recresid.default <- function(x, y, ...)
+recresid.default <- function(x, y, start = ncol(x) + 1, end = nrow(x), ...)
 {
-    n <- nrow(x)
-    q <- ncol(x)
+    stopifnot(start > ncol(x) & start <= nrow(x))
+    stopifnot(end >= start & end <= nrow(x))
+    n <- end
+    q <- start - 1
     w <- rep(0,(n-q))
     Xr1 <- x[1:q,,drop = FALSE]
     xr <- as.vector(x[q+1,])
