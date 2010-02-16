@@ -25,7 +25,7 @@ Fstats(formula, from = 0.15, to = NULL, data = list(), vcov. = NULL)}
 test statistic) is computed. For this an OLS model is fitted for the
 observations before and after the potential change point, i.e. \code{2k}
 parameters have to be estimated, and the error sum of squares is computed (ESS).
-Another OLS model for all obervations with a restricted sum of squares (RSS) is
+Another OLS model for all observations with a restricted sum of squares (RSS) is
 computed, hence \code{k} parameters have to be estimated here. If \code{n} is 
 the number of observations and \code{k} the number of regressors in the model,
 the formula is:

@@ -25,7 +25,7 @@
 
 \usage{
 \method{breakpoints}{formula}(formula, h = 0.15, breaks = NULL,
-    data = list(), \dots)
+    data = list(), hpc = c("none", "foreach"), \dots)
 \method{breakpoints}{breakpointsfull}(obj, breaks = NULL, \dots)
 \method{summary}{breakpointsfull}(object, breaks = NULL, sort = TRUE,
     format.times = NULL, \dots)
@@ -49,6 +49,8 @@
   \item{data}{an optional data frame containing the variables in the model. By
      default the variables are taken from the environment which \code{breakpoints} is
      called from.}
+  \item{hpc}{a character specifying the high performance computing support.
+    Default is \code{"none"}, can be set to \code{"foreach"}.}
   \item{\dots}{currently not used.}
   \item{obj, object}{an object of class \code{"breakpointsfull"}.}
   \item{sort}{logical. If set to \code{TRUE} \code{summary} tries to match
@@ -60,12 +62,12 @@
   \item{lty}{line type.}
   \item{names}{a character vector giving the names of the segments. If of length
     1 it is taken to be a generic prefix, e.g. \code{"segment"}.}
-  \item{het.reg}{logical. Should heterogenous regressors be assumed? If set
+  \item{het.reg}{logical. Should heterogeneous regressors be assumed? If set
     to \code{FALSE} the distribution of the regressors is assumed to be
-    homogenous over the segments.}
-  \item{het.err}{logical. Should heterogenous errors be assumed? If set
+    homogeneous over the segments.}
+  \item{het.err}{logical. Should heterogeneous errors be assumed? If set
     to \code{FALSE} the distribution of the errors is assumed to be
-    homogenous over the segments.}
+    homogeneous over the segments.}
   \item{vcov.}{a function to extract the covariance matrix
      for the coefficients of a fitted model of class \code{"lm"}.}
   \item{sandwich}{logical. Is the function \code{vcov.} the sandwich
@@ -96,7 +98,7 @@
   The foundation for estimating breaks in time series regression models
   was given by Bai (1994) and was extended to multiple breaks by Bai (1997ab)
   and Bai & Perron (1998). \code{breakpoints} implements the algorithm
-  described in Bai & Perron (2003) for simultanous estimation of
+  described in Bai & Perron (2003) for simultaneous estimation of
   multiple breakpoints. The distribution function used for the confidence
   intervals for the breakpoints is given in Bai (1997b). The ideas behind
   this implementation are described in Zeileis et al. (2003).
@@ -117,7 +119,7 @@
   with the associated RSS and BIC. These will be plotted if \code{plot}
   is applied and thus visualize the minimum BIC estimator of the number
   of breakpoints. From an object of class \code{"breakpointsfull"} an
-  arbitrary number of \code{breaks} (admissable by the minimum segment
+  arbitrary number of \code{breaks} (admissible by the minimum segment
   size \code{h}) can be extracted by another application of
   \code{breakpoints}, returning an object of class \code{"breakpoints"}.
   This contains only the breakpoints for the specified number of breaks
@@ -147,7 +149,7 @@
   using the methods for the \code{\link{logLik}} and \code{\link{AIC}}. As
   for linear models the log likelihood is computed on a normal model and
   the degrees of freedom are the number of regression coefficients multiplied
-  by the number of segements plus the number of estimated breakpoints plus
+  by the number of segments plus the number of estimated breakpoints plus
   1 for the error variance. More details can be found on the help page of
   the method \code{\link{logLik.breakpoints}}.
 
@@ -158,6 +160,11 @@
   a larger number of breakpoints.
 
   For illustration see the commented examples below and Zeileis et al. (2003).
+  
+  Optional support for high performance computing is available, currently using
+  \code{\link[foreach]{foreach}} for the dynamic programming algorithm.
+  If \code{hpc = "foreach"} is to be used, a parallel backend should be registered
+  before. See \code{\link[foreach]{foreach}} for more information.
 }
 \section{value}{
   An object of class \code{"breakpoints"} is a list with the following
@@ -206,6 +213,10 @@ Bai J., Perron P. (2003), Computation and Analysis of Multiple Structural Change
 Zeileis A., Kleiber C., Krämer W., Hornik K. (2003), Testing and Dating of
   Structural Changes in Practice, \emph{Computational Statistics and Data Analysis},
   \bold{44}, 109-123. doi:10.1016/S0167-9473(03)00030-6.
+
+Zeileis A., Shah A., Patnaik I. (2010), Testing, Monitoring, and Dating Structural
+  Changes in Exchange Rate Regimes, \emph{Computational Statistics and Data Analysis},
+  Forthcoming. doi:10.1016/j.csda.2009.12.005.
 }
 
 \examples{

@@ -18,7 +18,7 @@
      and \code{\link{sctest.Fstats}} the Chow test and the Nyblom-Hansen test
      can be performed by setting type to \code{"Chow"} or \code{"Nyblom-Hansen"},
      respectively.}
-  \item{h}{numeric from interval (0,1) specifying the bandwidth. Determins the
+  \item{h}{numeric from interval (0,1) specifying the bandwidth. Determines the
      size of the data window relative to the sample size (for MOSUM and ME tests
      only).}
   \item{alt.boundary}{logical. If set to \code{TRUE} alternative boundaries
@@ -26,7 +26,7 @@
      processes only).}
   \item{functional}{indicates which functional should be used to aggregate
      the empirical fluctuation processes to a test statistic.}
- \item{from, to}{numerics. If \code{from} is smaller than 1 they are
+ \item{from, to}{numeric. If \code{from} is smaller than 1 they are
      interpreted as percentages of data and by default \code{to} is taken to be
      the 1 - \code{from}. F statistics will be calculated for the observations
      \code{(n*from):(n*to)}, when \code{n} is the number of observations in the

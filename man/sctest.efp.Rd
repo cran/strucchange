@@ -22,7 +22,7 @@
 \details{The critical values for the MOSUM tests and the ME test are just
 tabulated for confidence levels between 0.1 and 0.01, thus the p
 value approximations will be poor for other p values. Similarly the
-critical values for the maximum and mean squared Euclidian norm (\code{"maxL2"}
+critical values for the maximum and mean squared Euclidean norm (\code{"maxL2"}
 and \code{"meanL2"}) are tabulated for confidence levels between 0.2 and 0.005.}
 
 \value{
@@ -35,7 +35,7 @@ and \code{"meanL2"}) are tabulated for confidence levels between 0.2 and 0.005.}
 
 \references{Brown R.L., Durbin J., Evans J.M. (1975), Techniques for
 testing constancy of regression relationships over time, \emph{Journal of the
-Royal Statistal Society}, B, \bold{37}, 149-163.
+Royal Statistical Society}, B, \bold{37}, 149-163.
 
 Chu C.-S., Hornik K., Kuan C.-M. (1995), MOSUM tests for parameter
 constancy, \emph{Biometrika}, \bold{82}, 603-617.

@@ -7,7 +7,7 @@
 \title{Monitoring of Empirical Fluctuation Processes}
 \description{
   Online monitoring of structural breaks in a linear regression model. A
-  sequential fluctuation test based on parameter estimates or OLS residualas
+  sequential fluctuation test based on parameter estimates or OLS residuals
   signals structural breaks.
 }
 \usage{
@@ -98,6 +98,14 @@ monitor(obj, data = NULL, verbose = TRUE)
   Structural Change in Dynamic Econometric Models,
   \emph{Journal of Applied Econometrics}, \bold{20}, 99--121.
   doi:10.1002/jae.776.
+
+  Zeileis A. (2005), A Unified Approach to Structural Change Tests Based on
+  ML Scores, F Statistics, and OLS Residuals. \emph{Econometric Reviews}, \bold{24},
+  445--466. doi:10.1080/07474930500406053.
+
+  Zeileis A., Shah A., Patnaik I. (2010), Testing, Monitoring, and Dating Structural
+  Changes in Exchange Rate Regimes, \emph{Computational Statistics and Data Analysis},
+  Forthcoming. doi:10.1016/j.csda.2009.12.005.
 }
 \examples{
 df1 <- data.frame(y=rnorm(300))

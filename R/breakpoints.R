@@ -16,7 +16,7 @@ breakpoints.Fstats <- function(obj, ...)
 }
 
 breakpoints.formula <- function(formula, h = 0.15, breaks = NULL,
-                                data = list(), ...)
+                                data = list(), hpc = c("none", "foreach"), ...)
 {
   mf <- model.frame(formula, data = data)
   y <- model.response(mf)
@@ -33,6 +33,12 @@ breakpoints.formula <- function(formula, h = 0.15, breaks = NULL,
     stop("minimum segment size must be smaller than half the number of observations")
   if(is.null(breaks)) breaks <- ceiling(n/h) - 2
 
+  hpc <- match.arg(hpc)
+  if(hpc == "foreach" && !require("foreach")) {
+    warning("High perfomance computing (hpc) support with 'foreach' package is not available, foreach is not installed.")
+    hpc <- "none"
+  }
+
   ## compute ith row of the RSS diagonal matrix, i.e,
   ## the recursive residuals for segments starting at i = 1:(n-h+1)
 
@@ -41,10 +47,11 @@ breakpoints.formula <- function(formula, h = 0.15, breaks = NULL,
     ssr <- recresid(X[i:n,,drop = FALSE],y[i:n])
     c(rep(NA, k), cumsum(ssr^2))
   }
-  RSS.triang <- sapply(1:(n-h+1), RSSi)
+
+  ## employ HPC support if available/selected
+  RSS.triang <- if(hpc == "none") sapply(1:(n-h+1), RSSi) else foreach(i = 1:(n-h+1)) %dopar% RSSi(i)
 
   ## function to extract the RSS(i,j) from RSS.triang
-
   RSS <- function(i,j) RSS.triang[[i]][j - i + 1]
 
   ## compute optimal previous partner if observation i is the mth break

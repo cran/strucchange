@@ -17,14 +17,6 @@ Type 'q()' to quit R.
 
 > library("strucchange")
 Loading required package: zoo
-
-Attaching package: 'zoo'
-
-
-	The following object(s) are masked from package:base :
-
-	 as.Date.numeric 
-
 Loading required package: sandwich
 > 
 > ## Nile data

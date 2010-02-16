@@ -29,7 +29,7 @@
 }
 
 \details{Plots are available for the \code{"max"} functional for all process types.
-For Brownian bridge type processes the maximum or mean squared Euclidian norm
+For Brownian bridge type processes the maximum or mean squared Euclidean norm
 (\code{"maxL2"} and \code{"meanL2"}) can be used for aggregating before plotting.
 No plots are available for the \code{"range"} functional.
 
@@ -46,7 +46,7 @@ structural change can be performed.}
 
 \references{Brown R.L., Durbin J., Evans J.M. (1975), Techniques for
 testing constancy of regression relationships over time, \emph{Journal of the
-Royal Statistal Society}, B, \bold{37}, 149-163.
+Royal Statistical Society}, B, \bold{37}, 149-163.
 
 Chu C.-S., Hornik K., Kuan C.-M. (1995), MOSUM tests for parameter
 constancy, \emph{Biometrika}, \bold{82}, 603-617.

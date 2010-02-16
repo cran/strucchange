@@ -27,7 +27,7 @@
 \details{
   As for linear models the log likelihood is computed on a normal model and
   the degrees of freedom are the number of regression coefficients multiplied
-  by the number of segements plus the number of estimated breakpoints plus
+  by the number of segments plus the number of estimated breakpoints plus
   1 for the error variance.
 
   If \code{AIC} is applied to an object of class \code{"breakpointsfull"}

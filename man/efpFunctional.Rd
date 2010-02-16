@@ -75,7 +75,7 @@ efpFunctional(functional = list(comp = function(x) max(abs(x)), time = max),
 }
 
 \value{
-  \code{efpFunctional} returns a list of class \code{"efpFunctional"} with components inlcuding:
+  \code{efpFunctional} returns a list of class \code{"efpFunctional"} with components including:
   \item{plotProcess}{a function for plotting empirical fluctuation processes,}
   \item{computeStatistic}{a function for computing a test statistic from an empirical fluctuation process,}
   \item{computePval}{a function for computing the corresponding p value,}

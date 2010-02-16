@@ -20,12 +20,12 @@
   \item{level}{the confidence level required.}
   \item{breaks}{an integer specifying the number of breaks to be used.
     By default the breaks of the minimum BIC partition are used.}
-  \item{het.reg}{logical. Should heterogenous regressors be assumed? If set
+  \item{het.reg}{logical. Should heterogeneous regressors be assumed? If set
     to \code{FALSE} the distribution of the regressors is assumed to be
-    homogenous over the segments.}
-  \item{het.err}{logical. Should heterogenous errors be assumed? If set
+    homogeneous over the segments.}
+  \item{het.err}{logical. Should heterogeneous errors be assumed? If set
     to \code{FALSE} the distribution of the errors is assumed to be
-    homogenous over the segments.}
+    homogeneous over the segments.}
   \item{vcov.}{a function to extract the covariance matrix
      for the coefficients of a fitted model of class \code{"lm"}.}
   \item{sandwich}{logical. Is the function \code{vcov.} the sandwich
@@ -46,7 +46,7 @@
 
   The distribution function used for the computation of confidence
   intervals of breakpoints is given in Bai (1997). The procedure, in
-  particular the usage of heterogenous regressors and/or errors, is
+  particular the usage of heterogeneous regressors and/or errors, is
   described in more detail in Bai & Perron (2003).
 
   The breakpoints should be computed from a formula with \code{breakpoints},

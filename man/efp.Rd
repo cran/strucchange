@@ -18,7 +18,7 @@ efp(formula, data, type = , h = 0.15,
      called from.}
   \item{type}{specifies which type of fluctuation process will be
      computed, the default is \code{"Rec-CUSUM"}. For details see below.}
-  \item{h}{a numeric from interval (0,1) sepcifying the bandwidth. determins the
+  \item{h}{a numeric from interval (0,1) specifying the bandwidth. determines the
      size of the data window relative to sample size (for MOSUM and ME processes
      only).}
   \item{dynamic}{logical. If \code{TRUE} the lagged observations are included as
@@ -31,7 +31,7 @@ efp(formula, data, type = , h = 0.15,
 
 \details{If \code{type} is one of \code{"Rec-CUSUM"}, \code{"OLS-CUSUM"},
 \code{"Rec-MOSUM"} or \code{"OLS-MOSUM"} the function \code{efp} will return a
-one-dimensional empiricial process of sums of residuals. Either it will be based
+one-dimensional empirical process of sums of residuals. Either it will be based
 on recursive residuals or on OLS residuals and the process will contain
 CUmulative SUMs or MOving SUMs of residuals in a certain data window.
 For the MOSUM and ME processes all estimations are done for the
@@ -49,7 +49,7 @@ strucchange. It still can be used now, but will be forced to \code{"RE"}.
 If \code{type} is \code{"Score-CUSUM"} or \code{"Score-MOSUM"} a \emph{k+1}-dimensional
 process will be returned, one for each score of the regression coefficients and one for
 the scores of the variance. The process gives the decorrelated cumulative sums of the ML
-scores (in a gaussian model) or first order conditions respectively (in an OLS framework).
+scores (in a Gaussian model) or first order conditions respectively (in an OLS framework).
 
 If there is a single structural change point \eqn{t^*}, the recursive CUSUM path
 starts to depart from its mean 0 at \eqn{t^*}. The Brownian bridge type paths
@@ -63,7 +63,7 @@ performed.
 }
 
 \value{
-  \code{efp} returns a list of class \code{"efp"} with components inlcuding:
+  \code{efp} returns a list of class \code{"efp"} with components including:
   \item{process}{the fitted empirical fluctuation process of class
     \code{"ts"} or \code{"mts"} respectively,}
   \item{type}{a string with the \code{type} of the process fitted,}
@@ -76,7 +76,7 @@ performed.
 
 Brown R.L., Durbin J., Evans J.M. (1975), Techniques for
 testing constancy of regression relationships over time, \emph{Journal of the
-Royal Statistal Society}, B, \bold{37}, 149-163.
+Royal Statistical Society}, B, \bold{37}, 149-163.
 
 Chu C.-S., Hornik K., Kuan C.-M. (1995), MOSUM tests for parameter
 constancy, \emph{Biometrika}, \bold{82}, 603-617.
