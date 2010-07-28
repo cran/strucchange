@@ -58,7 +58,7 @@ mos.bound <- zoo(c(rep(NA, 27), mos.bound[1], mos.bound), index(stock.returns))
 
 ## Lucent Technologies: CUSUM test
 plot(zoo(c(lu.cusum$efpprocess, lu.cusum$process), index(stock.prices)),
-  ylim = c(-1, 1) * cus.bound[102], xlab = "Time", ylab = "empirical fluctuation process")
+  ylim = c(-1, 1) * coredata(cus.bound)[102], xlab = "Time", ylab = "empirical fluctuation process")
 abline(0, 0)
 abline(v = as.Date("2001-09-10"), lty = 2)
 lines(cus.bound, col = 2)
@@ -66,7 +66,7 @@ lines(-cus.bound, col = 2)
 
 ## Lucent Technologies: MOSUM test
 plot(zoo(c(lu.mosum$efpprocess, lu.mosum$process), index(stock.prices)[-(1:14)]),
-  ylim = c(-1, 1) * mos.bound[102], xlab = "Time", ylab = "empirical fluctuation process")
+  ylim = c(-1, 1) * coredata(mos.bound)[102], xlab = "Time", ylab = "empirical fluctuation process")
 abline(0, 0)
 abline(v = as.Date("2001-09-10"), lty = 2)
 lines(mos.bound, col = 2)
@@ -74,7 +74,7 @@ lines(-mos.bound, col = 2)
 
 ## Delta Air Lines: CUSUM test
 plot(zoo(c(dal.cusum$efpprocess, dal.cusum$process), index(stock.prices)),
-  ylim = c(-1, 1) * cus.bound[102], xlab = "Time", ylab = "empirical fluctuation process")
+  ylim = c(-1, 1) * coredata(cus.bound)[102], xlab = "Time", ylab = "empirical fluctuation process")
 abline(0, 0)
 abline(v = as.Date("2001-09-10"), lty = 2)
 lines(cus.bound, col = 2)

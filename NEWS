@@ -1,3 +1,14 @@
+Changes in Version 1.4-1
+
+  o efp(), Fstats(), and breakpoints() are now more cautios about using
+    time series properties from the data and try to check whether any
+    NAs were removed. In general, the functions will yield best results
+    if all NA processing is done before calling them.
+    
+  o Better handling of time series properties for the boundaries in
+    the examples of SP2001.
+
+
 Changes in Version 1.4-0
 
   o added optional high performance computing support by means of the

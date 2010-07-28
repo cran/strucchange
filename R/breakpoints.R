@@ -110,13 +110,13 @@ breakpoints.formula <- function(formula, h = 0.15, breaks = NULL,
 
   opt <- extract.breaks(RSS.table, breaks)
 
-  if(is.ts(data))
-      datatsp <- tsp(data)
-  else {
+  if(is.ts(data)) {
+      if(NROW(data) == n) datatsp <- tsp(data)
+  } else {
       env <- environment(formula)
       if(missing(data)) data <- env
       orig.y <- eval(attr(terms(formula), "variables")[[2]], data, env)
-      if(is.ts(orig.y)) datatsp <- tsp(orig.y)
+      if(is.ts(orig.y) & (NROW(orig.y) == n)) datatsp <- tsp(orig.y)
         else datatsp <- c(1/n, 1, n)
   }
 

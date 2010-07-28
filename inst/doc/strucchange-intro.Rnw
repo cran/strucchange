@@ -65,6 +65,8 @@ test) framework. Since \cite{Z-papers:Zeileis+Leisch+Hornik:2002} various extens
 were added to the package, in particular related to breakpoint estimation
 \citep[also know as ``dating'', discussed in][]{Z-papers:Zeileis+Kleiber+Kraemer:2003}
 and to structural change tests in other parametric models \citep{Z-papers:Zeileis:2006}.
+A more unifying view of the underlying theory is presented in \cite{Z-papers:Zeileis:2005}
+and \cite{Z-papers:Zeileis+Shah+Patnaik:2010}.
 
 Here, we focus on the linear regression model and
 introduce a unified approach for implementing tests from the fluctuation test
@@ -815,7 +817,7 @@ In addition to these methods for the linear regression model, the \texttt{strucc
 package contains infrastructure for testing, monitoring, and dating structural
 changes in other parametric models, e.g., estimated by maximum likelihood. Details
 about the underlying theory can be found in \cite{Z-papers:Zeileis:2005},
-\cite{Z-papers:Zeileis+Hornik:2007}, and \cite{Z-reports:Zeileis+Shah+Patnaik:2008}.
+\cite{Z-papers:Zeileis+Hornik:2007}, and \cite{Z-papers:Zeileis+Shah+Patnaik:2010}.
 The corresponding functions in \texttt{strucchange} are presented in
 \cite{Z-papers:Zeileis+Kleiber+Kraemer:2003} and \cite{Z-papers:Zeileis:2006}.
 

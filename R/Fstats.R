@@ -17,18 +17,25 @@ Fstats <- function(formula, from = 0.15, to = NULL, data = list(), vcov. = NULL)
   n <- length(y)
   e <- lm.fit(X,y)$residuals
 
+  ## check if tsp are available and may be used
+  ## (potentially not if NAs were removed)
   ytsp <- NULL
   orig.y <- NULL
+  tsp_ok <- FALSE
   if(is.ts(data)){
-      ytime <- time(data)
-      ytsp <- tsp(data)
+      if(NROW(data) == n) {
+          ytime <- time(data)
+          ytsp <- tsp(data)
+	  tsp_ok <- TRUE
+      }
   } else {
       env <- environment(formula)
       if(missing(data)) data <- env
       orig.y <- eval(attr(terms(formula), "variables")[[2]], data, env)
-      if(is.ts(orig.y)){
-	ytime <- time(orig.y)
-	ytsp <- tsp(orig.y)
+      if(is.ts(orig.y) & (NROW(orig.y) == n)){
+	    ytime <- time(orig.y)
+	    ytsp <- tsp(orig.y)
+  	    tsp_ok <- TRUE
       }
   }
 
@@ -95,11 +102,11 @@ Fstats <- function(formula, from = 0.15, to = NULL, data = list(), vcov. = NULL)
   else
     min.RSS <- NA
 
-  if(is.ts(data)){
+  if(is.ts(data) & tsp_ok){
       stats <- ts(stats, start = time(data)[from], frequency = frequency(data))
       datatsp <- tsp(data)
   }
-  else if(!is.null(orig.y)) {
+  else if(!is.null(orig.y) & tsp_ok) {
       stats <- ts(stats, start = time(orig.y)[from], frequency = frequency(orig.y))
       datatsp <- tsp(orig.y)
   }
