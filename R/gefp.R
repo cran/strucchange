@@ -66,7 +66,7 @@ gefp <- function(...,
   if(inherits(z, "POSIXt"))
     z <- suppressWarnings(c(z[1] + as.numeric(difftime(z[1], z[2], units = "secs")), z))
   else
-    z <- suppressWarnings(c(z[1] - diff(z[1:2]), z))
+    z <- suppressWarnings(c(z[1] - as.numeric(diff(z[1:2])), z))
 
   process <- psi/sqrt(n)
 

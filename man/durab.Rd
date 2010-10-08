@@ -50,7 +50,7 @@ plot(fsHC)
 ## monitoring
 Durab <- window(durab, start=1964, end = c(1979, 12))
 ols.efp <- efp(durab.model, type = "OLS-CUSUM", data = Durab)
-newborder <- function(k) 1.5778*k/192
+newborder <- function(k) 1.723 * k/192
 ols.mefp <- mefp(ols.efp, period=2)
 ols.mefp2 <- mefp(ols.efp, border=newborder)
 Durab <- window(durab, start=1964)
@@ -58,6 +58,10 @@ ols.mon <- monitor(ols.mefp)
 ols.mon2 <- monitor(ols.mefp2)
 plot(ols.mon)
 lines(boundary(ols.mon2), col = 2)
+## Note: critical value for linear boundary taken from Table III
+## in Zeileis et al. 2005: (1.568 + 1.896)/2 = 1.732 is a linear
+## interpolation between the values for T = 2 and T = 3 at
+## alpha = 0.05. A typo switched 1.732 to 1.723.
 
 ## dating
 bp <- breakpoints(durab.model, data = durab)

@@ -1,3 +1,10 @@
+Changes in Version 1.4-2
+
+  o Improved time index computations in gefp().
+
+  o Added replication notes in ?durab.
+  
+
 Changes in Version 1.4-1
 
   o efp(), Fstats(), and breakpoints() are now more cautios about using
