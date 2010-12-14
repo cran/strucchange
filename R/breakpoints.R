@@ -25,6 +25,7 @@ breakpoints.formula <- function(formula, h = 0.15, breaks = NULL,
 
   n <- nrow(X)
   k <- ncol(X)
+  intercept_only <- isTRUE(all.equal(as.vector(X), rep(1L, n)))
   if(is.null(h)) h <- k + 1
   if(h < 1) h <- floor(n*h)
   if(h <= k)
@@ -44,7 +45,11 @@ breakpoints.formula <- function(formula, h = 0.15, breaks = NULL,
 
   RSSi <- function(i)
   {
-    ssr <- recresid(X[i:n,,drop = FALSE],y[i:n])
+    ssr <- if(intercept_only) {
+      (y[i:n] - cumsum(y[i:n])/(1L:(n-i+1L)))[-1L] * sqrt(1L + 1L/(1L:(n-i)))
+    } else {
+      recresid(X[i:n,,drop = FALSE],y[i:n])
+    }
     c(rep(NA, k), cumsum(ssr^2))
   }
 

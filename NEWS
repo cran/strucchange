@@ -1,3 +1,9 @@
+Changes in Version 1.4-3
+
+  o Speed-up in breakpoints() for the intercept-only case,
+    i.e., breakpoints(y ~ 1).
+
+
 Changes in Version 1.4-2
 
   o Improved time index computations in gefp().

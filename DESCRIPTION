@@ -1,6 +1,6 @@
 Package: strucchange
-Version: 1.4-2
-Date: 2010-10-08
+Version: 1.4-3
+Date: 2010-12-14
 Title: Testing, Monitoring and Dating Structural Changes
 Author: Achim Zeileis, Friedrich Leisch, Bruce Hansen, Kurt Hornik,
         Christian Kleiber
@@ -22,6 +22,6 @@ Depends: R (>= 2.1.0), graphics, stats, zoo, sandwich
 Suggests: lmtest, car, dynlm, e1071, tseries, foreach
 Imports: graphics, stats
 License: GPL-2
-Packaged: 2010-10-08 16:16:26 UTC; zeileis
+Packaged: 2010-12-14 09:44:39 UTC; zeileis
 Repository: CRAN
-Date/Publication: 2010-10-08 17:04:17
+Date/Publication: 2010-12-14 09:52:45
