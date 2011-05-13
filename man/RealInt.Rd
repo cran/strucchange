@@ -17,6 +17,9 @@ Journal of Applied Econometrics
 \references{
 Bai J., Perron P. (2003), Computation and Analysis of Multiple Structural Change
   Models, \emph{Journal of Applied Econometrics}, \bold{18}, 1-22.
+
+Zeileis A., Kleiber C. (2005), Validating Multiple Structural Change Models -
+  A Case Study. Journal of Applied Econometrics, \bold{20}, 685-690.
 }
 
 \examples{

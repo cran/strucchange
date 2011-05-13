@@ -190,13 +190,13 @@ breakdates <- function(obj, format.times = FALSE, ...)
 
 breakdates.breakpoints <- function(obj, format.times = FALSE, breaks = NULL, ...)
 {
-  if("breakpointsfull" %in% class(obj)) obj <- breakpoints(obj, breaks = breaks)
+  if(inherits(obj, "breakpointsfull")) obj <- breakpoints(obj, breaks = breaks)
   if(is.null(format.times)) format.times <- ((obj$datatsp[3] > 1) & (obj$datatsp[3] < obj$nobs))
 
   format.time <- function(timevec, freq)
-  {
-    first <- floor(timevec)
-    second <- round((timevec - first)*freq + 1, digits = 0)
+  {  
+    first <- floor(timevec + .001)
+    second <- floor(freq * (timevec - first) + 1 + .5 + .001)
     RVAL <- cbind(first, second)
     dummy <- function(x) paste(x[1], "(", x[2], ")", sep = "")
     RVAL <- apply(RVAL, 1, dummy)

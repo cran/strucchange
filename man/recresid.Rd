@@ -9,7 +9,8 @@
   (standardized one step prediction errors) of a linear regression model.
 }
 \usage{
-\method{recresid}{default}(x, y, start = ncol(x) + 1, end = nrow(x), \dots)
+\method{recresid}{default}(x, y, start = ncol(x) + 1, end = nrow(x),
+  tol = sqrt(.Machine$double.eps), \dots)
 \method{recresid}{formula}(formula, data = list(), \dots)
 \method{recresid}{lm}(x, data = list(), \dots)
 }
@@ -20,6 +21,8 @@
   \item{start, end}{integer. Index of the first and last observation, respectively,
     for which recursive residuals should be computed. By default, the maximal
     range is selected.}
+  \item{tol}{numeric. A relative tolerance for precision of recursive
+    coefficient estimates, see details.}
   \item{data}{an optional data frame containing the variables in the model. By
      default the variables are taken from the environment which \code{recresid} is
      called from. Specifying \code{data} might also be necessary when applying
@@ -28,9 +31,18 @@
   \item{\dots}{\emph{currently not used.}}
 }
 \details{
-  Under the usual assumptions for the linear regression model the
-  recursive residuals are (asymptotically) normal and
-  i.i.d. (see Brown, Durbin, Evans (1975) for details).
+  Recursive residuals are standardized one-step-ahead prediction errors.
+  Under the usual assumptions for the linear regression model they
+  are (asymptotically) normal and i.i.d. (see Brown, Durbin, Evans, 1975,
+  for details).
+  
+  The default method computes the initial coefficient estimates via QR
+  decomposition, using \code{\link{lm.fit}}. In subsequent steps, the
+  updating formula provided by Brown, Durbin, Evans (1975) is employed.
+  To avoid numerical instabilities in the first steps (with typically
+  small sample sizes), the QR solution is computed for comparison.
+  When the relative difference between the two solutions falls below
+  \code{tol}, only the updating formula is used in subsequent steps.
 }
 \value{
   A vector containing the recursive residuals.
@@ -46,8 +58,7 @@
 \seealso{\code{\link{efp}}}
 
 \examples{
-x <- rnorm(100)
-x[51:100] <- x[51:100] + 2
+x <- rnorm(100) + rep(c(0, 2), each = 50)
 rr <- recresid(x ~ 1)
 plot(cumsum(rr), type = "l")
 

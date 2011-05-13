@@ -112,7 +112,7 @@ ME = 4.3433, p-value = 5.615e-05
 	supF test
 
 data:  Nile.fs 
-sup.F = 75.9298, p-value = 2.220e-16
+sup.F = 75.9298, p-value = 2.22e-16
 
 > sctest(Nile.fs, type = "aveF")
 
@@ -187,7 +187,7 @@ RE = 1.6311, p-value = 0.02904
 	RE test (recursive estimates test) with alternative boundaries
 
 data:  seat.re 
-RE = 4.7365, p-value = 0.0003000
+RE = 4.7365, p-value = 3e-04
 
 > sctest(seat.re, fun = "range")
 

@@ -1,3 +1,14 @@
+Changes in Version 1.4-4
+
+  o Default recresid() method now tries to choose adaptively between
+    using the faster updating formula and the slower full
+    QR decomposition to yield numerically more stable results.
+    In previous versions of the function the QR decomposition was
+    used only in the first iteration.
+  
+  o Improvement in breakdates() computations.
+
+
 Changes in Version 1.4-3
 
   o Speed-up in breakpoints() for the intercept-only case,
