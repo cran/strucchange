@@ -22,7 +22,7 @@ recresid.lm <- function(x, data = list(), ...)
 }
 
 recresid.default <- function(x, y, start = ncol(x) + 1, end = nrow(x),
-  tol = sqrt(.Machine$double.eps), ...)
+  tol = sqrt(.Machine$double.eps)/ncol(x), ...)
 {
   ## checks and data dimensions
   stopifnot(start > ncol(x) & start <= nrow(x))
@@ -32,11 +32,17 @@ recresid.default <- function(x, y, start = ncol(x) + 1, end = nrow(x),
   k <- ncol(x)
   rval <- rep(0, n - q)
 
+  ## convenience function to replace NAs with 0s in coefs
+  coef0 <- function(obj) {
+    cf <- obj$coefficients
+    ifelse(is.na(cf), 0, cf)
+  }
+
   ## initialize recursion
   y1 <- y[1:q]
   fm <- lm.fit(x[1:q, , drop = FALSE], y1)
   X1 <- chol2inv(qr.R(fm$qr))	 
-  betar <- fm$coefficients
+  betar <- coef0(fm)
   xr <- as.vector(x[q+1,])
   fr <- as.vector((1 + (t(xr) %*% X1 %*% xr)))
   rval[1] <- (y[q+1] - t(xr) %*% betar)/sqrt(fr)
@@ -48,6 +54,9 @@ recresid.default <- function(x, y, start = ncol(x) + 1, end = nrow(x),
   {
     for(r in ((q+2):n))
     {
+        ## check for NAs in coefficients
+	nona <- all(!is.na(fm$coefficients))
+    
 	## recursion formula
         X1 <- X1 - (X1 %*% outer(xr, xr) %*% X1)/fr
         betar <- betar + X1 %*% xr * rval[r-q-1] * sqrt(fr)
@@ -56,10 +65,11 @@ recresid.default <- function(x, y, start = ncol(x) + 1, end = nrow(x),
 	if(check) {
 	  y1 <- y[1:(r-1)]
 	  fm <- lm.fit(x[1:(r-1), , drop = FALSE], y1)
+	  nona <- nona & all(!is.na(betar)) & all(!is.na(fm$coefficients))
 	  ## keep checking?
-	  if(max(abs((betar - fm$coefficients) / fm$coefficients)) < tol) check <- FALSE 
+	  if(nona && isTRUE(all.equal(as.vector(fm$coefficients), as.vector(betar), tol = tol))) check <- FALSE 
 	  X1 <- chol2inv(qr.R(fm$qr))
-          betar <- fm$coefficients
+          betar <- coef0(fm)
         }
         
         ## residual

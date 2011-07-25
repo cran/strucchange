@@ -10,7 +10,7 @@
 }
 \usage{
 \method{recresid}{default}(x, y, start = ncol(x) + 1, end = nrow(x),
-  tol = sqrt(.Machine$double.eps), \dots)
+  tol = sqrt(.Machine$double.eps)/ncol(x), \dots)
 \method{recresid}{formula}(formula, data = list(), \dots)
 \method{recresid}{lm}(x, data = list(), \dots)
 }
@@ -41,8 +41,9 @@
   updating formula provided by Brown, Durbin, Evans (1975) is employed.
   To avoid numerical instabilities in the first steps (with typically
   small sample sizes), the QR solution is computed for comparison.
-  When the relative difference between the two solutions falls below
-  \code{tol}, only the updating formula is used in subsequent steps.
+  When the relative difference (assessed bey \code{\link{all.equal}})
+  between the two solutions falls below \code{tol}, only the updating
+  formula is used in subsequent steps.
 }
 \value{
   A vector containing the recursive residuals.

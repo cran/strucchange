@@ -1,3 +1,14 @@
+Changes in Version 1.4-5
+
+  o Further improvements in new recresid() default method.
+    Now also works correctly if some coefficients are not identified
+    on the initial subsamples in the recursion.
+  
+  o Resaved datasets to reduce storage requirements.
+
+  o Fixed bug in breakpoints() for time series that contain NAs.
+
+
 Changes in Version 1.4-4
 
   o Default recresid() method now tries to choose adaptively between

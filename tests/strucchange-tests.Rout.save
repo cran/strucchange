@@ -1,7 +1,8 @@
 
-R version 2.8.0 (2008-10-20)
-Copyright (C) 2008 The R Foundation for Statistical Computing
+R version 2.13.1 (2011-07-08)
+Copyright (C) 2011 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
+Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -17,6 +18,13 @@ Type 'q()' to quit R.
 
 > library("strucchange")
 Loading required package: zoo
+
+Attaching package: 'zoo'
+
+The following object(s) are masked from 'package:base':
+
+    as.Date
+
 Loading required package: sandwich
 > 
 > ## Nile data
