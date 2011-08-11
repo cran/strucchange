@@ -1,3 +1,9 @@
+Changes in Version 1.4-6
+
+  o Default recresid() can now also deal with regressors that do not
+    vary across (small) subsamples.
+
+
 Changes in Version 1.4-5
 
   o Further improvements in new recresid() default method.

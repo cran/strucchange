@@ -37,11 +37,18 @@ recresid.default <- function(x, y, start = ncol(x) + 1, end = nrow(x),
     cf <- obj$coefficients
     ifelse(is.na(cf), 0, cf)
   }
+  Xinv0 <- function(obj) {
+    qr <- obj$qr
+    rval <- matrix(0, ncol = k, nrow = k)
+    wi <- qr$pivot[1:qr$rank]
+    rval[wi,wi] <- chol2inv(qr$qr[1:qr$rank, 1:qr$rank, drop = FALSE])
+    rval
+  }
 
   ## initialize recursion
   y1 <- y[1:q]
   fm <- lm.fit(x[1:q, , drop = FALSE], y1)
-  X1 <- chol2inv(qr.R(fm$qr))	 
+  X1 <- Xinv0(fm)	 
   betar <- coef0(fm)
   xr <- as.vector(x[q+1,])
   fr <- as.vector((1 + (t(xr) %*% X1 %*% xr)))
@@ -68,7 +75,7 @@ recresid.default <- function(x, y, start = ncol(x) + 1, end = nrow(x),
 	  nona <- nona & all(!is.na(betar)) & all(!is.na(fm$coefficients))
 	  ## keep checking?
 	  if(nona && isTRUE(all.equal(as.vector(fm$coefficients), as.vector(betar), tol = tol))) check <- FALSE 
-	  X1 <- chol2inv(qr.R(fm$qr))
+	  X1 <- Xinv0(fm)
           betar <- coef0(fm)
         }
         
