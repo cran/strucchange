@@ -32,7 +32,15 @@ breakpoints.formula <- function(formula, h = 0.15, breaks = NULL,
     stop("minimum segment size must be greater than the number of regressors")
   if(h > floor(n/2))
     stop("minimum segment size must be smaller than half the number of observations")
-  if(is.null(breaks)) breaks <- ceiling(n/h) - 2
+  if(is.null(breaks)) {
+    breaks <- ceiling(n/h) - 2
+  } else {
+    if(breaks > ceiling(n/h) - 2) {
+      breaks0 <- breaks
+      breaks <- ceiling(n/h) - 2
+      warning(sprintf("requested number of breaks = %i too large, changed to %i", breaks0, breaks))
+    }
+  }
 
   hpc <- match.arg(hpc)
   if(hpc == "foreach" && !require("foreach")) {

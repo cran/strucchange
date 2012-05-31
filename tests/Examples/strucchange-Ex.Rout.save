@@ -1,0 +1,2436 @@
+
+R version 2.15.0 (2012-03-30)
+Copyright (C) 2012 The R Foundation for Statistical Computing
+ISBN 3-900051-07-0
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> pkgname <- "strucchange"
+> source(file.path(R.home("share"), "R", "examples-header.R"))
+> options(warn = 1)
+> library('strucchange')
+Loading required package: zoo
+
+Attaching package: 'zoo'
+
+The following object(s) are masked from 'package:base':
+
+    as.Date, as.Date.numeric
+
+Loading required package: sandwich
+> 
+> assign(".oldSearch", search(), pos = 'CheckExEnv')
+> cleanEx()
+> nameEx("BostonHomicide")
+> ### * BostonHomicide
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: BostonHomicide
+> ### Title: Youth Homicides in Boston
+> ### Aliases: BostonHomicide
+> ### Keywords: datasets
+> 
+> ### ** Examples
+> 
+> data("BostonHomicide")
+> attach(BostonHomicide)
+> 
+> ## data from Table 1
+> tapply(homicides, year, mean)
+    1992     1993     1994     1995     1996     1997     1998 
+3.083333 4.000000 3.166667 3.833333 2.083333 1.250000 0.800000 
+> populationBM[0:6*12 + 7]
+[1] 12977 12455 12272 12222 11895 12038    NA
+> tapply(ahomicides25, year, mean)
+    1992     1993     1994     1995     1996     1997     1998 
+3.250000 4.166667 3.916667 4.166667 2.666667 2.333333 1.400000 
+> tapply(ahomicides35, year, mean)
+     1992      1993      1994      1995      1996      1997      1998 
+0.8333333 1.0833333 1.3333333 1.1666667 1.0833333 0.7500000 0.4000000 
+> population[0:6*12 + 7]
+[1] 228465 227218 226611 231367 230744 228696     NA
+> unemploy[0:6*12 + 7]
+[1] 20.2 18.8 15.9 14.7 13.8 12.6   NA
+> 
+> ## model A
+> ## via OLS
+> fmA <- lm(homicides ~ populationBM + season)
+> anova(fmA)
+Analysis of Variance Table
+
+Response: homicides
+             Df  Sum Sq Mean Sq F value  Pr(>F)  
+populationBM  1  14.364 14.3642  3.7961 0.05576 .
+season       11  47.254  4.2959  1.1353 0.34985  
+Residuals    64 242.174  3.7840                  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
+> ## as GLM
+> fmA1 <- glm(homicides ~ populationBM + season, family = poisson)
+> anova(fmA1, test = "Chisq")
+Analysis of Deviance Table
+
+Model: poisson, link: log
+
+Response: homicides
+
+Terms added sequentially (first to last)
+
+
+             Df Deviance Resid. Df Resid. Dev Pr(>Chi)  
+NULL                            76    115.649           
+populationBM  1   4.9916        75    110.657  0.02547 *
+season       11  18.2135        64     92.444  0.07676 .
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
+> 
+> ## model B & C
+> fmB <- lm(homicides ~ populationBM + season + ahomicides25)
+> fmC <- lm(homicides ~ populationBM + season + ahomicides25 + unemploy)
+> 
+> detach(BostonHomicide)
+> 
+> 
+> 
+> cleanEx()
+> nameEx("DJIA")
+> ### * DJIA
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: DJIA
+> ### Title: Dow Jones Industrial Average
+> ### Aliases: DJIA
+> ### Keywords: datasets
+> 
+> ### ** Examples
+> 
+> data("DJIA")
+> ## look at log-difference returns
+> djia <- diff(log(DJIA))
+> plot(djia)
+> 
+> ## convenience functions
+> ## set up a normal regression model which
+> ## explicitely also models the variance
+> normlm <- function(formula, data = list()) {
++   rval <- lm(formula, data = data)
++   class(rval) <- c("normlm", "lm")
++   return(rval)
++ }
+> estfun.normlm <- function(obj) {
++   res <- residuals(obj)
++   ef <- NextMethod(obj)
++   sigma2 <- mean(res^2)
++   rval <- cbind(ef, res^2 - sigma2)
++   colnames(rval) <- c(colnames(ef), "(Variance)")
++   return(rval)
++ }
+> 
+> ## normal model (with constant mean and variance) for log returns
+> m1 <- gefp(djia ~ 1, fit = normlm, vcov = meatHAC, sandwich = FALSE)
+> plot(m1, aggregate = FALSE)
+> ## suggests a clear break in the variance (but not the mean)
+> 
+> ## dating
+> bp <- breakpoints(I(djia^2) ~ 1)
+> plot(bp)
+> ## -> clearly one break
+> bp
+
+	 Optimal 2-segment partition: 
+
+Call:
+breakpoints.formula(formula = I(djia^2) ~ 1)
+
+Breakpoints at observation number:
+89 
+
+Corresponding to breakdates:
+0.552795 
+> time(djia)[bp$breakpoints]
+[1] "1973-03-16"
+> 
+> ## visualization
+> plot(djia)
+> abline(v = time(djia)[bp$breakpoints], lty = 2)
+> lines(time(djia)[confint(bp)$confint[c(1,3)]], rep(min(djia), 2), col = 2, type = "b", pch = 3)
+> 
+> 
+> 
+> cleanEx()
+> nameEx("Fstats")
+> ### * Fstats
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: Fstats
+> ### Title: F Statistics
+> ### Aliases: Fstats print.Fstats
+> ### Keywords: regression
+> 
+> ### ** Examples
+> 
+> ## Nile data with one breakpoint: the annual flows drop in 1898
+> ## because the first Ashwan dam was built
+> data("Nile")
+> plot(Nile)
+> 
+> ## test the null hypothesis that the annual flow remains constant
+> ## over the years
+> fs.nile <- Fstats(Nile ~ 1)
+> plot(fs.nile)
+> sctest(fs.nile)
+
+	supF test
+
+data:  fs.nile 
+sup.F = 75.9298, p-value = 2.22e-16
+
+> ## visualize the breakpoint implied by the argmax of the F statistics
+> plot(Nile)
+> lines(breakpoints(fs.nile))
+> 
+> ## UK Seatbelt data: a SARIMA(1,0,0)(1,0,0)_12 model
+> ## (fitted by OLS) is used and reveals (at least) two
+> ## breakpoints - one in 1973 associated with the oil crisis and
+> ## one in 1983 due to the introduction of compulsory
+> ## wearing of seatbelts in the UK.
+> data("UKDriverDeaths")
+> seatbelt <- log10(UKDriverDeaths)
+> seatbelt <- cbind(seatbelt, lag(seatbelt, k = -1), lag(seatbelt, k = -12))
+> colnames(seatbelt) <- c("y", "ylag1", "ylag12")
+> seatbelt <- window(seatbelt, start = c(1970, 1), end = c(1984,12))
+> plot(seatbelt[,"y"], ylab = expression(log[10](casualties)))
+> 
+> ## compute F statistics for potential breakpoints between
+> ## 1971(6) (corresponds to from = 0.1) and 1983(6) (corresponds to
+> ## to = 0.9 = 1 - from, the default)
+> ## compute F statistics
+> fs <- Fstats(y ~ ylag1 + ylag12, data = seatbelt, from = 0.1)
+> ## this gives the same result
+> fs <- Fstats(y ~ ylag1 + ylag12, data = seatbelt, from = c(1971, 6),
++              to = c(1983, 6))
+> ## plot the F statistics
+> plot(fs, alpha = 0.01)
+> ## plot F statistics with aveF boundary
+> plot(fs, aveF = TRUE)
+> ## perform the expF test
+> sctest(fs, type = "expF")
+
+	expF test
+
+data:  fs 
+exp.F = 6.4247, p-value = 0.008093
+
+> 
+> 
+> 
+> cleanEx()
+> nameEx("GermanM1")
+> ### * GermanM1
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Encoding: UTF-8
+> 
+> ### Name: GermanM1
+> ### Title: German M1 Money Demand
+> ### Aliases: GermanM1 historyM1 monitorM1
+> ### Keywords: datasets
+> 
+> ### ** Examples
+> 
+> data("GermanM1")
+> ## Lütkepohl et al. (1999) use the following model
+> LTW.model <- dm ~ dy2 + dR + dR1 + dp + m1 + y1 + R1 + season
+> ## Zeileis et al. (2005) use
+> M1.model <- dm ~ dy2 + dR + dR1 + dp + ecm.res + season
+> 
+> 
+> ## historical tests
+> ols <- efp(LTW.model, data = GermanM1, type = "OLS-CUSUM")
+> plot(ols)
+> re <- efp(LTW.model, data = GermanM1, type = "fluctuation")
+> plot(re)
+> fs <- Fstats(LTW.model, data = GermanM1, from = 0.1)
+> plot(fs)
+> 
+> ## monitoring
+> M1 <- historyM1
+> ols.efp <- efp(M1.model, type = "OLS-CUSUM", data = M1)
+> newborder <- function(k) 1.5778*k/118
+> ols.mefp <- mefp(ols.efp, period = 2)
+> ols.mefp2 <- mefp(ols.efp, border = newborder)
+> M1 <- GermanM1
+> ols.mon <- monitor(ols.mefp)
+Break detected at observation # 128 
+> ols.mon2 <- monitor(ols.mefp2)
+Break detected at observation # 135 
+> plot(ols.mon)
+> lines(boundary(ols.mon2), col = 2)
+> 
+> ## dating
+> bp <- breakpoints(LTW.model, data = GermanM1)
+> summary(bp)
+
+	 Optimal (m+1)-segment partition: 
+
+Call:
+breakpoints.formula(formula = LTW.model, data = GermanM1)
+
+Breakpoints at observation number:
+                       
+m = 1               119
+m = 2      42       119
+m = 3      48 71    119
+m = 4   27 48 71    119
+m = 5   27 48 71 98 119
+
+Corresponding to breakdates:
+                                               
+m = 1                                   1990(3)
+m = 2           1971(2)                 1990(3)
+m = 3           1972(4) 1978(3)         1990(3)
+m = 4   1967(3) 1972(4) 1978(3)         1990(3)
+m = 5   1967(3) 1972(4) 1978(3) 1985(2) 1990(3)
+
+Fit:
+                                                                         
+m   0             1             2             3             4            
+RSS  3.682680e-02  1.915789e-02  1.521998e-02  1.300657e-02  1.052593e-02
+BIC -6.974416e+02 -7.296334e+02 -7.025485e+02 -6.652504e+02 -6.355766e+02
+                 
+m   5            
+RSS  9.198182e-03
+BIC -5.951538e+02
+> plot(bp)
+> 
+> plot(fs)
+> lines(confint(bp))
+> 
+> 
+> 
+> cleanEx()
+> nameEx("Grossarl")
+> ### * Grossarl
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: Grossarl
+> ### Title: Marriages, Births and Deaths in Grossarl
+> ### Aliases: Grossarl
+> ### Keywords: datasets
+> 
+> ### ** Examples
+> 
+> data("Grossarl")
+> 
+> ## time series of births, deaths, marriages
+> ###########################################
+> 
+> with(Grossarl, plot(cbind(deaths, illegitimate + legitimate, marriages),
++   plot.type = "single", col = grey(c(0.7, 0, 0)), lty = c(1, 1, 3),
++   lwd = 1.5, ylab = "annual Grossarl series"))
+> legend("topright", c("deaths", "births", "marriages"), col = grey(c(0.7, 0, 0)),
++   lty = c(1, 1, 3), bty = "n")
+> 
+> ## illegitimate births
+> ######################
+> ## lm + MOSUM
+> plot(Grossarl$fraction)
+> fm.min <- lm(fraction ~ politics, data = Grossarl)
+> fm.ext <- lm(fraction ~ politics + morals + nuptiality + marriages,
++   data = Grossarl)
+> lines(ts(fitted(fm.min), start = 1700), col = 2)
+> lines(ts(fitted(fm.ext), start = 1700), col = 4)
+> mos.min <- efp(fraction ~ politics, data = Grossarl, type = "OLS-MOSUM")
+> mos.ext <- efp(fraction ~ politics + morals + nuptiality + marriages,
++   data = Grossarl, type = "OLS-MOSUM")
+> plot(mos.min)
+> lines(mos.ext, lty = 2)
+> 
+> ## dating
+> bp <- breakpoints(fraction ~ 1, data = Grossarl, h = 0.1)
+> summary(bp)
+
+	 Optimal (m+1)-segment partition: 
+
+Call:
+breakpoints.formula(formula = fraction ~ 1, h = 0.1, data = Grossarl)
+
+Breakpoints at observation number:
+                                    
+m = 1                127            
+m = 2      55        122            
+m = 3      55        124         180
+m = 4      55        122     157 179
+m = 5      54 86     122     157 179
+m = 6   35 55 86     122     157 179
+m = 7   35 55 80 101 122     157 179
+m = 8   35 55 79 99  119 139 159 179
+
+Corresponding to breakdates:
+                                               
+m = 1                       1826               
+m = 2        1754           1821               
+m = 3        1754           1823           1879
+m = 4        1754           1821      1856 1878
+m = 5        1753 1785      1821      1856 1878
+m = 6   1734 1754 1785      1821      1856 1878
+m = 7   1734 1754 1779 1800 1821      1856 1878
+m = 8   1734 1754 1778 1798 1818 1838 1858 1878
+
+Fit:
+                                                                    
+m   0            1            2            3            4           
+RSS    1.1087756    0.8756063    0.6854095    0.6587436    0.6279026
+BIC -460.8401553 -497.4625451 -535.8459249 -533.1857089 -532.1789212
+                                                       
+m   5            6            7            8           
+RSS    0.6018729    0.5917348    0.5933721    0.6084319
+BIC -530.0500553 -522.8509509 -511.7016920 -496.0924207
+> ## RSS, BIC, AIC
+> plot(bp)
+> plot(0:8, AIC(bp), type = "b")
+> 
+> ## probably use 5 or 6 breakpoints and compare with
+> ## coding of the factors as used by us
+> ##
+> ## politics                   1803      1816 1850
+> ## morals      1736 1753 1771 1803
+> ## nuptiality                 1803 1810 1816      1883
+> ##
+> ## m = 5            1753 1785           1821 1856 1878
+> ## m = 6       1734 1754 1785           1821 1856 1878
+> ##              6    2    5              1    4    3
+> 
+> ## fitted models
+> coef(bp, breaks = 6)
+            (Intercept)
+1700 - 1734  0.16933985
+1735 - 1754  0.14078070
+1755 - 1785  0.09890276
+1786 - 1821  0.05955620
+1822 - 1856  0.17441529
+1857 - 1878  0.22425604
+1879 - 1899  0.15414723
+> plot(Grossarl$fraction)
+> lines(fitted(bp, breaks = 6), col = 2)
+> lines(ts(fitted(fm.ext), start = 1700), col = 4)
+> 
+> 
+> ## marriages
+> ############
+> ## lm + MOSUM
+> plot(Grossarl$marriages)
+> fm.min <- lm(marriages ~ politics, data = Grossarl)
+> fm.ext <- lm(marriages ~ politics + morals + nuptiality, data = Grossarl)
+> lines(ts(fitted(fm.min), start = 1700), col = 2)
+> lines(ts(fitted(fm.ext), start = 1700), col = 4)
+> mos.min <- efp(marriages ~ politics, data = Grossarl, type = "OLS-MOSUM")
+> mos.ext <- efp(marriages ~ politics + morals + nuptiality, data = Grossarl,
++   type = "OLS-MOSUM")
+> plot(mos.min)
+> lines(mos.ext, lty = 2)
+> 
+> ## dating
+> bp <- breakpoints(marriages ~ 1, data = Grossarl, h = 0.1)
+> summary(bp)
+
+	 Optimal (m+1)-segment partition: 
+
+Call:
+breakpoints.formula(formula = marriages ~ 1, h = 0.1, data = Grossarl)
+
+Breakpoints at observation number:
+                                   
+m = 1               114            
+m = 2      39       114            
+m = 3      39       114         176
+m = 4      39    95 115         176
+m = 5      39 62 95 115         176
+m = 6      39 62 95 115 136     176
+m = 7      39 62 95 115 136 156 176
+m = 8   21 41 62 95 115 136 156 176
+
+Corresponding to breakdates:
+                                               
+m = 1                       1813               
+m = 2        1738           1813               
+m = 3        1738           1813           1875
+m = 4        1738      1794 1814           1875
+m = 5        1738 1761 1794 1814           1875
+m = 6        1738 1761 1794 1814 1835      1875
+m = 7        1738 1761 1794 1814 1835 1855 1875
+m = 8   1720 1740 1761 1794 1814 1835 1855 1875
+
+Fit:
+                                                                           
+m   0        1        2        3        4        5        6        7       
+RSS 3831.680 3059.473 2863.003 2722.783 2670.544 2633.841 2625.697 2625.597
+BIC 1168.720 1134.305 1131.627 1132.180 1138.903 1146.731 1156.709 1167.298
+            
+m   8       
+RSS 2645.033
+BIC 1179.369
+> ## RSS, BIC, AIC
+> plot(bp)
+> plot(0:8, AIC(bp), type = "b")
+> 
+> ## probably use 3 or 4 breakpoints and compare with
+> ## coding of the factors as used by us
+> ##
+> ## politics                   1803      1816 1850
+> ## morals      1736 1753 1771 1803
+> ## nuptiality                 1803 1810 1816      1883
+> ##
+> ## m = 3       1738                     1813      1875
+> ## m = 4       1738      1794           1814      1875
+> ##              2         4              1         3
+> 
+> ## fitted models
+> coef(bp, breaks = 4)
+            (Intercept)
+1700 - 1738   13.487179
+1739 - 1794   10.160714
+1795 - 1814   12.150000
+1815 - 1875    6.885246
+1876 - 1899    9.750000
+> plot(Grossarl$marriages)
+> lines(fitted(bp, breaks = 4), col = 2)
+> lines(ts(fitted(fm.ext), start = 1700), col = 4)
+> 
+> 
+> 
+> cleanEx()
+> nameEx("PhillipsCurve")
+> ### * PhillipsCurve
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: PhillipsCurve
+> ### Title: UK Phillips Curve Equation Data
+> ### Aliases: PhillipsCurve
+> ### Keywords: datasets
+> 
+> ### ** Examples
+> 
+> ## load and plot data
+> data("PhillipsCurve")
+> uk <- window(PhillipsCurve, start = 1948)
+> plot(uk[, "dp"])
+> 
+> ## AR(1) inflation model
+> ## estimate breakpoints
+> bp.inf <- breakpoints(dp ~ dp1, data = uk, h = 8)
+> plot(bp.inf)
+> summary(bp.inf)
+
+	 Optimal (m+1)-segment partition: 
+
+Call:
+breakpoints.formula(formula = dp ~ dp1, h = 8, data = uk)
+
+Breakpoints at observation number:
+               
+m = 1     20   
+m = 2     20 28
+m = 3   9 20 28
+
+Corresponding to breakdates:
+                      
+m = 1        1967     
+m = 2        1967 1975
+m = 3   1956 1967 1975
+
+Fit:
+                                                           
+m   0             1             2             3            
+RSS    0.03067807    0.02671859    0.01837817    0.01785840
+BIC -162.34174380 -156.80265333 -160.70385201 -150.78479201
+> 
+> ## fit segmented model with three breaks
+> fac.inf <- breakfactor(bp.inf, breaks = 2, label = "seg")
+> fm.inf <- lm(dp ~ 0 + fac.inf/dp1, data = uk)
+> summary(fm.inf)
+
+Call:
+lm(formula = dp ~ 0 + fac.inf/dp1, data = uk)
+
+Residuals:
+      Min        1Q    Median        3Q       Max 
+-0.046987 -0.014861 -0.003593  0.006286  0.058081 
+
+Coefficients:
+                 Estimate Std. Error t value Pr(>|t|)    
+fac.infseg1      0.024501   0.011176   2.192   0.0353 *  
+fac.infseg2     -0.000775   0.017853  -0.043   0.9656    
+fac.infseg3      0.017603   0.015007   1.173   0.2489    
+fac.infseg1:dp1  0.274012   0.269892   1.015   0.3171    
+fac.infseg2:dp1  1.343369   0.224521   5.983 9.05e-07 ***
+fac.infseg3:dp1  0.683410   0.130106   5.253 8.07e-06 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
+
+Residual standard error: 0.02325 on 34 degrees of freedom
+Multiple R-squared: 0.9237,	Adjusted R-squared: 0.9103 
+F-statistic: 68.64 on 6 and 34 DF,  p-value: < 2.2e-16 
+
+> 
+> ## Results from Table 2 in Bai & Perron (2003):
+> ## coefficient estimates
+> coef(bp.inf, breaks = 2)
+              (Intercept)       dp1
+1948 - 1967  0.0245010729 0.2740125
+1968 - 1975 -0.0007750299 1.3433686
+1976 - 1987  0.0176032179 0.6834098
+> ## corresponding standard errors
+> sqrt(sapply(vcov(bp.inf, breaks = 2), diag))
+            1948 - 1967 1968 - 1975 1976 - 1987
+(Intercept) 0.008268814  0.01985539  0.01571339
+dp1         0.199691273  0.24969992  0.13622996
+> ## breakpoints and confidence intervals
+> confint(bp.inf, breaks = 2)
+
+	 Confidence intervals for breakpoints
+	 of optimal 3-segment partition: 
+
+Call:
+confint.breakpointsfull(object = bp.inf, breaks = 2)
+
+Breakpoints at observation number:
+  2.5 % breakpoints 97.5 %
+1    18          20     25
+2    26          28     34
+
+Corresponding to breakdates:
+  2.5 % breakpoints 97.5 %
+1  1965        1967   1972
+2  1973        1975   1981
+> 
+> ## Phillips curve equation
+> ## estimate breakpoints
+> bp.pc <- breakpoints(dw ~ dp1 + du + u1, data = uk, h = 5, breaks = 5)
+> ## look at RSS and BIC
+> plot(bp.pc)
+> summary(bp.pc)
+
+	 Optimal (m+1)-segment partition: 
+
+Call:
+breakpoints.formula(formula = dw ~ dp1 + du + u1, h = 5, breaks = 5, 
+    data = uk)
+
+Breakpoints at observation number:
+                      
+m = 1            26   
+m = 2         20 28   
+m = 3   9        25 30
+m = 4   11 16    25 30
+m = 5   11 16 22 27 32
+
+Corresponding to breakdates:
+                                
+m = 1                  1973     
+m = 2             1967 1975     
+m = 3   1956           1972 1977
+m = 4   1958 1963      1972 1977
+m = 5   1958 1963 1969 1974 1979
+
+Fit:
+                                                                         
+m   0             1             2             3             4            
+RSS  3.408620e-02  1.690204e-02  1.062031e-02  7.834590e-03  5.183220e-03
+BIC -1.507502e+02 -1.603642e+02 -1.605064e+02 -1.542308e+02 -1.523113e+02
+                 
+m   5            
+RSS  3.388099e-03
+BIC -1.508732e+02
+> 
+> ## fit segmented model with three breaks
+> fac.pc <- breakfactor(bp.pc, breaks = 2, label = "seg")
+> fm.pc <- lm(dw ~ 0 + fac.pc/dp1 + du + u1, data = uk)
+> summary(fm.pc)
+
+Call:
+lm(formula = dw ~ 0 + fac.pc/dp1 + du + u1, data = uk)
+
+Residuals:
+      Min        1Q    Median        3Q       Max 
+-0.041392 -0.011516  0.000089  0.010036  0.044539 
+
+Coefficients:
+               Estimate Std. Error t value Pr(>|t|)    
+fac.pcseg1      0.06574    0.01169   5.623 3.24e-06 ***
+fac.pcseg2      0.06231    0.01883   3.310  0.00232 ** 
+fac.pcseg3      0.18093    0.05388   3.358  0.00204 ** 
+du             -0.14408    0.58218  -0.247  0.80611    
+u1             -0.87516    0.37274  -2.348  0.02523 *  
+fac.pcseg1:dp1  0.09373    0.24053   0.390  0.69936    
+fac.pcseg2:dp1  1.23143    0.20498   6.008 1.06e-06 ***
+fac.pcseg3:dp1  0.01618    0.25667   0.063  0.95013    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
+
+Residual standard error: 0.02021 on 32 degrees of freedom
+Multiple R-squared: 0.9655,	Adjusted R-squared: 0.9569 
+F-statistic:   112 on 8 and 32 DF,  p-value: < 2.2e-16 
+
+> 
+> ## Results from Table 3 in Bai & Perron (2003):
+> ## coefficient estimates
+> coef(fm.pc)
+    fac.pcseg1     fac.pcseg2     fac.pcseg3             du             u1 
+    0.06574278     0.06231337     0.18092502    -0.14408073    -0.87515585 
+fac.pcseg1:dp1 fac.pcseg2:dp1 fac.pcseg3:dp1 
+    0.09372759     1.23143008     0.01617826 
+> ## corresponding standard errors
+> sqrt(diag(vcov(fm.pc)))
+    fac.pcseg1     fac.pcseg2     fac.pcseg3             du             u1 
+    0.01169149     0.01882668     0.05388166     0.58217571     0.37273955 
+fac.pcseg1:dp1 fac.pcseg2:dp1 fac.pcseg3:dp1 
+    0.24052539     0.20497973     0.25666903 
+> ## breakpoints and confidence intervals
+> confint(bp.pc, breaks = 2, het.err = FALSE)
+
+	 Confidence intervals for breakpoints
+	 of optimal 3-segment partition: 
+
+Call:
+confint.breakpointsfull(object = bp.pc, breaks = 2, het.err = FALSE)
+
+Breakpoints at observation number:
+  2.5 % breakpoints 97.5 %
+1    19          20     21
+2    27          28     29
+
+Corresponding to breakdates:
+  2.5 % breakpoints 97.5 %
+1  1966        1967   1968
+2  1974        1975   1976
+> 
+> 
+> 
+> cleanEx()
+> nameEx("RealInt")
+> ### * RealInt
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: RealInt
+> ### Title: US Ex-post Real Interest Rate
+> ### Aliases: RealInt
+> ### Keywords: datasets
+> 
+> ### ** Examples
+> 
+> ## load and plot data
+> data("RealInt")
+> plot(RealInt)
+> 
+> ## estimate breakpoints
+> bp.ri <- breakpoints(RealInt ~ 1, h = 15)
+> plot(bp.ri)
+> summary(bp.ri)
+
+	 Optimal (m+1)-segment partition: 
+
+Call:
+breakpoints.formula(formula = RealInt ~ 1, h = 15)
+
+Breakpoints at observation number:
+                      
+m = 1               79
+m = 2         47    79
+m = 3      24 47    79
+m = 4      24 47 64 79
+m = 5   16 31 47 64 79
+
+Corresponding to breakdates:
+                                               
+m = 1                                   1980(3)
+m = 2                   1972(3)         1980(3)
+m = 3           1966(4) 1972(3)         1980(3)
+m = 4           1966(4) 1972(3) 1976(4) 1980(3)
+m = 5   1964(4) 1968(3) 1972(3) 1976(4) 1980(3)
+
+Fit:
+                                                               
+m   0         1         2         3         4         5        
+RSS 1214.9219  644.9955  455.9502  445.1819  444.8797  449.6395
+BIC  555.7445  499.7952  473.3381  480.1458  489.3454  499.7110
+> 
+> ## fit segmented model with three breaks
+> fac.ri <- breakfactor(bp.ri, breaks = 3, label = "seg")
+> fm.ri <- lm(RealInt ~ 0 + fac.ri)
+> summary(fm.ri)
+
+Call:
+lm(formula = RealInt ~ 0 + fac.ri)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-4.5157 -1.3674 -0.0578  1.3248  6.0990 
+
+Coefficients:
+           Estimate Std. Error t value Pr(>|t|)    
+fac.riseg1   1.8236     0.4329   4.213 5.57e-05 ***
+fac.riseg2   0.8661     0.4422   1.959    0.053 .  
+fac.riseg3  -1.7961     0.3749  -4.791 5.83e-06 ***
+fac.riseg4   5.6429     0.4329  13.036  < 2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
+
+Residual standard error: 2.121 on 99 degrees of freedom
+Multiple R-squared: 0.6842,	Adjusted R-squared: 0.6714 
+F-statistic: 53.62 on 4 and 99 DF,  p-value: < 2.2e-16 
+
+> 
+> ## setup kernel HAC estimator
+> vcov.ri <- function(x, ...) kernHAC(x, kernel = "Quadratic Spectral",
++   prewhite = 1, approx = "AR(1)", ...)
+> 
+> ## Results from Table 1 in Bai & Perron (2003):
+> ## coefficient estimates
+> coef(bp.ri, breaks = 3)
+                  (Intercept)
+1961(1) - 1966(4)   1.8236167
+1967(1) - 1972(3)   0.8660848
+1972(4) - 1980(3)  -1.7961384
+1980(4) - 1986(3)   5.6428896
+> ## corresponding standard errors
+> sapply(vcov(bp.ri, breaks = 3, vcov = vcov.ri), sqrt)
+1961(1) - 1966(4) 1967(1) - 1972(3) 1972(4) - 1980(3) 1980(4) - 1986(3) 
+        0.1857577         0.1499849         0.5026749         0.5887460 
+> ## breakpoints and confidence intervals
+> confint(bp.ri, breaks = 3, vcov = vcov.ri)
+
+	 Confidence intervals for breakpoints
+	 of optimal 4-segment partition: 
+
+Call:
+confint.breakpointsfull(object = bp.ri, breaks = 3, vcov. = vcov.ri)
+
+Breakpoints at observation number:
+  2.5 % breakpoints 97.5 %
+1    18          24     35
+2    33          47     48
+3    77          79     81
+
+Corresponding to breakdates:
+Warning: Overlapping confidence intervals
+  2.5 %   breakpoints 97.5 % 
+1 1965(2) 1966(4)     1969(3)
+2 1969(1) 1972(3)     1972(4)
+3 1980(1) 1980(3)     1981(1)
+> 
+> ## Visualization
+> plot(RealInt)
+> lines(as.vector(time(RealInt)), fitted(fm.ri), col = 4)
+> lines(confint(bp.ri, breaks = 3, vcov = vcov.ri))
+Warning: Overlapping confidence intervals
+> 
+> 
+> 
+> cleanEx()
+> nameEx("SP2001")
+> ### * SP2001
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: SP2001
+> ### Title: S&P 500 Stock Prices
+> ### Aliases: SP2001
+> ### Keywords: datasets
+> 
+> ### ** Examples
+> 
+> ## load and transform data
+> ## (DAL: Delta Air Lines, LU: Lucent Technologies)
+> data("SP2001")
+> stock.prices <- SP2001[, c("DAL", "LU")]
+> stock.returns <- diff(log(stock.prices))
+> 
+> ## price and return series
+> plot(stock.prices, ylab = c("Delta Air Lines", "Lucent Technologies"), main = "")
+> plot(stock.returns, ylab = c("Delta Air Lines", "Lucent Technologies"), main = "")
+> 
+> ## monitoring of DAL series
+> myborder <- function(k) 1.939*k/28
+> x <- as.vector(stock.returns[, "DAL"][1:28])
+> dal.cusum <- mefp(x ~ 1, type = "OLS-CUSUM", border = myborder)
+> dal.mosum <- mefp(x ~ 1, type = "OLS-MOSUM", h = 0.5, period = 4)
+> x <- as.vector(stock.returns[, "DAL"])
+> dal.cusum <- monitor(dal.cusum)
+Break detected at observation # 29 
+> dal.mosum <- monitor(dal.mosum)
+Break detected at observation # 29 
+> 
+> ## monitoring of LU series
+> x <- as.vector(stock.returns[, "LU"][1:28])
+> lu.cusum <- mefp(x ~ 1, type = "OLS-CUSUM", border = myborder)
+> lu.mosum <- mefp(x ~ 1, type = "OLS-MOSUM", h = 0.5, period = 4)
+> x <- as.vector(stock.returns[, "LU"])
+> lu.cusum <- monitor(lu.cusum)
+> lu.mosum <- monitor(lu.mosum)
+> 
+> ## pretty plotting
+> ## (needs some work because lm() does not keep "zoo" attributes)
+> cus.bound <- zoo(c(rep(NA, 27), myborder(28:102)), index(stock.returns))
+> mos.bound <- as.vector(boundary(dal.mosum))
+> mos.bound <- zoo(c(rep(NA, 27), mos.bound[1], mos.bound), index(stock.returns))
+> 
+> ## Lucent Technologies: CUSUM test
+> plot(zoo(c(lu.cusum$efpprocess, lu.cusum$process), index(stock.prices)),
++   ylim = c(-1, 1) * coredata(cus.bound)[102], xlab = "Time", ylab = "empirical fluctuation process")
+> abline(0, 0)
+> abline(v = as.Date("2001-09-10"), lty = 2)
+> lines(cus.bound, col = 2)
+> lines(-cus.bound, col = 2)
+> 
+> ## Lucent Technologies: MOSUM test
+> plot(zoo(c(lu.mosum$efpprocess, lu.mosum$process), index(stock.prices)[-(1:14)]),
++   ylim = c(-1, 1) * coredata(mos.bound)[102], xlab = "Time", ylab = "empirical fluctuation process")
+> abline(0, 0)
+> abline(v = as.Date("2001-09-10"), lty = 2)
+> lines(mos.bound, col = 2)
+> lines(-mos.bound, col = 2)
+> 
+> ## Delta Air Lines: CUSUM test
+> plot(zoo(c(dal.cusum$efpprocess, dal.cusum$process), index(stock.prices)),
++   ylim = c(-1, 1) * coredata(cus.bound)[102], xlab = "Time", ylab = "empirical fluctuation process")
+> abline(0, 0)
+> abline(v = as.Date("2001-09-10"), lty = 2)
+> lines(cus.bound, col = 2)
+> lines(-cus.bound, col = 2)
+> 
+> ## Delta Air Lines: MOSUM test
+> plot(zoo(c(dal.mosum$efpprocess, dal.mosum$process), index(stock.prices)[-(1:14)]),
++   ylim = range(dal.mosum$process), xlab = "Time", ylab = "empirical fluctuation process")
+> abline(0, 0)
+> abline(v = as.Date("2001-09-10"), lty = 2)
+> lines(mos.bound, col = 2)
+> lines(-mos.bound, col = 2)
+> 
+> 
+> 
+> cleanEx()
+> nameEx("USIncExp")
+> ### * USIncExp
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: USIncExp
+> ### Title: Income and Expenditures in the US
+> ### Aliases: USIncExp
+> ### Keywords: datasets
+> 
+> ### ** Examples
+> 
+> ## These example are presented in the vignette distributed with this
+> ## package, the code was generated by Stangle("strucchange-intro.Rnw")
+> 
+> ###################################################
+> ### chunk number 1: data
+> ###################################################
+> library("strucchange")
+> data("USIncExp")
+> plot(USIncExp, plot.type = "single", col = 1:2, ylab = "billion US$")
+> legend(1960, max(USIncExp), c("income", "expenditures"),
++        lty = c(1,1), col = 1:2, bty = "n")
+> 
+> 
+> ###################################################
+> ### chunk number 2: subset
+> ###################################################
+> library("strucchange")
+> data("USIncExp")
+> USIncExp2 <- window(USIncExp, start = c(1985,12))
+> 
+> 
+> ###################################################
+> ### chunk number 3: ecm-setup
+> ###################################################
+> coint.res <- residuals(lm(expenditure ~ income, data = USIncExp2))
+> coint.res <- lag(ts(coint.res, start = c(1985,12), freq = 12), k = -1)
+> USIncExp2 <- cbind(USIncExp2, diff(USIncExp2), coint.res)
+> USIncExp2 <- window(USIncExp2, start = c(1986,1), end = c(2001,2))
+> colnames(USIncExp2) <- c("income", "expenditure", "diff.income",
++                          "diff.expenditure", "coint.res")
+> ecm.model <- diff.expenditure ~ coint.res + diff.income
+> 
+> 
+> ###################################################
+> ### chunk number 4: ts-used
+> ###################################################
+> plot(USIncExp2[,3:5], main = "")
+> 
+> 
+> ###################################################
+> ### chunk number 5: efp
+> ###################################################
+> ocus <- efp(ecm.model, type="OLS-CUSUM", data=USIncExp2)
+> me <- efp(ecm.model, type="ME", data=USIncExp2, h=0.2)
+> 
+> 
+> ###################################################
+> ### chunk number 6: efp-boundary
+> ###################################################
+> bound.ocus <- boundary(ocus, alpha=0.05)
+> 
+> 
+> ###################################################
+> ### chunk number 7: OLS-CUSUM
+> ###################################################
+> plot(ocus)
+> 
+> 
+> ###################################################
+> ### chunk number 8: efp-boundary2
+> ###################################################
+> plot(ocus, boundary = FALSE)
+> lines(bound.ocus, col = 4)
+> lines(-bound.ocus, col = 4)
+> 
+> 
+> ###################################################
+> ### chunk number 9: ME-null
+> ###################################################
+> plot(me, functional = NULL)
+> 
+> 
+> ###################################################
+> ### chunk number 10: efp-sctest
+> ###################################################
+> sctest(ocus)
+
+	OLS-based CUSUM test
+
+data:  ocus 
+S0 = 1.5511, p-value = 0.01626
+
+> 
+> 
+> ###################################################
+> ### chunk number 11: efp-sctest2
+> ###################################################
+> sctest(ecm.model, type="OLS-CUSUM", data=USIncExp2)
+
+	OLS-based CUSUM test
+
+data:  ecm.model 
+S0 = 1.5511, p-value = 0.01626
+
+> 
+> 
+> ###################################################
+> ### chunk number 12: Fstats
+> ###################################################
+> fs <- Fstats(ecm.model, from = c(1990, 1), to = c(1999,6), data = USIncExp2)
+> 
+> 
+> ###################################################
+> ### chunk number 13: Fstats-plot
+> ###################################################
+> plot(fs)
+> 
+> 
+> ###################################################
+> ### chunk number 14: pval-plot
+> ###################################################
+> plot(fs, pval=TRUE)
+> 
+> 
+> ###################################################
+> ### chunk number 15: aveF-plot
+> ###################################################
+> plot(fs, aveF=TRUE)
+> 
+> 
+> ###################################################
+> ### chunk number 16: Fstats-sctest
+> ###################################################
+> sctest(fs, type="expF")
+
+	expF test
+
+data:  fs 
+exp.F = 8.9955, p-value = 0.001311
+
+> 
+> 
+> ###################################################
+> ### chunk number 17: Fstats-sctest2
+> ###################################################
+> sctest(ecm.model, type = "expF", from = 49, to = 162, data = USIncExp2)
+
+	expF test
+
+data:  ecm.model 
+exp.F = 8.9955, p-value = 0.001311
+
+> 
+> 
+> ###################################################
+> ### chunk number 18: mefp
+> ###################################################
+> USIncExp3 <- window(USIncExp2, start = c(1986, 1), end = c(1989,12))
+> me.mefp <- mefp(ecm.model, type = "ME", data = USIncExp3, alpha = 0.05)
+> 
+> 
+> ###################################################
+> ### chunk number 19: monitor1
+> ###################################################
+> USIncExp3 <- window(USIncExp2, start = c(1986, 1), end = c(1990,12))
+> me.mefp <- monitor(me.mefp)
+> 
+> 
+> ###################################################
+> ### chunk number 20: monitor2
+> ###################################################
+> USIncExp3 <- window(USIncExp2, start = c(1986, 1))
+> me.mefp <- monitor(me.mefp)
+Break detected at observation # 72 
+> me.mefp
+Monitoring with ME test (moving estimates test) 
+
+Initial call:
+  mefp.formula(formula = ecm.model, type = "ME", data = USIncExp3,      alpha = 0.05) 
+
+Last call:
+  monitor(obj = me.mefp) 
+
+Significance level   :  0.05 
+Critical value       :  3.109524 
+History size         :  48 
+Last point evaluated :  182 
+Structural break at  :  72 
+
+Parameter estimate on history :
+(Intercept)   coint.res diff.income 
+ 18.9299679  -0.3893141   0.3156597 
+Last parameter estimate :
+(Intercept)   coint.res diff.income 
+27.94869106  0.00983451  0.13314662 
+> 
+> 
+> ###################################################
+> ### chunk number 21: monitor-plot
+> ###################################################
+> plot(me.mefp)
+> 
+> 
+> ###################################################
+> ### chunk number 22: mefp2
+> ###################################################
+> USIncExp3 <- window(USIncExp2, start = c(1986, 1), end = c(1989,12))
+> me.efp <- efp(ecm.model, type = "ME", data = USIncExp3, h = 0.5)
+> me.mefp <- mefp(me.efp, alpha=0.05)
+> 
+> 
+> ###################################################
+> ### chunk number 23: monitor3
+> ###################################################
+> USIncExp3 <- window(USIncExp2, start = c(1986, 1))
+> me.mefp <- monitor(me.mefp)
+Break detected at observation # 70 
+> 
+> 
+> ###################################################
+> ### chunk number 24: monitor-plot2
+> ###################################################
+> plot(me.mefp)
+> 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("boundary.Fstats")
+> ### * boundary.Fstats
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: boundary.Fstats
+> ### Title: Boundary for F Statistics
+> ### Aliases: boundary.Fstats
+> ### Keywords: regression
+> 
+> ### ** Examples
+> 
+> ## Load dataset "nhtemp" with average yearly temperatures in New Haven
+> data("nhtemp")
+> ## plot the data
+> plot(nhtemp)
+> 
+> ## test the model null hypothesis that the average temperature remains
+> ## constant over the years for potential break points between 1941
+> ## (corresponds to from = 0.5) and 1962 (corresponds to to = 0.85)
+> ## compute F statistics
+> fs <- Fstats(nhtemp ~ 1, from = 0.5, to = 0.85)
+> ## plot the p values without boundary
+> plot(fs, pval = TRUE, alpha = 0.01)
+> ## add the boundary in another colour
+> lines(boundary(fs, pval = TRUE, alpha = 0.01), col = 2)
+> 
+> 
+> 
+> cleanEx()
+> nameEx("boundary.efp")
+> ### * boundary.efp
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: boundary.efp
+> ### Title: Boundary for Empirical Fluctuation Processes
+> ### Aliases: boundary.efp
+> ### Keywords: regression
+> 
+> ### ** Examples
+> 
+> ## Load dataset "nhtemp" with average yearly temperatures in New Haven
+> data("nhtemp")
+> ## plot the data
+> plot(nhtemp)
+> 
+> ## test the model null hypothesis that the average temperature remains constant
+> ## over the years
+> ## compute OLS-CUSUM fluctuation process
+> temp.cus <- efp(nhtemp ~ 1, type = "OLS-CUSUM")
+> ## plot the process without boundaries
+> plot(temp.cus, alpha = 0.01, boundary = FALSE)
+> ## add the boundaries in another colour
+> bound <- boundary(temp.cus, alpha = 0.01)
+> lines(bound, col=4)
+> lines(-bound, col=4)
+> 
+> 
+> 
+> cleanEx()
+> nameEx("boundary.mefp")
+> ### * boundary.mefp
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: boundary.mefp
+> ### Title: Boundary Function for Monitoring of Structural Changes
+> ### Aliases: boundary.mefp
+> ### Keywords: regression
+> 
+> ### ** Examples
+> 
+> df1 <- data.frame(y=rnorm(300))
+> df1[150:300,"y"] <- df1[150:300,"y"]+1
+> me1 <- mefp(y~1, data=df1[1:50,,drop=FALSE], type="ME", h=1,
++               alpha=0.05)
+> me2 <- monitor(me1, data=df1)
+Break detected at observation # 183 
+> 
+> plot(me2, boundary=FALSE)
+> lines(boundary(me2), col="green", lty="44")
+> 
+> 
+> 
+> cleanEx()
+> nameEx("breakdates")
+> ### * breakdates
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: breakdates
+> ### Title: Breakdates Corresponding to Breakpoints
+> ### Aliases: breakdates breakdates.breakpoints
+> ###   breakdates.confint.breakpoints
+> ### Keywords: regression
+> 
+> ### ** Examples
+> 
+> ## Nile data with one breakpoint: the annual flows drop in 1898
+> ## because the first Ashwan dam was built
+> data("Nile")
+> plot(Nile)
+> 
+> bp.nile <- breakpoints(Nile ~ 1)
+> summary(bp.nile)
+
+	 Optimal (m+1)-segment partition: 
+
+Call:
+breakpoints.formula(formula = Nile ~ 1)
+
+Breakpoints at observation number:
+                      
+m = 1      28         
+m = 2      28       83
+m = 3      28    68 83
+m = 4      28 45 68 83
+m = 5   15 30 45 68 83
+
+Corresponding to breakdates:
+                                
+m = 1        1898               
+m = 2        1898           1953
+m = 3        1898      1938 1953
+m = 4        1898 1915 1938 1953
+m = 5   1885 1900 1915 1938 1953
+
+Fit:
+                                                                           
+m   0           1           2           3           4           5          
+RSS 2835156.750 1597457.194 1552923.616 1538096.513 1507888.476 1659993.500
+BIC    1318.242    1270.084    1276.467    1284.718    1291.944    1310.765
+> plot(bp.nile)
+> 
+> ## compute breakdates corresponding to the
+> ## breakpoints of minimum BIC segmentation
+> breakdates(bp.nile)
+[1] 1898
+> 
+> ## confidence intervals
+> ci.nile <- confint(bp.nile)
+> breakdates(ci.nile)
+  2.5 % breakpoints 97.5 %
+1  1895        1898   1902
+> ci.nile
+
+	 Confidence intervals for breakpoints
+	 of optimal 2-segment partition: 
+
+Call:
+confint.breakpointsfull(object = bp.nile)
+
+Breakpoints at observation number:
+  2.5 % breakpoints 97.5 %
+1    25          28     32
+
+Corresponding to breakdates:
+  2.5 % breakpoints 97.5 %
+1  1895        1898   1902
+> 
+> plot(Nile)
+> lines(ci.nile)
+> 
+> 
+> 
+> cleanEx()
+> nameEx("breakfactor")
+> ### * breakfactor
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: breakfactor
+> ### Title: Factor Coding of Segmentations
+> ### Aliases: breakfactor
+> ### Keywords: regression
+> 
+> ### ** Examples
+> 
+> ## Nile data with one breakpoint: the annual flows drop in 1898
+> ## because the first Ashwan dam was built
+> data("Nile")
+> plot(Nile)
+> 
+> ## compute breakpoints
+> bp.nile <- breakpoints(Nile ~ 1)
+> 
+> ## fit and visualize segmented and unsegmented model
+> fm0 <- lm(Nile ~ 1)
+> fm1 <- lm(Nile ~ breakfactor(bp.nile, breaks = 1))
+> 
+> lines(fitted(fm0), col = 3)
+> lines(fitted(fm1), col = 4)
+> lines(bp.nile, breaks = 1)
+> 
+> 
+> 
+> cleanEx()
+> nameEx("breakpoints")
+> ### * breakpoints
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: breakpoints
+> ### Title: Dating Breaks
+> ### Aliases: breakpoints breakpoints.formula breakpoints.breakpointsfull
+> ###   breakpoints.Fstats summary.breakpoints summary.breakpointsfull
+> ###   plot.breakpointsfull plot.summary.breakpointsfull print.breakpoints
+> ###   print.summary.breakpointsfull lines.breakpoints coef.breakpointsfull
+> ###   vcov.breakpointsfull fitted.breakpointsfull residuals.breakpointsfull
+> ###   df.residual.breakpointsfull
+> ### Keywords: regression
+> 
+> ### ** Examples
+> 
+> ## Nile data with one breakpoint: the annual flows drop in 1898
+> ## because the first Ashwan dam was built
+> data("Nile")
+> plot(Nile)
+> 
+> ## F statistics indicate one breakpoint
+> fs.nile <- Fstats(Nile ~ 1)
+> plot(fs.nile)
+> breakpoints(fs.nile)
+
+	 Optimal 2-segment partition: 
+
+Call:
+breakpoints.Fstats(obj = fs.nile)
+
+Breakpoints at observation number:
+28 
+
+Corresponding to breakdates:
+1898 
+> lines(breakpoints(fs.nile))
+> 
+> ## or
+> bp.nile <- breakpoints(Nile ~ 1)
+> summary(bp.nile)
+
+	 Optimal (m+1)-segment partition: 
+
+Call:
+breakpoints.formula(formula = Nile ~ 1)
+
+Breakpoints at observation number:
+                      
+m = 1      28         
+m = 2      28       83
+m = 3      28    68 83
+m = 4      28 45 68 83
+m = 5   15 30 45 68 83
+
+Corresponding to breakdates:
+                                
+m = 1        1898               
+m = 2        1898           1953
+m = 3        1898      1938 1953
+m = 4        1898 1915 1938 1953
+m = 5   1885 1900 1915 1938 1953
+
+Fit:
+                                                                           
+m   0           1           2           3           4           5          
+RSS 2835156.750 1597457.194 1552923.616 1538096.513 1507888.476 1659993.500
+BIC    1318.242    1270.084    1276.467    1284.718    1291.944    1310.765
+> 
+> ## the BIC also chooses one breakpoint
+> plot(bp.nile)
+> breakpoints(bp.nile)
+
+	 Optimal 2-segment partition: 
+
+Call:
+breakpoints.breakpointsfull(obj = bp.nile)
+
+Breakpoints at observation number:
+28 
+
+Corresponding to breakdates:
+1898 
+> 
+> ## fit null hypothesis model and model with 1 breakpoint
+> fm0 <- lm(Nile ~ 1)
+> fm1 <- lm(Nile ~ breakfactor(bp.nile, breaks = 1))
+> plot(Nile)
+> lines(ts(fitted(fm0), start = 1871), col = 3)
+> lines(ts(fitted(fm1), start = 1871), col = 4)
+> lines(bp.nile)
+> 
+> ## confidence interval
+> ci.nile <- confint(bp.nile)
+> ci.nile
+
+	 Confidence intervals for breakpoints
+	 of optimal 2-segment partition: 
+
+Call:
+confint.breakpointsfull(object = bp.nile)
+
+Breakpoints at observation number:
+  2.5 % breakpoints 97.5 %
+1    25          28     32
+
+Corresponding to breakdates:
+  2.5 % breakpoints 97.5 %
+1  1895        1898   1902
+> lines(ci.nile)
+> 
+> 
+> ## UK Seatbelt data: a SARIMA(1,0,0)(1,0,0)_12 model
+> ## (fitted by OLS) is used and reveals (at least) two
+> ## breakpoints - one in 1973 associated with the oil crisis and
+> ## one in 1983 due to the introduction of compulsory
+> ## wearing of seatbelts in the UK.
+> data("UKDriverDeaths")
+> seatbelt <- log10(UKDriverDeaths)
+> seatbelt <- cbind(seatbelt, lag(seatbelt, k = -1), lag(seatbelt, k = -12))
+> colnames(seatbelt) <- c("y", "ylag1", "ylag12")
+> seatbelt <- window(seatbelt, start = c(1970, 1), end = c(1984,12))
+> plot(seatbelt[,"y"], ylab = expression(log[10](casualties)))
+> 
+> ## testing
+> re.seat <- efp(y ~ ylag1 + ylag12, data = seatbelt, type = "RE")
+> plot(re.seat)
+> 
+> ## dating
+> bp.seat <- breakpoints(y ~ ylag1 + ylag12, data = seatbelt, h = 0.1)
+> summary(bp.seat)
+
+	 Optimal (m+1)-segment partition: 
+
+Call:
+breakpoints.formula(formula = y ~ ylag1 + ylag12, h = 0.1, data = seatbelt)
+
+Breakpoints at observation number:
+                                   
+m = 1      46                      
+m = 2      46                   157
+m = 3      46 70                157
+m = 4      46 70    108         157
+m = 5      46 70        120 141 160
+m = 6      46 70 89 108     141 160
+m = 7      46 70 89 107 125 144 162
+m = 8   18 46 70 89 107 125 144 162
+
+Corresponding to breakdates:
+                                                                            
+m = 1           1973(10)                                                    
+m = 2           1973(10)                                             1983(1)
+m = 3           1973(10) 1975(10)                                    1983(1)
+m = 4           1973(10) 1975(10)         1978(12)                   1983(1)
+m = 5           1973(10) 1975(10)                  1979(12) 1981(9)  1983(4)
+m = 6           1973(10) 1975(10) 1977(5) 1978(12)          1981(9)  1983(4)
+m = 7           1973(10) 1975(10) 1977(5) 1978(11) 1980(5)  1981(12) 1983(6)
+m = 8   1971(6) 1973(10) 1975(10) 1977(5) 1978(11) 1980(5)  1981(12) 1983(6)
+
+Fit:
+                                                                    
+m   0            1            2            3            4           
+RSS    0.3297082    0.2967377    0.2675731    0.2438039    0.2395281
+BIC -602.8610528 -601.0539119 -598.9041553 -594.8774283 -577.2904615
+                                                       
+m   5            6            7            8           
+RSS    0.2317149    0.2258093    0.2243860    0.2231045
+BIC -562.4879701 -546.3631592 -526.7295255 -506.9886310
+> lines(bp.seat, breaks = 2)
+> 
+> ## minimum BIC partition
+> plot(bp.seat)
+> breakpoints(bp.seat)
+
+	 Optimal 1-segment partition: 
+
+Call:
+breakpoints.breakpointsfull(obj = bp.seat)
+
+Breakpoints at observation number:
+NA 
+
+Corresponding to breakdates:
+NA 
+> ## the BIC would choose 0 breakpoints although the RE and supF test
+> ## clearly reject the hypothesis of structural stability. Bai &
+> ## Perron (2003) report that the BIC has problems in dynamic regressions.
+> ## due to the shape of the RE process of the F statistics choose two
+> ## breakpoints and fit corresponding models
+> bp.seat2 <- breakpoints(bp.seat, breaks = 2)
+> fm0 <- lm(y ~ ylag1 + ylag12, data = seatbelt)
+> fm1 <- lm(y ~ breakfactor(bp.seat2)/(ylag1 + ylag12) - 1, data = seatbelt)
+> 
+> ## plot
+> plot(seatbelt[,"y"], ylab = expression(log[10](casualties)))
+> time.seat <- as.vector(time(seatbelt))
+> lines(time.seat, fitted(fm0), col = 3)
+> lines(time.seat, fitted(fm1), col = 4)
+> lines(bp.seat2)
+> 
+> ## confidence intervals
+> ci.seat2 <- confint(bp.seat, breaks = 2)
+> ci.seat2
+
+	 Confidence intervals for breakpoints
+	 of optimal 3-segment partition: 
+
+Call:
+confint.breakpointsfull(object = bp.seat, breaks = 2)
+
+Breakpoints at observation number:
+  2.5 % breakpoints 97.5 %
+1    33          46     56
+2   144         157    171
+
+Corresponding to breakdates:
+  2.5 %    breakpoints 97.5 % 
+1 1972(9)  1973(10)    1974(8)
+2 1981(12) 1983(1)     1984(3)
+> lines(ci.seat2)
+> 
+> 
+> 
+> cleanEx()
+> nameEx("confint.breakpointsfull")
+> ### * confint.breakpointsfull
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: confint.breakpointsfull
+> ### Title: Confidence Intervals for Breakpoints
+> ### Aliases: confint.breakpointsfull lines.confint.breakpoints
+> ###   print.confint.breakpoints
+> ### Keywords: regression
+> 
+> ### ** Examples
+> 
+> ## Nile data with one breakpoint: the annual flows drop in 1898
+> ## because the first Ashwan dam was built
+> data("Nile")
+> plot(Nile)
+> 
+> ## dating breaks
+> bp.nile <- breakpoints(Nile ~ 1)
+> ci.nile <- confint(bp.nile, breaks = 1)
+> lines(ci.nile)
+> 
+> 
+> 
+> cleanEx()
+> nameEx("durab")
+> ### * durab
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: durab
+> ### Title: US Labor Productivity
+> ### Aliases: durab
+> ### Keywords: datasets
+> 
+> ### ** Examples
+> 
+> data("durab")
+> ## use AR(1) model as in Hansen (2001) and Zeileis et al. (2005)
+> durab.model <- y ~ lag
+> 
+> ## historical tests
+> ## OLS-based CUSUM process
+> ols <- efp(durab.model, data = durab, type = "OLS-CUSUM")
+> plot(ols)
+> ## F statistics
+> fs <- Fstats(durab.model, data = durab, from = 0.1)
+> plot(fs)
+> 
+> ## F statistics based on heteroskadisticy-consistent covariance matrix
+> fsHC <- Fstats(durab.model, data = durab, from = 0.1,
++ 	       vcov = function(x, ...) vcovHC(x, type = "HC", ...))
+> plot(fsHC)
+> 
+> ## monitoring
+> Durab <- window(durab, start=1964, end = c(1979, 12))
+> ols.efp <- efp(durab.model, type = "OLS-CUSUM", data = Durab)
+> newborder <- function(k) 1.723 * k/192
+> ols.mefp <- mefp(ols.efp, period=2)
+> ols.mefp2 <- mefp(ols.efp, border=newborder)
+> Durab <- window(durab, start=1964)
+> ols.mon <- monitor(ols.mefp)
+Break detected at observation # 437 
+> ols.mon2 <- monitor(ols.mefp2)
+Break detected at observation # 416 
+> plot(ols.mon)
+> lines(boundary(ols.mon2), col = 2)
+> ## Note: critical value for linear boundary taken from Table III
+> ## in Zeileis et al. 2005: (1.568 + 1.896)/2 = 1.732 is a linear
+> ## interpolation between the values for T = 2 and T = 3 at
+> ## alpha = 0.05. A typo switched 1.732 to 1.723.
+> 
+> ## dating
+> bp <- breakpoints(durab.model, data = durab)
+> summary(bp)
+
+	 Optimal (m+1)-segment partition: 
+
+Call:
+breakpoints.formula(formula = durab.model, data = durab)
+
+Breakpoints at observation number:
+                           
+m = 1               418    
+m = 2       221         530
+m = 3   114 225         530
+m = 4   114 221     418 531
+m = 5   114 221 319 418 531
+
+Corresponding to breakdates:
+                                                 
+m = 1                            1981(12)        
+m = 2           1965(7)                   1991(4)
+m = 3   1956(8) 1965(11)                  1991(4)
+m = 4   1956(8) 1965(7)          1981(12) 1991(5)
+m = 5   1956(8) 1965(7)  1973(9) 1981(12) 1991(5)
+
+Fit:
+                                                                         
+m   0             1             2             3             4            
+RSS  5.585766e-02  5.431308e-02  5.325480e-02  5.220120e-02  5.170801e-02
+BIC -4.221198e+03 -4.219994e+03 -4.213353e+03 -4.206911e+03 -4.193650e+03
+                 
+m   5            
+RSS  5.157302e-02
+BIC -4.175918e+03
+> plot(summary(bp))
+> 
+> plot(ols)
+> lines(breakpoints(bp, breaks = 1), col = 3)
+> lines(breakpoints(bp, breaks = 2), col = 4)
+> plot(fs)
+> lines(breakpoints(bp, breaks = 1), col = 3)
+> lines(breakpoints(bp, breaks = 2), col = 4)
+> 
+> 
+> 
+> cleanEx()
+> nameEx("efp")
+> ### * efp
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: efp
+> ### Title: Empirical Fluctuation Processes
+> ### Aliases: efp print.efp
+> ### Keywords: regression
+> 
+> ### ** Examples
+> 
+> ## Nile data with one breakpoint: the annual flows drop in 1898
+> ## because the first Ashwan dam was built
+> data("Nile")
+> plot(Nile)
+> 
+> ## test the null hypothesis that the annual flow remains constant
+> ## over the years
+> ## compute OLS-based CUSUM process and plot
+> ## with standard and alternative boundaries
+> ocus.nile <- efp(Nile ~ 1, type = "OLS-CUSUM")
+> plot(ocus.nile)
+> plot(ocus.nile, alpha = 0.01, alt.boundary = TRUE)
+> ## calculate corresponding test statistic
+> sctest(ocus.nile)
+
+	OLS-based CUSUM test
+
+data:  ocus.nile 
+S0 = 2.9518, p-value = 5.409e-08
+
+> 
+> ## UK Seatbelt data: a SARIMA(1,0,0)(1,0,0)_12 model
+> ## (fitted by OLS) is used and reveals (at least) two
+> ## breakpoints - one in 1973 associated with the oil crisis and
+> ## one in 1983 due to the introduction of compulsory
+> ## wearing of seatbelts in the UK.
+> data("UKDriverDeaths")
+> seatbelt <- log10(UKDriverDeaths)
+> seatbelt <- cbind(seatbelt, lag(seatbelt, k = -1), lag(seatbelt, k = -12))
+> colnames(seatbelt) <- c("y", "ylag1", "ylag12")
+> seatbelt <- window(seatbelt, start = c(1970, 1), end = c(1984,12))
+> plot(seatbelt[,"y"], ylab = expression(log[10](casualties)))
+> 
+> ## use RE process
+> re.seat <- efp(y ~ ylag1 + ylag12, data = seatbelt, type = "RE")
+> plot(re.seat)
+> plot(re.seat, functional = NULL)
+> sctest(re.seat)
+
+	RE test (recursive estimates test)
+
+data:  re.seat 
+RE = 1.6311, p-value = 0.02904
+
+> 
+> 
+> 
+> cleanEx()
+> nameEx("efpFunctional")
+> ### * efpFunctional
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: efpFunctional
+> ### Title: Functionals for Fluctuation Processes
+> ### Aliases: efpFunctional simulateBMDist maxBM maxBB maxBMI maxBBI maxL2BB
+> ###   meanL2BB rangeBM rangeBB rangeBMI rangeBBI supLM
+> ### Keywords: regression
+> 
+> ### ** Examples
+> 
+> 
+> data("BostonHomicide")
+> gcus <- gefp(homicides ~ 1, family = poisson, vcov = kernHAC,
++ 	     data = BostonHomicide)
+> plot(gcus, functional = meanL2BB)	 
+> gcus
+
+Generalized Empirical M-Fluctuation Process
+
+Call: gefp(homicides ~ 1, family = poisson, vcov = kernHAC, data = BostonHomicide)
+
+
+Fitted model: 
+Call:  fit(formula = ..1, family = ..2, data = data)
+
+Coefficients:
+(Intercept)  
+      1.017  
+
+Degrees of Freedom: 76 Total (i.e. Null);  76 Residual
+Null Deviance:	    115.6 
+Residual Deviance: 115.6 	AIC: 316.5 
+
+> sctest(gcus, functional = meanL2BB)
+
+	M-fluctuation test
+
+data:  gcus 
+f(efp) = 0.9337, p-value = 0.005
+
+> 
+> y <- rnorm(1000)
+> x1 <- runif(1000)
+> x2 <- runif(1000)
+> 
+> ## supWald statistic computed by Fstats()
+> fs <- Fstats(y ~ x1 + x2, from = 0.1)
+> plot(fs)
+> sctest(fs)
+
+	supF test
+
+data:  fs 
+sup.F = 12.2517, p-value = 0.1161
+
+> 
+> ## compare with supLM statistic
+> scus <- gefp(y ~ x1 + x2, fit = lm)
+> plot(scus, functional = supLM(0.1))
+> sctest(scus, functional = supLM(0.1))
+
+	M-fluctuation test
+
+data:  scus 
+f(efp) = 12.2579, p-value = 0.1158
+
+> 
+> ## seatbelt data
+> data("UKDriverDeaths")
+> seatbelt <- log10(UKDriverDeaths)
+> seatbelt <- cbind(seatbelt, lag(seatbelt, k = -1), lag(seatbelt, k = -12))
+> colnames(seatbelt) <- c("y", "ylag1", "ylag12")
+> seatbelt <- window(seatbelt, start = c(1970, 1), end = c(1984,12))
+> 
+> scus.seat <- gefp(y ~ ylag1 + ylag12, data = seatbelt)
+> 
+> ## double maximum test
+> plot(scus.seat)
+> ## range test
+> plot(scus.seat, functional = rangeBB)
+> ## Cramer-von Mises statistic (Nyblom-Hansen test)
+> plot(scus.seat, functional = meanL2BB)
+> ## supLM test
+> plot(scus.seat, functional = supLM(0.1))
+> 
+> 
+> 
+> cleanEx()
+> nameEx("gefp")
+> ### * gefp
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: gefp
+> ### Title: Generalized Empirical M-Fluctuation Processes
+> ### Aliases: gefp print.gefp sctest.gefp plot.gefp time.gefp print.gefp
+> ### Keywords: regression
+> 
+> ### ** Examples
+> 
+> data("BostonHomicide")
+> gcus <- gefp(homicides ~ 1, family = poisson, vcov = kernHAC,
++ 	     data = BostonHomicide)
+> plot(gcus, aggregate = FALSE)	 
+> gcus
+
+Generalized Empirical M-Fluctuation Process
+
+Call: gefp(homicides ~ 1, family = poisson, vcov = kernHAC, data = BostonHomicide)
+
+
+Fitted model: 
+Call:  fit(formula = ..1, family = ..2, data = data)
+
+Coefficients:
+(Intercept)  
+      1.017  
+
+Degrees of Freedom: 76 Total (i.e. Null);  76 Residual
+Null Deviance:	    115.6 
+Residual Deviance: 115.6 	AIC: 316.5 
+
+> sctest(gcus)
+
+	M-fluctuation test
+
+data:  gcus 
+f(efp) = 1.669, p-value = 0.007613
+
+> 
+> 
+> 
+> cleanEx()
+> nameEx("logLik.breakpoints")
+> ### * logLik.breakpoints
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: logLik.breakpoints
+> ### Title: Log Likelihood and Information Criteria for Breakpoints
+> ### Aliases: logLik.breakpoints logLik.breakpointsfull AIC.breakpointsfull
+> ### Keywords: regression
+> 
+> ### ** Examples
+> 
+> ## Nile data with one breakpoint: the annual flows drop in 1898
+> ## because the first Ashwan dam was built
+> data("Nile")
+> plot(Nile)
+> 
+> bp.nile <- breakpoints(Nile ~ 1)
+> summary(bp.nile)
+
+	 Optimal (m+1)-segment partition: 
+
+Call:
+breakpoints.formula(formula = Nile ~ 1)
+
+Breakpoints at observation number:
+                      
+m = 1      28         
+m = 2      28       83
+m = 3      28    68 83
+m = 4      28 45 68 83
+m = 5   15 30 45 68 83
+
+Corresponding to breakdates:
+                                
+m = 1        1898               
+m = 2        1898           1953
+m = 3        1898      1938 1953
+m = 4        1898 1915 1938 1953
+m = 5   1885 1900 1915 1938 1953
+
+Fit:
+                                                                           
+m   0           1           2           3           4           5          
+RSS 2835156.750 1597457.194 1552923.616 1538096.513 1507888.476 1659993.500
+BIC    1318.242    1270.084    1276.467    1284.718    1291.944    1310.765
+> plot(bp.nile)
+> 
+> ## BIC of partitions with0 to 5 breakpoints
+> plot(0:5, AIC(bp.nile, k = log(bp.nile$nobs)), type = "b")
+> ## AIC
+> plot(0:5, AIC(bp.nile), type = "b")
+> 
+> ## BIC, AIC, log likelihood of a single partition
+> bp.nile1 <- breakpoints(bp.nile, breaks = 1)
+> AIC(bp.nile1, k = log(bp.nile1$nobs))
+[1] 1270.084
+> AIC(bp.nile1)
+[1] 1259.663
+> logLik(bp.nile1)
+'log Lik.' -625.8315 (df=4)
+> 
+> 
+> 
+> cleanEx()
+> nameEx("mefp")
+> ### * mefp
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: mefp
+> ### Title: Monitoring of Empirical Fluctuation Processes
+> ### Aliases: mefp mefp.formula mefp.efp print.mefp monitor
+> ### Keywords: regression
+> 
+> ### ** Examples
+> 
+> df1 <- data.frame(y=rnorm(300))
+> df1[150:300,"y"] <- df1[150:300,"y"]+1
+> 
+> ## use the first 50 observations as history period
+> e1 <- efp(y~1, data=df1[1:50,,drop=FALSE], type="ME", h=1)
+> me1 <- mefp(e1, alpha=0.05)
+> 
+> ## the same in one function call
+> me1 <- mefp(y~1, data=df1[1:50,,drop=FALSE], type="ME", h=1,
++               alpha=0.05)
+> 
+> ## monitor the 50 next observations
+> me2 <- monitor(me1, data=df1[1:100,,drop=FALSE])
+> plot(me2)
+> 
+> # and now monitor on all data
+> me3 <- monitor(me2, data=df1)
+Break detected at observation # 183 
+> plot(me3)
+> 
+> 
+> ## Load dataset "USIncExp" with income and expenditure in the US
+> ## and choose a suitable subset for the history period
+> data("USIncExp")
+> USIncExp3 <- window(USIncExp, start=c(1969,1), end=c(1971,12))
+> ## initialize the monitoring with the formula interface
+> me.mefp <- mefp(expenditure~income, type="ME", rescale=TRUE,
++                    data=USIncExp3, alpha=0.05)
+> 
+> ## monitor the new observations for the year 1972
+> USIncExp3 <- window(USIncExp, start=c(1969,1), end=c(1972,12))
+> me.mefp <- monitor(me.mefp)
+> 
+> ## monitor the new data for the years 1973-1976
+> USIncExp3 <- window(USIncExp, start=c(1969,1), end=c(1976,12))
+> me.mefp <- monitor(me.mefp)
+Break detected at observation # 58 
+> plot(me.mefp, functional = NULL)
+> 
+> 
+> 
+> cleanEx()
+> nameEx("plot.Fstats")
+> ### * plot.Fstats
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: plot.Fstats
+> ### Title: Plot F Statistics
+> ### Aliases: plot.Fstats lines.Fstats
+> ### Keywords: hplot
+> 
+> ### ** Examples
+> 
+> ## Load dataset "nhtemp" with average yearly temperatures in New Haven
+> data("nhtemp")
+> ## plot the data
+> plot(nhtemp)
+> 
+> ## test the model null hypothesis that the average temperature remains
+> ## constant over the years for potential break points between 1941
+> ## (corresponds to from = 0.5) and 1962 (corresponds to to = 0.85)
+> ## compute F statistics
+> fs <- Fstats(nhtemp ~ 1, from = 0.5, to = 0.85)
+> ## plot the F statistics
+> plot(fs, alpha = 0.01)
+> ## and the corresponding p values
+> plot(fs, pval = TRUE, alpha = 0.01)
+> ## perform the aveF test
+> sctest(fs, type = "aveF")
+
+	aveF test
+
+data:  fs 
+ave.F = 10.8103, p-value = 2.059e-06
+
+> 
+> 
+> 
+> cleanEx()
+> nameEx("plot.efp")
+> ### * plot.efp
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: plot.efp
+> ### Title: Plot Empirical Fluctuation Process
+> ### Aliases: plot.efp lines.efp
+> ### Keywords: hplot
+> 
+> ### ** Examples
+> 
+> ## Load dataset "nhtemp" with average yearly temperatures in New Haven
+> data("nhtemp")
+> ## plot the data
+> plot(nhtemp)
+> 
+> ## test the model null hypothesis that the average temperature remains
+> ## constant over the years
+> ## compute Rec-CUSUM fluctuation process
+> temp.cus <- efp(nhtemp ~ 1)
+> ## plot the process
+> plot(temp.cus, alpha = 0.01)
+> ## and calculate the test statistic
+> sctest(temp.cus)
+
+	Recursive CUSUM test
+
+data:  temp.cus 
+S = 1.2724, p-value = 0.002902
+
+> 
+> ## compute (recursive estimates) fluctuation process
+> ## with an additional linear trend regressor
+> lin.trend <- 1:60
+> temp.me <- efp(nhtemp ~ lin.trend, type = "fluctuation")
+> ## plot the bivariate process
+> plot(temp.me, functional = NULL)
+> ## and perform the corresponding test
+> sctest(temp.me)
+
+	RE test (recursive estimates test)
+
+data:  temp.me 
+RE = 1.4938, p-value = 0.04558
+
+> 
+> 
+> 
+> cleanEx()
+> nameEx("plot.mefp")
+> ### * plot.mefp
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: plot.mefp
+> ### Title: Plot Methods for mefp Objects
+> ### Aliases: plot.mefp lines.mefp
+> ### Keywords: hplot
+> 
+> ### ** Examples
+> 
+> df1 <- data.frame(y=rnorm(300))
+> df1[150:300,"y"] <- df1[150:300,"y"]+1
+> me1 <- mefp(y~1, data=df1[1:50,,drop=FALSE], type="ME", h=1,
++               alpha=0.05)
+> me2 <- monitor(me1, data=df1)
+Break detected at observation # 183 
+> 
+> plot(me2)
+> 
+> 
+> 
+> cleanEx()
+> nameEx("recresid")
+> ### * recresid
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: recresid
+> ### Title: Recursive Residuals
+> ### Aliases: recresid recresid.default recresid.formula recresid.lm
+> ### Keywords: regression
+> 
+> ### ** Examples
+> 
+> x <- rnorm(100) + rep(c(0, 2), each = 50)
+> rr <- recresid(x ~ 1)
+> plot(cumsum(rr), type = "l")
+> 
+> plot(efp(x ~ 1, type = "Rec-CUSUM"))
+> 
+> 
+> 
+> cleanEx()
+> nameEx("root.matrix")
+> ### * root.matrix
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: root.matrix
+> ### Title: Root of a Matrix
+> ### Aliases: root.matrix
+> ### Keywords: algebra
+> 
+> ### ** Examples
+> 
+> X <- matrix(c(1,2,2,8), ncol=2)
+> test <- root.matrix(X)
+> ## control results
+> X
+     [,1] [,2]
+[1,]    1    2
+[2,]    2    8
+> test %*% test
+     [,1] [,2]
+[1,]    1    2
+[2,]    2    8
+> 
+> 
+> 
+> cleanEx()
+> nameEx("scPublications")
+> ### * scPublications
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: scPublications
+> ### Title: Structural Change Publications
+> ### Aliases: scPublications
+> ### Keywords: datasets
+> 
+> ### ** Examples
+> 
+> ## construct time series:
+> ## number of sc publications in econometrics/statistics
+> data("scPublications")
+> 
+> ## select years from 1987 and
+> ## `most important' journals
+> pub <- scPublications
+> pub <- subset(pub, year > 1986)
+> tab1 <- table(pub$journal)
+> nam1 <- names(tab1)[as.vector(tab1) > 9] ## at least 10 papers
+> tab2 <- sapply(levels(pub$journal), function(x) min(subset(pub, journal == x)$year))
+> nam2 <- names(tab2)[as.vector(tab2) < 1991] ## started at least in 1990
+> nam <- nam1[nam1 %in% nam2]
+> pub <- subset(pub, as.character(journal) %in% nam)
+> pub$journal <- factor(pub$journal)
+> pub_data <- pub
+> 
+> ## generate time series
+> pub <- with(pub, tapply(type, year, table))
+> pub <- zoo(t(sapply(pub, cbind)), 1987:2006)
+> colnames(pub) <- levels(pub_data$type)
+> 
+> ## visualize
+> plot(pub, ylim = c(0, 35))
+> 
+> 
+> 
+> cleanEx()
+> nameEx("sctest.Fstats")
+> ### * sctest.Fstats
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: sctest.Fstats
+> ### Title: supF-, aveF- and expF-Test
+> ### Aliases: sctest.Fstats
+> ### Keywords: htest
+> 
+> ### ** Examples
+> 
+> ## Load dataset "nhtemp" with average yearly temperatures in New Haven
+> data(nhtemp)
+> ## plot the data
+> plot(nhtemp)
+> 
+> ## test the model null hypothesis that the average temperature remains
+> ## constant over the years for potential break points between 1941
+> ## (corresponds to from = 0.5) and 1962 (corresponds to to = 0.85)
+> ## compute F statistics
+> fs <- Fstats(nhtemp ~ 1, from = 0.5, to = 0.85)
+> ## plot the F statistics
+> plot(fs, alpha = 0.01)
+> ## and the corresponding p values
+> plot(fs, pval = TRUE, alpha = 0.01)
+> ## perform the aveF test
+> sctest(fs, type = "aveF")
+
+	aveF test
+
+data:  fs 
+ave.F = 10.8103, p-value = 2.059e-06
+
+> 
+> 
+> 
+> cleanEx()
+> nameEx("sctest")
+> ### * sctest
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: sctest.formula
+> ### Title: Structural Change Tests
+> ### Aliases: sctest sctest.formula
+> ### Keywords: htest
+> 
+> ### ** Examples
+> 
+> ## Example 7.4 from Greene (1993), "Econometric Analysis"
+> ## Chow test on Longley data
+> data("longley")
+> sctest(Employed ~ Year + GNP.deflator + GNP + Armed.Forces, data = longley,
++   type = "Chow", point = 7)
+
+	Chow test
+
+data:  Employed ~ Year + GNP.deflator + GNP + Armed.Forces 
+F = 3.9268, p-value = 0.06307
+
+> 
+> ## which is equivalent to segmenting the regression via
+> fac <- factor(c(rep(1, 7), rep(2, 9)))
+> fm0 <- lm(Employed ~ Year + GNP.deflator + GNP + Armed.Forces, data = longley)
+> fm1 <- lm(Employed ~ fac/(Year + GNP.deflator + GNP + Armed.Forces), data = longley)
+> anova(fm0, fm1)
+Analysis of Variance Table
+
+Model 1: Employed ~ Year + GNP.deflator + GNP + Armed.Forces
+Model 2: Employed ~ fac/(Year + GNP.deflator + GNP + Armed.Forces)
+  Res.Df    RSS Df Sum of Sq      F  Pr(>F)  
+1     11 4.8987                              
+2      6 1.1466  5    3.7521 3.9268 0.06307 .
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
+> 
+> ## estimates from Table 7.5 in Greene (1993)
+> summary(fm0)
+
+Call:
+lm(formula = Employed ~ Year + GNP.deflator + GNP + Armed.Forces, 
+    data = longley)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-0.9058 -0.3427 -0.1076  0.2168  1.4377 
+
+Coefficients:
+               Estimate Std. Error t value Pr(>|t|)   
+(Intercept)   1.169e+03  8.359e+02   1.399  0.18949   
+Year         -5.765e-01  4.335e-01  -1.330  0.21049   
+GNP.deflator -1.977e-02  1.389e-01  -0.142  0.88940   
+GNP           6.439e-02  1.995e-02   3.227  0.00805 **
+Armed.Forces -1.015e-04  3.086e-03  -0.033  0.97436   
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
+
+Residual standard error: 0.6673 on 11 degrees of freedom
+Multiple R-squared: 0.9735,	Adjusted R-squared: 0.9639 
+F-statistic: 101.1 on 4 and 11 DF,  p-value: 1.346e-08 
+
+> summary(fm1)
+
+Call:
+lm(formula = Employed ~ fac/(Year + GNP.deflator + GNP + Armed.Forces), 
+    data = longley)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-0.47717 -0.18950  0.02089  0.14836  0.56493 
+
+Coefficients:
+                    Estimate Std. Error t value Pr(>|t|)   
+(Intercept)        1.678e+03  9.390e+02   1.787  0.12413   
+fac2               2.098e+03  1.786e+03   1.174  0.28473   
+fac1:Year         -8.352e-01  4.847e-01  -1.723  0.13563   
+fac2:Year         -1.914e+00  7.913e-01  -2.419  0.05194 . 
+fac1:GNP.deflator -1.633e-01  1.762e-01  -0.927  0.38974   
+fac2:GNP.deflator -4.247e-02  2.238e-01  -0.190  0.85576   
+fac1:GNP           9.481e-02  3.815e-02   2.485  0.04747 * 
+fac2:GNP           1.123e-01  2.269e-02   4.951  0.00258 **
+fac1:Armed.Forces -2.467e-03  6.965e-03  -0.354  0.73532   
+fac2:Armed.Forces -2.579e-02  1.259e-02  -2.049  0.08635 . 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
+
+Residual standard error: 0.4372 on 6 degrees of freedom
+Multiple R-squared: 0.9938,	Adjusted R-squared: 0.9845 
+F-statistic: 106.9 on 9 and 6 DF,  p-value: 6.28e-06 
+
+> 
+> 
+> 
+> cleanEx()
+> nameEx("sctest.efp")
+> ### * sctest.efp
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: sctest.efp
+> ### Title: Generalized Fluctuation Tests
+> ### Aliases: sctest.efp
+> ### Keywords: htest
+> 
+> ### ** Examples
+> 
+> ## Load dataset "nhtemp" with average yearly temperatures in New Haven
+> data("nhtemp")
+> ## plot the data
+> plot(nhtemp)
+> 
+> ## test the model null hypothesis that the average temperature remains
+> ## constant over the years compute OLS-CUSUM fluctuation process
+> temp.cus <- efp(nhtemp ~ 1, type = "OLS-CUSUM")
+> ## plot the process with alternative boundaries
+> plot(temp.cus, alpha = 0.01, alt.boundary = TRUE)
+> ## and calculate the test statistic
+> sctest(temp.cus)
+
+	OLS-based CUSUM test
+
+data:  temp.cus 
+S0 = 2.0728, p-value = 0.0003709
+
+> 
+> ## compute moving estimates fluctuation process
+> temp.me <- efp(nhtemp ~ 1, type = "ME", h = 0.2)
+> ## plot the process with functional = "max"
+> plot(temp.me)
+> ## and perform the corresponding test
+> sctest(temp.me)
+
+	ME test (moving estimates test)
+
+data:  temp.me 
+ME = 1.5627, p-value = 0.01
+
+> 
+> 
+> 
+> cleanEx()
+> nameEx("solveCrossprod")
+> ### * solveCrossprod
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: solveCrossprod
+> ### Title: Inversion of X'X
+> ### Aliases: solveCrossprod
+> ### Keywords: algebra
+> 
+> ### ** Examples
+> 
+> X <- cbind(1, rnorm(100))
+> solveCrossprod(X)
+             [,1]         [,2]
+[1,]  0.010148448 -0.001363317
+[2,] -0.001363317  0.012520432
+> solve(crossprod(X))
+             [,1]         [,2]
+[1,]  0.010148448 -0.001363317
+[2,] -0.001363317  0.012520432
+> 
+> 
+> 
+> ### * <FOOTER>
+> ###
+> cat("Time elapsed: ", proc.time() - get("ptime", pos = 'CheckExEnv'),"\n")
+Time elapsed:  54.287 0.192 54.791 0 0 
+> grDevices::dev.off()
+null device 
+          1 
+> ###
+> ### Local variables: ***
+> ### mode: outline-minor ***
+> ### outline-regexp: "\\(> \\)?### [*]+" ***
+> ### End: ***
+> quit('no')

@@ -1,0 +1,134 @@
+
+> library("strucchange")
+Loading required package: zoo
+
+Attaching package: 'zoo'
+
+The following object(s) are masked from 'package:base':
+
+    as.Date, as.Date.numeric
+
+Loading required package: sandwich
+
+> data("USIncExp")
+
+> plot(USIncExp, plot.type = "single", col = 1:2, ylab = "billion US$")
+
+> legend(1960, max(USIncExp), c("income", "expenditures"), 
++     lty = c(1, 1), col = 1:2, bty = "n")
+
+> library("strucchange")
+
+> data("USIncExp")
+
+> USIncExp2 <- window(USIncExp, start = c(1985, 12))
+
+> coint.res <- residuals(lm(expenditure ~ income, data = USIncExp2))
+
+> coint.res <- lag(ts(coint.res, start = c(1985, 12), 
++     freq = 12), k = -1)
+
+> USIncExp2 <- cbind(USIncExp2, diff(USIncExp2), coint.res)
+
+> USIncExp2 <- window(USIncExp2, start = c(1986, 1), 
++     end = c(2001, 2))
+
+> colnames(USIncExp2) <- c("income", "expenditure", 
++     "diff.income", "diff.expenditure", "coint.res")
+
+> ecm.model <- diff.expenditure ~ coint.res + diff.income
+
+> plot(USIncExp2[, 3:5], main = "")
+
+> ocus <- efp(ecm.model, type = "OLS-CUSUM", data = USIncExp2)
+
+> me <- efp(ecm.model, type = "ME", data = USIncExp2, 
++     h = 0.2)
+
+> bound.ocus <- boundary(ocus, alpha = 0.05)
+
+> plot(ocus)
+
+> plot(me, functional = NULL)
+
+> sctest(ecm.model, type = "OLS-CUSUM", data = USIncExp2)
+
+	OLS-based CUSUM test
+
+data:  ecm.model 
+S0 = 1.5511, p-value = 0.01626
+
+
+> fs <- Fstats(ecm.model, from = c(1990, 1), to = c(1999, 
++     6), data = USIncExp2)
+
+> plot(fs)
+
+> sctest(ecm.model, type = "expF", from = 49, to = 162, 
++     data = USIncExp2)
+
+	expF test
+
+data:  ecm.model 
+exp.F = 8.9955, p-value = 0.001311
+
+
+> USIncExp3 <- window(USIncExp2, start = c(1986, 1), 
++     end = c(1989, 12))
+
+> me.mefp <- mefp(ecm.model, type = "ME", data = USIncExp3, 
++     alpha = 0.05)
+
+> USIncExp3 <- window(USIncExp2, start = c(1986, 1), 
++     end = c(1990, 12))
+
+> me.mefp <- monitor(me.mefp)
+
+> USIncExp3 <- window(USIncExp2, start = c(1986, 1))
+
+> me.mefp <- monitor(me.mefp)
+Break detected at observation # 72 
+
+> me.mefp
+Monitoring with ME test (moving estimates test) 
+
+Initial call:
+  mefp.formula(formula = ecm.model, type = "ME", data = USIncExp3,      alpha = 0.05) 
+
+Last call:
+  monitor(obj = me.mefp) 
+
+Significance level   :  0.05 
+Critical value       :  3.109524 
+History size         :  48 
+Last point evaluated :  182 
+Structural break at  :  72 
+
+Parameter estimate on history :
+(Intercept)   coint.res diff.income 
+ 18.9299679  -0.3893141   0.3156597 
+Last parameter estimate :
+(Intercept)   coint.res diff.income 
+27.94869106  0.00983451  0.13314662 
+
+> plot(me.mefp)
+
+> USIncExp3 <- window(USIncExp2, start = c(1986, 1), 
++     end = c(1989, 12))
+
+> me.efp <- efp(ecm.model, type = "ME", data = USIncExp3, 
++     h = 0.5)
+
+> me.mefp <- mefp(me.efp, alpha = 0.05)
+
+> USIncExp3 <- window(USIncExp2, start = c(1986, 1))
+
+> me.mefp <- monitor(me.mefp)
+Break detected at observation # 70 
+
+> plot(me.mefp)
+
+ *** Run successfully completed ***
+> proc.time()
+   user  system elapsed 
+  1.576   0.068   1.643 

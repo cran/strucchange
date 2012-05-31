@@ -73,17 +73,18 @@ supLM <- function(from = 0.15, to = NULL) {
   computeCritval <- function(alpha, nproc = 1)
     uniroot(function(y) {computePval(y, nproc = nproc) - alpha}, c(0, 1000))$root
 
-  boundary <- function(x) rep(1, length(x))
+  boundary0 <- function(x) rep(1, length(x))
 
   plotProcess <- function(x, alpha = 0.05, aggregate = TRUE,
-    xlab = NULL, ylab = NULL, main = x$type.name, ylim = NULL, ...)
+    xlab = NULL, ylab = NULL, main = x$type.name, ylim = NULL,
+    boundary = TRUE, ...)
   {
     n <- x$nobs
     n1 <- floor(from * n)
     n2 <- floor(to * n)
     tt <- (1:n)/n
 
-    bound <- computeCritval(alpha = alpha, nproc = NCOL(x$process)) * boundary(0:n/n)
+    bound <- computeCritval(alpha = alpha, nproc = NCOL(x$process)) * boundary0(0:n/n)
     if(is.null(xlab)) {
       if(!is.null(x$order.name)) xlab <- x$order.name
         else xlab <- "Time"
@@ -105,7 +106,7 @@ supLM <- function(from = 0.15, to = NULL) {
     
       plot(proc, xlab = xlab, ylab = ylab, main = main, ylim = ylim, ...)
       abline(0, 0)
-      lines(bound, col = 2)	    
+      if(boundary) lines(bound, col = 2)	    
     } else {
       if(is.null(ylim) & NCOL(x$process) < 2) ylim <- range(c(range(x$process), range(bound), range(-bound)))
       if(is.null(ylab) & NCOL(x$process) < 2) ylab <- "Empirical fluctuation process"
@@ -121,7 +122,7 @@ supLM <- function(from = 0.15, to = NULL) {
   
   efpFunctional(lim.process = "Brownian bridge",
     functional = list(comp = function(x) sum(x^2), time = wmax),
-    boundary = boundary,
+    boundary = boundary0,
     computePval = computePval,
     computeCritval = computeCritval,
     plotProcess = plotProcess)

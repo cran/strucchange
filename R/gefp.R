@@ -22,8 +22,8 @@ gefp <- function(...,
   if(!is.null(order.by))
   {
     if(inherits(order.by, "formula")) {
-      z <- model.matrix(order.by, data = data)
-      z <- as.vector(z[, ncol(z)])
+      z <- model.frame(order.by, data = data)
+      z <- as.numeric(as.vector(z[, ncol(z)]))
       order.name <- deparse(order.by[[2]])
     } else {
       z <- order.by
@@ -183,6 +183,9 @@ efpFunctional <- function(functional = list(comp = function(x) max(abs(x)), time
 {		     
   probs <- probs[probs != 0]
 
+  ## store boundary function supplied
+  boundary0 <- boundary
+
   ## compute from functional list the full functional
   ## lambda = myfun
   
@@ -191,7 +194,7 @@ efpFunctional <- function(functional = list(comp = function(x) max(abs(x)), time
       if(identical(functional[[2]], max)) {
         myfun <- function(x) {
 	  rval <- apply(as.matrix(x), 1, functional[[1]])
-	  functional[[2]](rval/boundary(0:(length(rval)-1)/(length(rval)-1)))
+	  functional[[2]](rval/boundary0(0:(length(rval)-1)/(length(rval)-1)))
 	}
       } else
         myfun <- function(x) functional[[2]](apply(as.matrix(x), 1, functional[[1]]))
@@ -285,10 +288,11 @@ efpFunctional <- function(functional = list(comp = function(x) max(abs(x)), time
       ## can also use boundary argument: b(t) = critval * boundary(t)
     
           plotProcess <- function(x, alpha = 0.05, aggregate = TRUE,
-	    xlab = NULL, ylab = NULL, main = x$type.name, ylim = NULL, ...)
+	    xlab = NULL, ylab = NULL, main = x$type.name, ylim = NULL,
+	    boundary = TRUE, ...)
 	  {
             n <- x$nobs
-	    bound <- computeCritval(alpha = alpha, nproc = NCOL(x$process)) * boundary(0:n/n)
+	    bound <- computeCritval(alpha = alpha, nproc = NCOL(x$process)) * boundary0(0:n/n)
 	    bound <- suppressWarnings(zoo(bound, time(x)))
             if(is.null(xlab)) {
 	      if(!is.null(x$order.name)) xlab <- x$order.name
@@ -303,7 +307,7 @@ efpFunctional <- function(functional = list(comp = function(x) max(abs(x)), time
 	    
 	      plot(proc, xlab = xlab, ylab = ylab, main = main, ylim = ylim, ...)
 	      abline(0, 0)
-	      lines(bound, col = 2)	    
+	      if(boundary) lines(bound, col = 2)	    
 	    } else {
 	      if(is.null(ylim) & NCOL(x$process) < 2) ylim <- range(c(range(x$process), range(bound), range(-bound)))
 	      if(is.null(ylab) & NCOL(x$process) < 2) ylab <- "Empirical fluctuation process"
@@ -313,8 +317,10 @@ efpFunctional <- function(functional = list(comp = function(x) max(abs(x)), time
                 lines(x, ...)
   	        abline(0, 0)
 	        if(paste(deparse(functional[[1]]), collapse = "") == "function (x) max(abs(x))") {
-	          lines(bound, col = 2)
-		  lines(-bound, col = 2)
+	          if(boundary) {
+		    lines(bound, col = 2)
+		    lines(-bound, col = 2)
+		  }
 	        }	      
 	      }
 	      plot(x$process, xlab = xlab, ylab = ylab, main = main, panel = panel, ylim = ylim, ...)
@@ -327,10 +333,11 @@ efpFunctional <- function(functional = list(comp = function(x) max(abs(x)), time
       ## plot: first aggregate, add critval and statistic
 
           plotProcess <- function(x, alpha = 0.05, aggregate = TRUE,
-	    xlab = NULL, ylab = NULL, main = x$type.name, ylim = NULL, ...)
+	    xlab = NULL, ylab = NULL, main = x$type.name, ylim = NULL,
+	    boundary = TRUE, statistic = TRUE, ...)
 	  {
             n <- x$nobs
-	    bound <- computeCritval(alpha = alpha, nproc = NCOL(x$process)) * boundary(0:n/n)
+	    bound <- computeCritval(alpha = alpha, nproc = NCOL(x$process)) * boundary0(0:n/n)
 	    bound <- suppressWarnings(zoo(bound, time(x)))
             stat <- computeStatistic(x$process)
 	    stat <- suppressWarnings(zoo(rep(stat, length(time(x))), time(x)))
@@ -347,8 +354,8 @@ efpFunctional <- function(functional = list(comp = function(x) max(abs(x)), time
 	    
 	      plot(proc, xlab = xlab, ylab = ylab, main = main, ylim = ylim, ...)
 	      abline(0, 0)
-	      lines(bound, col = 2)
-	      lines(stat, lty = 2)	    
+	      if(boundary) lines(bound, col = 2)
+	      if(statistic) lines(stat, lty = 2)
 	    } else {
 	      panel <- function(x, ...)
 	      {
@@ -366,10 +373,11 @@ efpFunctional <- function(functional = list(comp = function(x) max(abs(x)), time
       ## lambda = lambda_comp(lambda_time(x))
 
         plotProcess <- function(x, alpha = 0.05, aggregate = TRUE,
-	    xlab = NULL, ylab = NULL, main = x$type.name, xlim = NULL, ylim = NULL, ...)
+	    xlab = NULL, ylab = NULL, main = x$type.name, xlim = NULL, ylim = NULL,
+	    boundary = TRUE, ...)
         {
           k <- NCOL(x$process)
-          bound <- computeCritval(alpha = alpha, nproc = NCOL(x$process)) * boundary(1:k/k)
+          bound <- computeCritval(alpha = alpha, nproc = NCOL(x$process)) * boundary0(1:k/k)
 	  ## for pretty printing
 	  bound <- c(bound[1], bound, bound[k])
           stat <- rep(computeStatistic(x$process), k+2)
@@ -390,7 +398,7 @@ efpFunctional <- function(functional = list(comp = function(x) max(abs(x)), time
 	    axis(2)
 	    axis(1, at = 1:k, labels = xlabels)
 	    abline(0, 0)
-	    lines(c(0.9, 1:k, k+0.1), bound, col = 2)
+	    if(boundary) lines(c(0.9, 1:k, k+0.1), bound, col = 2)
 	    if(!identical(functional[[2]], max)) lines(c(0.9, 1:k, k+0.1), stat, lty = 2)	    
 	  } else {
             if(is.null(xlab)) {
@@ -434,7 +442,7 @@ efpFunctional <- function(functional = list(comp = function(x) max(abs(x)), time
                computeStatistic = computeStatistic,
 	       computePval = computePval,
 	       computeCritval = computeCritval,
-	       boundary = boundary,
+	       boundary = boundary0,
 	       lim.process = lim.process,
 	       nobs = nobs, nrep = nrep, nproc = nproc)
 	       
