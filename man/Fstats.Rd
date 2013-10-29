@@ -31,6 +31,10 @@ the number of observations and \code{k} the number of regressors in the model,
 the formula is:
 
 \deqn{F = \frac{(RSS - ESS)}{ESS/(n - 2 k)}}{F = (RSS-ESS)/ESS * (n-2*k)}
+
+Note that this statistic has an asymptotic chi-squared distribution with k degrees of
+freedom and (under the assumption of normality) F/k has an exact F distribution
+with k and n - 2k degrees of freedom.
 }
 
 \value{\code{Fstats} returns an object of class \code{"Fstats"}, which contains

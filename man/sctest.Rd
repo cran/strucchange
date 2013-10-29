@@ -1,54 +1,36 @@
-\name{sctest.formula}
+\name{sctest}
 \alias{sctest}
-\alias{sctest.formula}
+
 \title{Structural Change Tests}
-\description{Performs tests for structural change.}
+
+\description{
+Generic function for performing structural change tests.
+}
+
 \usage{
-\method{sctest}{formula}(formula, type = , h = 0.15,
-    alt.boundary = FALSE, functional = c("max", "range",
-    "maxL2", "meanL2"), from = 0.15, to = NULL, point = 0.5,
-    asymptotic = FALSE, data, ...)
+sctest(x, \dots)
 }
 
 \arguments{
-  \item{formula}{a formula describing the model to be tested.}
-  \item{type}{a character string specifying the structural change test that is
-     to be performed, the default is \code{"Rec-CUSUM"}. Besides the test
-     types described in \code{\link{efp}}
-     and \code{\link{sctest.Fstats}} the Chow test and the Nyblom-Hansen test
-     can be performed by setting type to \code{"Chow"} or \code{"Nyblom-Hansen"},
-     respectively.}
-  \item{h}{numeric from interval (0,1) specifying the bandwidth. Determines the
-     size of the data window relative to the sample size (for MOSUM and ME tests
-     only).}
-  \item{alt.boundary}{logical. If set to \code{TRUE} alternative boundaries
-     (instead of the standard linear boundaries) will be used (for CUSUM
-     processes only).}
-  \item{functional}{indicates which functional should be used to aggregate
-     the empirical fluctuation processes to a test statistic.}
- \item{from, to}{numeric. If \code{from} is smaller than 1 they are
-     interpreted as percentages of data and by default \code{to} is taken to be
-     the 1 - \code{from}. F statistics will be calculated for the observations
-     \code{(n*from):(n*to)}, when \code{n} is the number of observations in the
-     model. If \code{from} is greater than 1 it is interpreted to be the index
-     and \code{to} defaults to \code{n - from}. (for F tests only)}
-  \item{point}{parameter of the Chow test for the potential change point.
-    Interpreted analogous to the \code{from} parameter. By
-     default taken to be \code{floor(n*0.5)} if \code{n} is the  number of
-     observations in the model.}
-  \item{asymptotic}{logical. If \code{TRUE} the asymptotic (chi-square)
-     distribution instead of the exact (F) distribution will be used to compute
-     the p value (for Chow test only).}
-  \item{data}{an optional data frame containing the variables in the model. By
-     default the variables are taken from the environment which
-     \code{sctest} is called from.}
-  \item{...}{further arguments passed to \code{\link{efp}} or
-     \code{\link{Fstats}}.} }
+  \item{x}{an object.}
+  \item{\dots}{arguments passed to methods.}
+}
 
-\details{\code{sctest.formula} is mainly a wrapper for \code{\link{sctest.efp}}
-and \code{\link{sctest.Fstats}} as it fits an empirical fluctuation process
-first or computes the F statistics respectively and subsequently performs the
-corresponding test. The Chow test and the Nyblom-Hansen test are available explicitly here.}
+\details{
+\code{sctest} is a generic function for performing/extracting structural
+change tests based on various types of objects. The \code{strucchange} package
+provides various types of methods.
+
+First, structural change tests based on
+F statistics in linear regression models (\code{\link{Fstats}}),
+empirical fluctuation processes in linear regression models (\code{\link{efp}}),
+and generalized empirical fluctuation processes in parametric models (\code{\link{gefp}})
+are available in the corresponding \code{sctest} methods.
+
+Second, convenience interfaces for carrying out structural change tests
+in linear regression models and general parametric models are provided in
+\code{\link{sctest.formula}} and \code{\link{sctest.default}}, respectively.
+}
 
 \value{
   An object of class \code{"htest"} containing:
@@ -58,23 +40,16 @@ corresponding test. The Chow test and the Nyblom-Hansen test are available expli
   \item{data.name}{a character string with the data name.}
 }
 
-\seealso{\code{\link{sctest.efp}}, \code{\link{sctest.Fstats}}}
+\references{
+Zeileis A., Leisch F., Hornik K., Kleiber C. (2002), \code{strucchange}:
+An R Package for Testing for Structural Change in Linear Regression Models,
+\emph{Journal of Statistical Software}, \bold{7}(2), 1-38.
+URL \url{http://www.jstatsoft.org/v07/i02/}.
 
-\examples{
-## Example 7.4 from Greene (1993), "Econometric Analysis"
-## Chow test on Longley data
-data("longley")
-sctest(Employed ~ Year + GNP.deflator + GNP + Armed.Forces, data = longley,
-  type = "Chow", point = 7)
-
-## which is equivalent to segmenting the regression via
-fac <- factor(c(rep(1, 7), rep(2, 9)))
-fm0 <- lm(Employed ~ Year + GNP.deflator + GNP + Armed.Forces, data = longley)
-fm1 <- lm(Employed ~ fac/(Year + GNP.deflator + GNP + Armed.Forces), data = longley)
-anova(fm0, fm1)
-
-## estimates from Table 7.5 in Greene (1993)
-summary(fm0)
-summary(fm1)
+Zeileis A. (2006), Implementing a Class of Structural Change Tests: An
+Econometric Computing Approach. \emph{Computational Statistics & Data Analysis}, 
+\bold{50}, 2987--3008. doi:10.1016/j.csda.2005.07.001.
 }
-\keyword{htest}
+
+\seealso{\code{\link{sctest.formula}}, \code{\link{sctest.default}},
+  \code{\link{sctest.Fstats}}, \code{\link{sctest.efp}}, \code{\link{sctest.gefp}}}

@@ -1,4 +1,4 @@
-import("stats", "graphics")
+import("stats", "graphics", "zoo", "sandwich")
 
 export(
 ## testing
@@ -28,6 +28,10 @@ export(
   "rangeBMI",
   "rangeBBI",
   "supLM",
+  "maxMOSUM",
+  "catL2BB",
+  "ordL2BB",
+  "ordwmax",
 
 ## new generics
   "sctest",
@@ -59,6 +63,7 @@ export(
   "monitorRECritvalTable")
 
 ## methods to new generics
+S3method("sctest", "default")
 S3method("sctest", "formula")
 S3method("sctest", "efp")
 S3method("sctest", "gefp")

@@ -1,7 +1,6 @@
 
-R version 2.15.0 (2012-03-30)
-Copyright (C) 2012 The R Foundation for Statistical Computing
-ISBN 3-900051-07-0
+R version 3.0.1 (2013-05-16) -- "Good Sport"
+Copyright (C) 2013 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -24,13 +23,13 @@ Loading required package: zoo
 
 Attaching package: 'zoo'
 
-The following object(s) are masked from 'package:base':
+The following object is masked from 'package:base':
 
     as.Date, as.Date.numeric
 
 Loading required package: sandwich
 > 
-> assign(".oldSearch", search(), pos = 'CheckExEnv')
+> base::assign(".oldSearch", base::search(), pos = 'CheckExEnv')
 > cleanEx()
 > nameEx("BostonHomicide")
 > ### * BostonHomicide
@@ -76,7 +75,7 @@ populationBM  1  14.364 14.3642  3.7961 0.05576 .
 season       11  47.254  4.2959  1.1353 0.34985  
 Residuals    64 242.174  3.7840                  
 ---
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 > ## as GLM
 > fmA1 <- glm(homicides ~ populationBM + season, family = poisson)
 > anova(fmA1, test = "Chisq")
@@ -94,7 +93,7 @@ NULL                            76    115.649
 populationBM  1   4.9916        75    110.657  0.02547 *
 season       11  18.2135        64     92.444  0.07676 .
 ---
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 > 
 > ## model B & C
 > fmB <- lm(homicides ~ populationBM + season + ahomicides25)
@@ -196,7 +195,7 @@ Corresponding to breakdates:
 
 	supF test
 
-data:  fs.nile 
+data:  fs.nile
 sup.F = 75.9298, p-value = 2.22e-16
 
 > ## visualize the breakpoint implied by the argmax of the F statistics
@@ -232,7 +231,7 @@ sup.F = 75.9298, p-value = 2.22e-16
 
 	expF test
 
-data:  fs 
+data:  fs
 exp.F = 6.4247, p-value = 0.008093
 
 > 
@@ -583,11 +582,11 @@ fac.infseg1:dp1  0.274012   0.269892   1.015   0.3171
 fac.infseg2:dp1  1.343369   0.224521   5.983 9.05e-07 ***
 fac.infseg3:dp1  0.683410   0.130106   5.253 8.07e-06 ***
 ---
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 Residual standard error: 0.02325 on 34 degrees of freedom
-Multiple R-squared: 0.9237,	Adjusted R-squared: 0.9103 
-F-statistic: 68.64 on 6 and 34 DF,  p-value: < 2.2e-16 
+Multiple R-squared:  0.9237,	Adjusted R-squared:  0.9103 
+F-statistic: 68.64 on 6 and 34 DF,  p-value: < 2.2e-16
 
 > 
 > ## Results from Table 2 in Bai & Perron (2003):
@@ -683,11 +682,11 @@ fac.pcseg1:dp1  0.09373    0.24053   0.390  0.69936
 fac.pcseg2:dp1  1.23143    0.20498   6.008 1.06e-06 ***
 fac.pcseg3:dp1  0.01618    0.25667   0.063  0.95013    
 ---
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 Residual standard error: 0.02021 on 32 degrees of freedom
-Multiple R-squared: 0.9655,	Adjusted R-squared: 0.9569 
-F-statistic:   112 on 8 and 32 DF,  p-value: < 2.2e-16 
+Multiple R-squared:  0.9655,	Adjusted R-squared:  0.9569 
+F-statistic:   112 on 8 and 32 DF,  p-value: < 2.2e-16
 
 > 
 > ## Results from Table 3 in Bai & Perron (2003):
@@ -792,11 +791,11 @@ fac.riseg2   0.8661     0.4422   1.959    0.053 .
 fac.riseg3  -1.7961     0.3749  -4.791 5.83e-06 ***
 fac.riseg4   5.6429     0.4329  13.036  < 2e-16 ***
 ---
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 Residual standard error: 2.121 on 99 degrees of freedom
-Multiple R-squared: 0.6842,	Adjusted R-squared: 0.6714 
-F-statistic: 53.62 on 4 and 99 DF,  p-value: < 2.2e-16 
+Multiple R-squared:  0.6842,	Adjusted R-squared:  0.6714 
+F-statistic: 53.62 on 4 and 99 DF,  p-value: < 2.2e-16
 
 > 
 > ## setup kernel HAC estimator
@@ -1019,7 +1018,7 @@ Break detected at observation # 29
 
 	OLS-based CUSUM test
 
-data:  ocus 
+data:  ocus
 S0 = 1.5511, p-value = 0.01626
 
 > 
@@ -1031,7 +1030,7 @@ S0 = 1.5511, p-value = 0.01626
 
 	OLS-based CUSUM test
 
-data:  ecm.model 
+data:  ecm.model
 S0 = 1.5511, p-value = 0.01626
 
 > 
@@ -1067,7 +1066,7 @@ S0 = 1.5511, p-value = 0.01626
 
 	expF test
 
-data:  fs 
+data:  fs
 exp.F = 8.9955, p-value = 0.001311
 
 > 
@@ -1079,7 +1078,7 @@ exp.F = 8.9955, p-value = 0.001311
 
 	expF test
 
-data:  ecm.model 
+data:  ecm.model
 exp.F = 8.9955, p-value = 0.001311
 
 > 
@@ -1581,6 +1580,71 @@ Corresponding to breakdates:
 > 
 > 
 > cleanEx()
+> nameEx("catL2BB")
+> ### * catL2BB
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: catL2BB
+> ### Title: Generators for efpFunctionals along Categorical Variables
+> ### Aliases: catL2BB ordL2BB ordwmax
+> ### Keywords: regression
+> 
+> ### ** Examples
+> 
+> ## artificial data
+> set.seed(1)
+> d <- data.frame(
++   x = runif(200, -1, 1),
++   z = factor(rep(1:4, each = 50)),
++   err = rnorm(200)
++ )
+> d$y <- rep(c(0.5, -0.5), c(150, 50)) * d$x + d$err
+> 
+> ## empirical fluctuation process
+> scus <- gefp(y ~ x, data = d, fit = lm, order.by = ~ z)
+> 
+> ## chi-squared-type test (unordered LM-type test)
+> LMuo <- catL2BB(scus)
+> plot(scus, functional = LMuo)
+> sctest(scus, functional = LMuo)
+
+	M-fluctuation test
+
+data:  scus
+f(efp) = 12.3749, p-value = 0.05411
+
+> 
+> ## ordinal maxLM test (with few replications only
+> ## to save time)
+> maxLMo <- ordL2BB(scus, nrep = 2000)
+> plot(scus, functional = maxLMo)
+> sctest(scus, functional = maxLMo)
+
+	M-fluctuation test
+
+data:  scus
+f(efp) = 9.0937, p-value = 0.03047
+
+> 
+> ## ordinal weighted double maximum test
+> WDM <- ordwmax(scus)
+Loading required package: mvtnorm
+> plot(scus, functional = WDM)
+> sctest(scus, functional = WDM)
+
+	M-fluctuation test
+
+data:  scus
+f(efp) = 3.001, p-value = 0.01458
+
+> 
+> 
+> 
+> cleanEx()
+
+detaching 'package:mvtnorm'
+
 > nameEx("confint.breakpointsfull")
 > ### * confint.breakpointsfull
 > 
@@ -1729,7 +1793,7 @@ BIC -4.175918e+03
 
 	OLS-based CUSUM test
 
-data:  ocus.nile 
+data:  ocus.nile
 S0 = 2.9518, p-value = 5.409e-08
 
 > 
@@ -1753,7 +1817,7 @@ S0 = 2.9518, p-value = 5.409e-08
 
 	RE test (recursive estimates test)
 
-data:  re.seat 
+data:  re.seat
 RE = 1.6311, p-value = 0.02904
 
 > 
@@ -1768,7 +1832,7 @@ RE = 1.6311, p-value = 0.02904
 > ### Name: efpFunctional
 > ### Title: Functionals for Fluctuation Processes
 > ### Aliases: efpFunctional simulateBMDist maxBM maxBB maxBMI maxBBI maxL2BB
-> ###   meanL2BB rangeBM rangeBB rangeBMI rangeBBI supLM
+> ###   meanL2BB rangeBM rangeBB rangeBMI rangeBBI
 > ### Keywords: regression
 > 
 > ### ** Examples
@@ -1776,7 +1840,7 @@ RE = 1.6311, p-value = 0.02904
 > 
 > data("BostonHomicide")
 > gcus <- gefp(homicides ~ 1, family = poisson, vcov = kernHAC,
-+ 	     data = BostonHomicide)
++   data = BostonHomicide)
 > plot(gcus, functional = meanL2BB)	 
 > gcus
 
@@ -1794,13 +1858,13 @@ Coefficients:
 
 Degrees of Freedom: 76 Total (i.e. Null);  76 Residual
 Null Deviance:	    115.6 
-Residual Deviance: 115.6 	AIC: 316.5 
+Residual Deviance: 115.6 	AIC: 316.5
 
 > sctest(gcus, functional = meanL2BB)
 
 	M-fluctuation test
 
-data:  gcus 
+data:  gcus
 f(efp) = 0.9337, p-value = 0.005
 
 > 
@@ -1815,7 +1879,7 @@ f(efp) = 0.9337, p-value = 0.005
 
 	supF test
 
-data:  fs 
+data:  fs
 sup.F = 12.2517, p-value = 0.1161
 
 > 
@@ -1826,7 +1890,7 @@ sup.F = 12.2517, p-value = 0.1161
 
 	M-fluctuation test
 
-data:  scus 
+data:  scus
 f(efp) = 12.2579, p-value = 0.1158
 
 > 
@@ -1883,13 +1947,13 @@ Coefficients:
 
 Degrees of Freedom: 76 Total (i.e. Null);  76 Residual
 Null Deviance:	    115.6 
-Residual Deviance: 115.6 	AIC: 316.5 
+Residual Deviance: 115.6 	AIC: 316.5
 
 > sctest(gcus)
 
 	M-fluctuation test
 
-data:  gcus 
+data:  gcus
 f(efp) = 1.669, p-value = 0.007613
 
 > 
@@ -2046,7 +2110,7 @@ Break detected at observation # 58
 
 	aveF test
 
-data:  fs 
+data:  fs
 ave.F = 10.8103, p-value = 2.059e-06
 
 > 
@@ -2081,7 +2145,7 @@ ave.F = 10.8103, p-value = 2.059e-06
 
 	Recursive CUSUM test
 
-data:  temp.cus 
+data:  temp.cus
 S = 1.2724, p-value = 0.002902
 
 > 
@@ -2096,7 +2160,7 @@ S = 1.2724, p-value = 0.002902
 
 	RE test (recursive estimates test)
 
-data:  temp.me 
+data:  temp.me
 RE = 1.4938, p-value = 0.04558
 
 > 
@@ -2246,105 +2310,35 @@ Break detected at observation # 183
 
 	aveF test
 
-data:  fs 
+data:  fs
 ave.F = 10.8103, p-value = 2.059e-06
 
 > 
 > 
 > 
 > cleanEx()
-> nameEx("sctest")
-> ### * sctest
+> nameEx("sctest.default")
+> ### * sctest.default
 > 
 > flush(stderr()); flush(stdout())
 > 
-> ### Name: sctest.formula
-> ### Title: Structural Change Tests
-> ### Aliases: sctest sctest.formula
+> ### Name: sctest.default
+> ### Title: Structural Change Tests in Parametric Models
+> ### Aliases: sctest.default
 > ### Keywords: htest
 > 
 > ### ** Examples
 > 
-> ## Example 7.4 from Greene (1993), "Econometric Analysis"
-> ## Chow test on Longley data
-> data("longley")
-> sctest(Employed ~ Year + GNP.deflator + GNP + Armed.Forces, data = longley,
-+   type = "Chow", point = 7)
+> ## Zeileis and Hornik (2007), Section 5.3, Figure 6
+> data("Grossarl")
+> m <- glm(cbind(illegitimate, legitimate) ~ 1, family = binomial, data = Grossarl,
++   subset = time(fraction) <= 1800)
+> sctest(m, order.by = 1700:1800, functional = "CvM")
 
-	Chow test
+	M-fluctuation test
 
-data:  Employed ~ Year + GNP.deflator + GNP + Armed.Forces 
-F = 3.9268, p-value = 0.06307
-
-> 
-> ## which is equivalent to segmenting the regression via
-> fac <- factor(c(rep(1, 7), rep(2, 9)))
-> fm0 <- lm(Employed ~ Year + GNP.deflator + GNP + Armed.Forces, data = longley)
-> fm1 <- lm(Employed ~ fac/(Year + GNP.deflator + GNP + Armed.Forces), data = longley)
-> anova(fm0, fm1)
-Analysis of Variance Table
-
-Model 1: Employed ~ Year + GNP.deflator + GNP + Armed.Forces
-Model 2: Employed ~ fac/(Year + GNP.deflator + GNP + Armed.Forces)
-  Res.Df    RSS Df Sum of Sq      F  Pr(>F)  
-1     11 4.8987                              
-2      6 1.1466  5    3.7521 3.9268 0.06307 .
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
-> 
-> ## estimates from Table 7.5 in Greene (1993)
-> summary(fm0)
-
-Call:
-lm(formula = Employed ~ Year + GNP.deflator + GNP + Armed.Forces, 
-    data = longley)
-
-Residuals:
-    Min      1Q  Median      3Q     Max 
--0.9058 -0.3427 -0.1076  0.2168  1.4377 
-
-Coefficients:
-               Estimate Std. Error t value Pr(>|t|)   
-(Intercept)   1.169e+03  8.359e+02   1.399  0.18949   
-Year         -5.765e-01  4.335e-01  -1.330  0.21049   
-GNP.deflator -1.977e-02  1.389e-01  -0.142  0.88940   
-GNP           6.439e-02  1.995e-02   3.227  0.00805 **
-Armed.Forces -1.015e-04  3.086e-03  -0.033  0.97436   
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
-
-Residual standard error: 0.6673 on 11 degrees of freedom
-Multiple R-squared: 0.9735,	Adjusted R-squared: 0.9639 
-F-statistic: 101.1 on 4 and 11 DF,  p-value: 1.346e-08 
-
-> summary(fm1)
-
-Call:
-lm(formula = Employed ~ fac/(Year + GNP.deflator + GNP + Armed.Forces), 
-    data = longley)
-
-Residuals:
-     Min       1Q   Median       3Q      Max 
--0.47717 -0.18950  0.02089  0.14836  0.56493 
-
-Coefficients:
-                    Estimate Std. Error t value Pr(>|t|)   
-(Intercept)        1.678e+03  9.390e+02   1.787  0.12413   
-fac2               2.098e+03  1.786e+03   1.174  0.28473   
-fac1:Year         -8.352e-01  4.847e-01  -1.723  0.13563   
-fac2:Year         -1.914e+00  7.913e-01  -2.419  0.05194 . 
-fac1:GNP.deflator -1.633e-01  1.762e-01  -0.927  0.38974   
-fac2:GNP.deflator -4.247e-02  2.238e-01  -0.190  0.85576   
-fac1:GNP           9.481e-02  3.815e-02   2.485  0.04747 * 
-fac2:GNP           1.123e-01  2.269e-02   4.951  0.00258 **
-fac1:Armed.Forces -2.467e-03  6.965e-03  -0.354  0.73532   
-fac2:Armed.Forces -2.579e-02  1.259e-02  -2.049  0.08635 . 
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
-
-Residual standard error: 0.4372 on 6 degrees of freedom
-Multiple R-squared: 0.9938,	Adjusted R-squared: 0.9845 
-F-statistic: 106.9 on 9 and 6 DF,  p-value: 6.28e-06 
+data:  m
+f(efp) = 3.5363, p-value = 0.005
 
 > 
 > 
@@ -2377,7 +2371,7 @@ F-statistic: 106.9 on 9 and 6 DF,  p-value: 6.28e-06
 
 	OLS-based CUSUM test
 
-data:  temp.cus 
+data:  temp.cus
 S0 = 2.0728, p-value = 0.0003709
 
 > 
@@ -2390,8 +2384,105 @@ S0 = 2.0728, p-value = 0.0003709
 
 	ME test (moving estimates test)
 
-data:  temp.me 
+data:  temp.me
 ME = 1.5627, p-value = 0.01
+
+> 
+> 
+> 
+> cleanEx()
+> nameEx("sctest.formula")
+> ### * sctest.formula
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: sctest.formula
+> ### Title: Structural Change Tests in Linear Regression Models
+> ### Aliases: sctest.formula
+> ### Keywords: htest
+> 
+> ### ** Examples
+> 
+> ## Example 7.4 from Greene (1993), "Econometric Analysis"
+> ## Chow test on Longley data
+> data("longley")
+> sctest(Employed ~ Year + GNP.deflator + GNP + Armed.Forces, data = longley,
++   type = "Chow", point = 7)
+
+	Chow test
+
+data:  Employed ~ Year + GNP.deflator + GNP + Armed.Forces
+F = 3.9268, p-value = 0.06307
+
+> 
+> ## which is equivalent to segmenting the regression via
+> fac <- factor(c(rep(1, 7), rep(2, 9)))
+> fm0 <- lm(Employed ~ Year + GNP.deflator + GNP + Armed.Forces, data = longley)
+> fm1 <- lm(Employed ~ fac/(Year + GNP.deflator + GNP + Armed.Forces), data = longley)
+> anova(fm0, fm1)
+Analysis of Variance Table
+
+Model 1: Employed ~ Year + GNP.deflator + GNP + Armed.Forces
+Model 2: Employed ~ fac/(Year + GNP.deflator + GNP + Armed.Forces)
+  Res.Df    RSS Df Sum of Sq      F  Pr(>F)  
+1     11 4.8987                              
+2      6 1.1466  5    3.7521 3.9268 0.06307 .
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+> 
+> ## estimates from Table 7.5 in Greene (1993)
+> summary(fm0)
+
+Call:
+lm(formula = Employed ~ Year + GNP.deflator + GNP + Armed.Forces, 
+    data = longley)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-0.9058 -0.3427 -0.1076  0.2168  1.4377 
+
+Coefficients:
+               Estimate Std. Error t value Pr(>|t|)   
+(Intercept)   1.169e+03  8.359e+02   1.399  0.18949   
+Year         -5.765e-01  4.335e-01  -1.330  0.21049   
+GNP.deflator -1.977e-02  1.389e-01  -0.142  0.88940   
+GNP           6.439e-02  1.995e-02   3.227  0.00805 **
+Armed.Forces -1.015e-04  3.086e-03  -0.033  0.97436   
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.6673 on 11 degrees of freedom
+Multiple R-squared:  0.9735,	Adjusted R-squared:  0.9639 
+F-statistic: 101.1 on 4 and 11 DF,  p-value: 1.346e-08
+
+> summary(fm1)
+
+Call:
+lm(formula = Employed ~ fac/(Year + GNP.deflator + GNP + Armed.Forces), 
+    data = longley)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-0.47717 -0.18950  0.02089  0.14836  0.56493 
+
+Coefficients:
+                    Estimate Std. Error t value Pr(>|t|)   
+(Intercept)        1.678e+03  9.390e+02   1.787  0.12413   
+fac2               2.098e+03  1.786e+03   1.174  0.28473   
+fac1:Year         -8.352e-01  4.847e-01  -1.723  0.13563   
+fac2:Year         -1.914e+00  7.913e-01  -2.419  0.05194 . 
+fac1:GNP.deflator -1.633e-01  1.762e-01  -0.927  0.38974   
+fac2:GNP.deflator -4.247e-02  2.238e-01  -0.190  0.85576   
+fac1:GNP           9.481e-02  3.815e-02   2.485  0.04747 * 
+fac2:GNP           1.123e-01  2.269e-02   4.951  0.00258 **
+fac1:Armed.Forces -2.467e-03  6.965e-03  -0.354  0.73532   
+fac2:Armed.Forces -2.579e-02  1.259e-02  -2.049  0.08635 . 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.4372 on 6 degrees of freedom
+Multiple R-squared:  0.9938,	Adjusted R-squared:  0.9845 
+F-statistic: 106.9 on 9 and 6 DF,  p-value: 6.28e-06
 
 > 
 > 
@@ -2421,10 +2512,47 @@ ME = 1.5627, p-value = 0.01
 > 
 > 
 > 
+> cleanEx()
+> nameEx("supLM")
+> ### * supLM
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: supLM
+> ### Title: Generators for efpFunctionals along Continuous Variables
+> ### Aliases: supLM maxMOSUM
+> ### Keywords: regression
+> 
+> ### ** Examples
+> 
+> ## seatbelt data
+> data("UKDriverDeaths")
+> seatbelt <- log10(UKDriverDeaths)
+> seatbelt <- cbind(seatbelt, lag(seatbelt, k = -1), lag(seatbelt, k = -12))
+> colnames(seatbelt) <- c("y", "ylag1", "ylag12")
+> seatbelt <- window(seatbelt, start = c(1970, 1), end = c(1984,12))
+> 
+> ## empirical fluctuation process
+> scus.seat <- gefp(y ~ ylag1 + ylag12, data = seatbelt)
+> 
+> ## supLM test
+> plot(scus.seat, functional = supLM(0.1))
+> ## MOSUM test
+> plot(scus.seat, functional = maxMOSUM(0.25))
+> ## double maximum test
+> plot(scus.seat)
+> ## range test
+> plot(scus.seat, functional = rangeBB)
+> ## Cramer-von Mises statistic (Nyblom-Hansen test)
+> plot(scus.seat, functional = meanL2BB)
+> 
+> 
+> 
 > ### * <FOOTER>
 > ###
-> cat("Time elapsed: ", proc.time() - get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  54.287 0.192 54.791 0 0 
+> options(digits = 7L)
+> base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
+Time elapsed:  58.496 0.168 59.563 0 0 
 > grDevices::dev.off()
 null device 
           1 

@@ -5,7 +5,7 @@
 \alias{plot.gefp}
 \alias{time.gefp}
 \alias{print.gefp}
-\encoding{latin1}
+
 \title{Generalized Empirical M-Fluctuation Processes}
 \description{Computes an empirical M-fluctuation process 
 from the scores of a fitted model.}

@@ -11,8 +11,6 @@
 \alias{rangeBB}
 \alias{rangeBMI}
 \alias{rangeBBI}
-\alias{supLM}
-\encoding{latin1}
 \title{Functionals for Fluctuation Processes}
 \description{Computes an object for aggregating, plotting and testing
 empirical fluctuation processes.}
@@ -51,15 +49,18 @@ efpFunctional(functional = list(comp = function(x) max(abs(x)), time = max),
 
 \details{
   \code{efpFunctional} computes an object of class \code{"efpFunctional"}
-  which should know how to do inference based on empirical fluctuation processes
+  which then knows how to do inference based on empirical fluctuation processes
   (currently only for \code{\link{gefp}} objects and not yet for \code{\link{efp}}
   objects) and how to visualize the corresponding processes.   
 
   \code{efpFunctional}s for many frequently used test statistics are provided:
-  \code{maxBB} for the double maximum function, \code{meanL2BB} for the Cramer-von Mises
-  statistic, or \code{rangeBB} for the range statistic. Furthermore, \code{supLM}
+  \code{\link{maxBB}} for the double maximum statistic, \code{\link{meanL2BB}} for the Cramer-von Mises
+  statistic, or \code{rangeBB} for the range statistic. Furthermore, \code{\link{supLM}}
   generates an object of class \code{"efpFunctional"} for a certain trimming parameter,
-  see the examples. More details can be found in Zeileis (2006).    
+  see the examples. More details can be found in Zeileis (2006). Based on
+  Merkle, Fan, and Zeileis (2013), further \code{efpFunctional} generators for
+  aggregating along (ordered) categorical variables have been added:
+  \code{\link{catL2BB}}, \code{\link{ordL2BB}}, \code{\link{ordwmax}}.
 
   For setting up an \code{efpFunctional}, the functions
   \code{computeStatistic}, \code{computePval}, and \code{plotProcess} need to be
@@ -83,6 +84,13 @@ efpFunctional(functional = list(comp = function(x) max(abs(x)), time = max),
 }
 
 \references{
+Merkle E.C., Zeileis A. (2013), Tests of Measurement Invariance without Subgroups:
+A Generalization of Classical Methods. \emph{Psychometrika}, \bold{78}(1), 59--82.
+doi:10.1007/S11336-012-9302-4
+
+Merkle E.C., Fan J., Zeileis A. (2013), Testing for Measurement Invariance with
+Respect to an Ordinal Variable. \emph{Psychometrika}, Forthcoming.
+
 Zeileis A. (2005), A Unified Approach to Structural Change Tests Based on
 ML Scores, F Statistics, and OLS Residuals. \emph{Econometric Reviews}, \bold{24},
 445--466. doi:10.1080/07474930500406053.
@@ -96,13 +104,13 @@ Instability, \emph{Statistica Neerlandica}, \bold{61}, 488--508.
 doi:10.1111/j.1467-9574.2007.00371.x.
 }
 
-\seealso{\code{\link{efp}}, \code{\link{efpFunctional}}}
+\seealso{\code{\link{gefp}}, \code{\link{supLM}}, \code{\link{catL2BB}}, \code{\link{sctest.default}}}
 
 \examples{
 
 data("BostonHomicide")
 gcus <- gefp(homicides ~ 1, family = poisson, vcov = kernHAC,
-	     data = BostonHomicide)
+  data = BostonHomicide)
 plot(gcus, functional = meanL2BB)	 
 gcus
 sctest(gcus, functional = meanL2BB)

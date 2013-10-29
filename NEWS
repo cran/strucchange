@@ -1,3 +1,38 @@
+Changes in Version 1.5-0
+
+  o Added new efpFunctional generators for conducting various types of
+    structural change tests based on empirical fluctuation processes of class
+    "gefp". In particular a (maximum) MOSUM functional was added as well
+    as several functionals suitable for aggregation along categorical
+    variables. The documentation for previously available functionals
+    such as supLM() was also enhanced.
+    
+  o The new functionals mentioned above for assessing parameter instability
+    along (ordered) categorical variables are catL2BB (unordered),
+    ordL2BB and ordwmax (ordered). These are discussed in more detail in
+    Merkle, Fan, and Zeileis (2013, Psychometrika).
+    
+  o Added a new default method for sctest(). This essentially just calls
+    gefp(object, fit = NULL) and then (optionally) calls plot() and sctest()
+    using the specified functional. However, several convenience options have
+    been added, e.g., using the maximum likelihood information (rather than
+    the outer product of gradients) for the covariance matrix or specifying
+    the functional via a character string.
+
+  o Documentation of the sctest() generic and its methods have been enhanced.
+    Methods for "formula", "efp", and "Fstats" are suitable for assessing
+    structural changes in linear regression models while the "default" and
+    "gefp" methods (see above) are suitable for general parametric models.
+
+  o Improved plot() method for gefp/efpFunctional to allow for more
+    flexibility in boundary display. Rather than only boundary = TRUE) or
+    FALSE one can now specify a list of graphical parameters, e.g.,
+    boundary = list(col = "slategray", lty = 2).
+
+  o Updated Depends/Imports in DESCRIPTION/NAMESPACE with new R CMD check
+    requirements.
+
+
 Changes in Version 1.4-7
 
   o plotProcess() function in "efpFunctional" objects now takes a

@@ -1,7 +1,6 @@
 
-R version 2.13.1 (2011-07-08)
-Copyright (C) 2011 The R Foundation for Statistical Computing
-ISBN 3-900051-07-0
+R version 3.0.1 (2013-05-16) -- "Good Sport"
+Copyright (C) 2013 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -21,7 +20,7 @@ Loading required package: zoo
 
 Attaching package: 'zoo'
 
-The following object(s) are masked from 'package:base':
+The following object is masked from 'package:base':
 
     as.Date, as.Date.numeric
 
@@ -40,77 +39,77 @@ Loading required package: sandwich
 
 	Recursive CUSUM test
 
-data:  Nile.rcus 
+data:  Nile.rcus
 S = 2.0669, p-value = 7.487e-08
 
 > sctest(Nile.ocus)
 
 	OLS-based CUSUM test
 
-data:  Nile.ocus 
+data:  Nile.ocus
 S0 = 2.9518, p-value = 5.409e-08
 
 > sctest(Nile.ocus, alt = TRUE)
 
 	OLS-based CUSUM test with alternative boundaries
 
-data:  Nile.ocus 
+data:  Nile.ocus
 S0 = 6.5741, p-value = 1e-04
 
 > sctest(Nile.re)
 
 	RE test (recursive estimates test)
 
-data:  Nile.re 
+data:  Nile.re
 RE = 2.9518, p-value = 5.409e-08
 
 > sctest(Nile.re, alt = TRUE)
 
 	RE test (recursive estimates test) with alternative boundaries
 
-data:  Nile.re 
+data:  Nile.re
 RE = 6.5741, p-value = 1e-04
 
 > sctest(Nile.re, fun = "range")
 
 	RE test (recursive estimates test) with range norm
 
-data:  Nile.re 
+data:  Nile.re
 RE = 2.9518, p-value = 1.831e-06
 
 > sctest(Nile.rmos)
 
 	Recursive MOSUM test
 
-data:  Nile.rmos 
+data:  Nile.rmos
 M = 5.097, p-value = 0.01
 
 > sctest(Nile.omos)
 
 	OLS-based MOSUM test
 
-data:  Nile.omos 
+data:  Nile.omos
 M0 = 2.4237, p-value = 0.01
 
 > sctest(Nile.omos, fun = "range")
 
 	OLS-based MOSUM test with range norm
 
-data:  Nile.omos 
+data:  Nile.omos
 M0 = 4.3433, p-value = 5.615e-05
 
 > sctest(Nile.me)
 
 	ME test (moving estimates test)
 
-data:  Nile.me 
+data:  Nile.me
 ME = 2.4237, p-value = 0.01
 
 > sctest(Nile.me, fun = "range")
 
 	ME test (moving estimates test) with range norm
 
-data:  Nile.me 
+data:  Nile.me
 ME = 4.3433, p-value = 5.615e-05
 
 > 
@@ -119,21 +118,21 @@ ME = 4.3433, p-value = 5.615e-05
 
 	supF test
 
-data:  Nile.fs 
+data:  Nile.fs
 sup.F = 75.9298, p-value = 2.22e-16
 
 > sctest(Nile.fs, type = "aveF")
 
 	aveF test
 
-data:  Nile.fs 
+data:  Nile.fs
 ave.F = 21.2147, p-value < 2.2e-16
 
 > sctest(Nile.fs, type = "expF")
 
 	expF test
 
-data:  Nile.fs 
+data:  Nile.fs
 exp.F = 33.759, p-value < 2.2e-16
 
 > breakpoints(Nile.fs)
@@ -166,77 +165,77 @@ Corresponding to breakdates:
 
 	Recursive CUSUM test
 
-data:  seat.rcus 
+data:  seat.rcus
 S = 1.1599, p-value = 0.008572
 
 > sctest(seat.ocus)
 
 	OLS-based CUSUM test
 
-data:  seat.ocus 
+data:  seat.ocus
 S0 = 1.4866, p-value = 0.02407
 
 > sctest(seat.ocus, alt = TRUE)
 
 	OLS-based CUSUM test with alternative boundaries
 
-data:  seat.ocus 
+data:  seat.ocus
 S0 = 3.4082, p-value = 0.04502
 
 > sctest(seat.re)
 
 	RE test (recursive estimates test)
 
-data:  seat.re 
+data:  seat.re
 RE = 1.6311, p-value = 0.02904
 
 > sctest(seat.re, alt = TRUE)
 
 	RE test (recursive estimates test) with alternative boundaries
 
-data:  seat.re 
+data:  seat.re
 RE = 4.7365, p-value = 3e-04
 
 > sctest(seat.re, fun = "range")
 
 	RE test (recursive estimates test) with range norm
 
-data:  seat.re 
+data:  seat.re
 RE = 1.9303, p-value = 0.04762
 
 > sctest(seat.rmos)
 
 	Recursive MOSUM test
 
-data:  seat.rmos 
+data:  seat.rmos
 M = 2.0539, p-value = 0.04259
 
 > sctest(seat.omos)
 
 	OLS-based MOSUM test
 
-data:  seat.omos 
+data:  seat.omos
 M0 = 0.9162, p-value = 0.4004
 
 > sctest(seat.omos, fun = "range")
 
 	OLS-based MOSUM test with range norm
 
-data:  seat.omos 
+data:  seat.omos
 M0 = 1.4949, p-value = 0.5175
 
 > sctest(seat.me)
 
 	ME test (moving estimates test)
 
-data:  seat.me 
+data:  seat.me
 ME = 1.7107, p-value = 0.04712
 
 > sctest(seat.me, fun = "range")
 
 	ME test (moving estimates test) with range norm
 
-data:  seat.me 
+data:  seat.me
 ME = 2.1956, p-value = 0.3007
 
 > 
@@ -245,21 +244,21 @@ ME = 2.1956, p-value = 0.3007
 
 	supF test
 
-data:  seat.fs 
+data:  seat.fs
 sup.F = 19.3331, p-value = 0.006721
 
 > sctest(seat.fs, type = "aveF")
 
 	aveF test
 
-data:  seat.fs 
+data:  seat.fs
 ave.F = 7.458, p-value = 0.01461
 
 > sctest(seat.fs, type = "expF")
 
 	expF test
 
-data:  seat.fs 
+data:  seat.fs
 exp.F = 6.4247, p-value = 0.008093
 
 > breakpoints(seat.fs)
@@ -287,56 +286,56 @@ Corresponding to breakdates:
 
 	OLS-based CUSUM test
 
-data:  M1.ocus 
+data:  M1.ocus
 S0 = 0.5088, p-value = 0.958
 
 > sctest(M1.ocus, alt = TRUE)
 
 	OLS-based CUSUM test with alternative boundaries
 
-data:  M1.ocus 
+data:  M1.ocus
 S0 = 1.6288, p-value = 0.9704
 
 > sctest(M1.re)
 
 	RE test (recursive estimates test)
 
-data:  M1.re 
+data:  M1.re
 RE = 1.9821, p-value = 0.008475
 
 > sctest(M1.re, fun = "range")
 
 	RE test (recursive estimates test) with range norm
 
-data:  M1.re 
+data:  M1.re
 RE = 2.2386, p-value = 0.01844
 
 > sctest(M1.re, alt = TRUE)
 
 	RE test (recursive estimates test) with alternative boundaries
 
-data:  M1.re 
+data:  M1.re
 RE = 5.4937, p-value = 0.001099
 
 > sctest(M1.fs, type = "supF")
 
 	supF test
 
-data:  M1.fs 
+data:  M1.fs
 sup.F = 108.8288, p-value = 4.441e-16
 
 > sctest(M1.fs, type = "aveF")
 
 	aveF test
 
-data:  M1.fs 
+data:  M1.fs
 ave.F = 35.5514, p-value = 2.007e-07
 
 > sctest(M1.fs, type = "expF")
 
 	expF test
 
-data:  M1.fs 
+data:  M1.fs
 exp.F = 49.7395, p-value < 2.2e-16
 
 > 
@@ -451,3 +450,6 @@ Corresponding to breakdates:
 2  1815        1821   1823
 > 
 > 
+> proc.time()
+   user  system elapsed 
+  2.412   0.040   2.454 
