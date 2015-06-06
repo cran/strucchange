@@ -1,7 +1,5 @@
 monitorMECritvalData <- function(n, end=10, frequency=1000, h=1,
                            verbose=FALSE){
-    stopifnot("package:e1071" %in% search() || require("e1071", quietly = TRUE))
-
     logPlus <- function(x) ifelse(x<=exp(1),1,log(x))
     
     dn <- list(NULL, c("max","range"), as.character(h), as.character(end))
@@ -58,7 +56,6 @@ monitorMECritval <- function(x, probs=c(0.9,0.95))
 monitorRECritvalData <- function(n, end=10, frequency=1000,
                                  verbose=FALSE, linear=FALSE){
     
-    stopifnot("package:e1071" %in% search() || require("e1071", quietly = TRUE))
     dn <- list(NULL, as.character(end))
     
     z <- array(0, dim=c(n, length(end)), dimnames=dn)

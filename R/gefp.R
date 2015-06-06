@@ -209,9 +209,9 @@ sctest.default <- function(x, order.by = NULL, functional = maxBB,
       "cvm" = meanL2BB,
       "suplm" = supLM(from = from, to = to),
       "range" = rangeBB,
-      "lmuo" = catL2BB(order.by),
-      "wdmo" = ordwmax(order.by),
-      "maxlmo" = ordL2BB(order.by, nproc = NCOL(scus$process), nobs = nobs, nrep = nrep),
+      "lmuo" = catL2BB(factor(order.by)),
+      "wdmo" = ordwmax(factor(order.by)),
+      "maxlmo" = ordL2BB(factor(order.by), nproc = NCOL(scus$process), nobs = nobs, nrep = nrep),
       "maxmosum" = maxMOSUM(width = width),
       stop("Unknown efp functional.")
     )

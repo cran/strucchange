@@ -103,7 +103,7 @@ Zeileis (2006) introduces the underling computational tools \code{gefp} and
 
 Merkle and Zeileis (2013) discuss the methods in the context of measurement
 invariance which is particularly relevant to psychometric models for cross section
-data. Merkle, Fan, and Zeileis (2013) extend the results to ordered categorical
+data. Merkle, Fan, and Zeileis (2014) extend the results to ordered categorical
 variables.
 
 Zeileis, Shah, and Patnaik (2013) provide a unifying discussion in the context
@@ -123,8 +123,9 @@ Merkle E.C., Zeileis A. (2013), Tests of Measurement Invariance without Subgroup
 A Generalization of Classical Methods. \emph{Psychometrika}, \bold{78}(1), 59--82.
 doi:10.1007/S11336-012-9302-4
 
-Merkle E.C., Fan J., Zeileis A. (2013), Testing for Measurement Invariance with
-Respect to an Ordinal Variable. \emph{Psychometrika}, Forthcoming.
+Merkle E.C., Fan J., Zeileis A. (2014), Testing for Measurement Invariance with
+Respect to an Ordinal Variable. \emph{Psychometrika}, \bold{79}(4), 569--584.
+doi:10.1007/S11336-013-9376-7.
 
 Zeileis A. (2005), A Unified Approach to Structural Change Tests Based on
 ML Scores, F Statistics, and OLS Residuals. \emph{Econometric Reviews}, \bold{24},
@@ -140,7 +141,7 @@ doi:10.1111/j.1467-9574.2007.00371.x.
 
 Zeileis A., Shah A., Patnaik I. (2010), Testing, Monitoring, and Dating Structural
 Changes in Exchange Rate Regimes, \emph{Computational Statistics and Data Analysis},
-Forthcoming. doi:10.1016/j.csda.2009.12.005.
+\bold{54}(6), 1696--1706. doi:10.1016/j.csda.2009.12.005.
 }
 
 \seealso{\code{\link{gefp}}, \code{\link{efpFunctional}}}

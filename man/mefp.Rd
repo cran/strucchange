@@ -105,7 +105,7 @@ monitor(obj, data = NULL, verbose = TRUE)
 
   Zeileis A., Shah A., Patnaik I. (2010), Testing, Monitoring, and Dating Structural
   Changes in Exchange Rate Regimes, \emph{Computational Statistics and Data Analysis},
-  Forthcoming. doi:10.1016/j.csda.2009.12.005.
+  \bold{54}(6), 1696--1706. doi:10.1016/j.csda.2009.12.005.
 }
 \examples{
 df1 <- data.frame(y=rnorm(300))

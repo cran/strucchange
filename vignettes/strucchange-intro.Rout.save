@@ -4,7 +4,7 @@ Loading required package: zoo
 
 Attaching package: 'zoo'
 
-The following object(s) are masked from 'package:base':
+The following objects are masked from 'package:base':
 
     as.Date, as.Date.numeric
 
@@ -55,7 +55,7 @@ Loading required package: sandwich
 
 	OLS-based CUSUM test
 
-data:  ecm.model 
+data:  ecm.model
 S0 = 1.5511, p-value = 0.01626
 
 
@@ -69,7 +69,7 @@ S0 = 1.5511, p-value = 0.01626
 
 	expF test
 
-data:  ecm.model 
+data:  ecm.model
 exp.F = 8.9955, p-value = 0.001311
 
 
@@ -131,4 +131,4 @@ Break detected at observation # 70
  *** Run successfully completed ***
 > proc.time()
    user  system elapsed 
-  1.576   0.068   1.643 
+   1.50    0.06    1.56 

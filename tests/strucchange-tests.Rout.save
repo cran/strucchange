@@ -1,6 +1,6 @@
 
-R version 3.0.1 (2013-05-16) -- "Good Sport"
-Copyright (C) 2013 The R Foundation for Statistical Computing
+R version 3.2.0 (2015-04-16) -- "Full of Ingredients"
+Copyright (C) 2015 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -20,7 +20,7 @@ Loading required package: zoo
 
 Attaching package: 'zoo'
 
-The following object is masked from 'package:base':
+The following objects are masked from 'package:base':
 
     as.Date, as.Date.numeric
 
@@ -119,14 +119,14 @@ ME = 4.3433, p-value = 5.615e-05
 	supF test
 
 data:  Nile.fs
-sup.F = 75.9298, p-value = 2.22e-16
+sup.F = 75.93, p-value = 2.22e-16
 
 > sctest(Nile.fs, type = "aveF")
 
 	aveF test
 
 data:  Nile.fs
-ave.F = 21.2147, p-value < 2.2e-16
+ave.F = 21.215, p-value < 2.2e-16
 
 > sctest(Nile.fs, type = "expF")
 
@@ -215,7 +215,7 @@ M = 2.0539, p-value = 0.04259
 	OLS-based MOSUM test
 
 data:  seat.omos
-M0 = 0.9162, p-value = 0.4004
+M0 = 0.91616, p-value = 0.4004
 
 > sctest(seat.omos, fun = "range")
 
@@ -245,7 +245,7 @@ ME = 2.1956, p-value = 0.3007
 	supF test
 
 data:  seat.fs
-sup.F = 19.3331, p-value = 0.006721
+sup.F = 19.333, p-value = 0.006721
 
 > sctest(seat.fs, type = "aveF")
 
@@ -287,7 +287,7 @@ Corresponding to breakdates:
 	OLS-based CUSUM test
 
 data:  M1.ocus
-S0 = 0.5088, p-value = 0.958
+S0 = 0.50881, p-value = 0.958
 
 > sctest(M1.ocus, alt = TRUE)
 
@@ -322,21 +322,21 @@ RE = 5.4937, p-value = 0.001099
 	supF test
 
 data:  M1.fs
-sup.F = 108.8288, p-value = 4.441e-16
+sup.F = 108.83, p-value = 4.441e-16
 
 > sctest(M1.fs, type = "aveF")
 
 	aveF test
 
 data:  M1.fs
-ave.F = 35.5514, p-value = 2.007e-07
+ave.F = 35.551, p-value = 2.007e-07
 
 > sctest(M1.fs, type = "expF")
 
 	expF test
 
 data:  M1.fs
-exp.F = 49.7395, p-value < 2.2e-16
+exp.F = 49.74, p-value < 2.2e-16
 
 > 
 > M1 <- historyM1
@@ -423,14 +423,14 @@ m = 7   1734 1754 1779 1800 1821      1856 1878
 m = 8   1734 1754 1778 1798 1818 1838 1858 1878
 
 Fit:
-                                                                    
-m   0            1            2            3            4           
-RSS    1.1087756    0.8756063    0.6854095    0.6587436    0.6279026
-BIC -460.8401553 -497.4625451 -535.8459249 -533.1857089 -532.1789212
-                                                       
-m   5            6            7            8           
-RSS    0.6018729    0.5917348    0.5933721    0.6084319
-BIC -530.0500553 -522.8509509 -511.7016920 -496.0924207
+                                                                         
+m   0         1         2         3         4         5         6        
+RSS    1.1088    0.8756    0.6854    0.6587    0.6279    0.6019    0.5917
+BIC -460.8402 -497.4625 -535.8459 -533.1857 -532.1789 -530.0501 -522.8510
+                       
+m   7         8        
+RSS    0.5934    0.6084
+BIC -511.7017 -496.0924
 > confint(Grossarl.bp)
 
 	 Confidence intervals for breakpoints
@@ -452,4 +452,4 @@ Corresponding to breakdates:
 > 
 > proc.time()
    user  system elapsed 
-  2.412   0.040   2.454 
+  2.268   0.076   2.613 

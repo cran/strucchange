@@ -13,8 +13,8 @@ categorical variables.
 
 \usage{
 catL2BB(freq)
-ordL2BB(freq, nobs = NULL, nproc = NULL, nrep = 50000, \dots)
-ordwmax(freq, algorithm = GenzBretz(), \dots)
+ordL2BB(freq, nproc = NULL, nrep = 1e5, probs = c(0:84/100, 850:1000/1000), \dots)
+ordwmax(freq, algorithm = mvtnorm::GenzBretz(), \dots)
 }
 
 \arguments{
@@ -22,23 +22,21 @@ ordwmax(freq, algorithm = GenzBretz(), \dots)
     categorical variable to be used for aggregation: either a
     \code{\link{gefp}} object, a \code{\link{factor}}, or a numeric
     vector with either absolute or relative category frequencies.}
-  \item{nobs}{numeric. Number of observations used for simulating
-    from the asymptotic distribution (passed to \code{\link{efpFunctional}}).
-    By default chosen such that there are at least 50 observations
-    per category.}
   \item{nproc}{numeric. Number of processes used for simulating
     from the asymptotic distribution (passed to \code{\link{efpFunctional}}).
     If \code{feq} is a \code{\link{gefp}} object, then its number of
     processes is used by default.}
   \item{nrep}{numeric. Number of replications used for simulating
     from the asymptotic distribution (passed to \code{\link{efpFunctional}}).}
+  \item{probs}{numeric vector specifying for which probabilities 
+    critical values should be tabulated.}
   \item{\dots}{further arguments passed to \code{\link{efpFunctional}}.}
   \item{algorithm}{algorithm specification passed to \code{\link[mvtnorm]{pmvnorm}}
     for computing the asymptotic distribution.}
 }
 
 \details{
-  Merkle, Fan, and Zeileis (2013) discuss three functionals that are 
+  Merkle, Fan, and Zeileis (2014) discuss three functionals that are 
   suitable for aggregating empirical fluctuation processes along categorical
   variables, especially ordinal variables. The functions \code{catL2BB},
   \code{ordL2BB}, and \code{ordwmax} all require a specification of the
@@ -55,10 +53,11 @@ ordwmax(freq, algorithm = GenzBretz(), \dots)
   \code{ordL2BB} is the ordinal counterpart to \code{\link{supLM}}
   where aggregation is done along the ordered categories (rather than
   continuously). The asymptotic distribution is non-standard and needs
-  to be simulated for every combination of frequencies and number of
-  processes. This can be very time-consuming, hence it is recommended
-  to store the result of \code{catL2BB} in case it needs to be applied
-  several \code{\link{gefp}} fluctuation processes.
+  to be simulated via \code{\link[mvtnorm]{rmvnorm}} for every combination
+  of frequencies and number of processes. This can be somewhat
+  time-consuming, hence it is recommended to store the result of 
+  \code{ordL2BB} in case it needs to be applied several \code{\link{gefp}}
+  fluctuation processes.
 
   \code{ordwmax} is a weighted double maximum test based on ideas
   previously suggested by Hothorn and Zeileis (2008) in the context of
@@ -74,8 +73,9 @@ ordwmax(freq, algorithm = GenzBretz(), \dots)
 Hothorn T., Zeileis A. (2008), Generalized Maximally Selected Statistics.
 \emph{Biometrics}, \bold{64}, 1263--1269.
 
-Merkle E.C., Fan J., Zeileis A. (2013), Testing for Measurement Invariance with
-Respect to an Ordinal Variable. \emph{Psychometrika}, Forthcoming.
+Merkle E.C., Fan J., Zeileis A. (2014), Testing for Measurement Invariance with
+Respect to an Ordinal Variable. \emph{Psychometrika}, \bold{79}(4), 569--584.
+doi:10.1007/S11336-013-9376-7.
 
 Zeileis A. (2006), Implementing a Class of Structural Change Tests: An
 Econometric Computing Approach. \emph{Computational Statistics & Data Analysis}, 
@@ -102,9 +102,8 @@ LMuo <- catL2BB(scus)
 plot(scus, functional = LMuo)
 sctest(scus, functional = LMuo)
 
-## ordinal maxLM test (with few replications only
-## to save time)
-maxLMo <- ordL2BB(scus, nrep = 2000)
+## ordinal maxLM test (with few replications only to save time)
+maxLMo <- ordL2BB(scus, nrep = 10000)
 plot(scus, functional = maxLMo)
 sctest(scus, functional = maxLMo)
 

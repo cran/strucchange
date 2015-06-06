@@ -85,6 +85,7 @@ S3method("mefp", "efp")
 
 S3method("recresid", "formula")
 S3method("recresid", "lm")
+S3method("recresid", "default")
 
 ## methods to standard generics
 S3method("plot", "efp")

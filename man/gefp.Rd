@@ -72,7 +72,7 @@ doi:10.1111/j.1467-9574.2007.00371.x.
 
 Zeileis A., Shah A., Patnaik I. (2010), Testing, Monitoring, and Dating Structural
 Changes in Exchange Rate Regimes, \emph{Computational Statistics and Data Analysis},
-Forthcoming. doi:10.1016/j.csda.2009.12.005.
+\bold{54}(6), 1696--1706. doi:10.1016/j.csda.2009.12.005.
 }
 
 \seealso{\code{\link{efp}}, \code{\link{efpFunctional}}}

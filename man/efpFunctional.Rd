@@ -58,7 +58,7 @@ efpFunctional(functional = list(comp = function(x) max(abs(x)), time = max),
   statistic, or \code{rangeBB} for the range statistic. Furthermore, \code{\link{supLM}}
   generates an object of class \code{"efpFunctional"} for a certain trimming parameter,
   see the examples. More details can be found in Zeileis (2006). Based on
-  Merkle, Fan, and Zeileis (2013), further \code{efpFunctional} generators for
+  Merkle, Fan, and Zeileis (2014), further \code{efpFunctional} generators for
   aggregating along (ordered) categorical variables have been added:
   \code{\link{catL2BB}}, \code{\link{ordL2BB}}, \code{\link{ordwmax}}.
 
@@ -88,8 +88,9 @@ Merkle E.C., Zeileis A. (2013), Tests of Measurement Invariance without Subgroup
 A Generalization of Classical Methods. \emph{Psychometrika}, \bold{78}(1), 59--82.
 doi:10.1007/S11336-012-9302-4
 
-Merkle E.C., Fan J., Zeileis A. (2013), Testing for Measurement Invariance with
-Respect to an Ordinal Variable. \emph{Psychometrika}, Forthcoming.
+Merkle E.C., Fan J., Zeileis A. (2014), Testing for Measurement Invariance with
+Respect to an Ordinal Variable. \emph{Psychometrika}, \bold{79}(4), 569--584.
+doi:10.1007/S11336-013-9376-7.
 
 Zeileis A. (2005), A Unified Approach to Structural Change Tests Based on
 ML Scores, F Statistics, and OLS Residuals. \emph{Econometric Reviews}, \bold{24},

@@ -43,7 +43,7 @@ breakpoints.formula <- function(formula, h = 0.15, breaks = NULL,
   }
 
   hpc <- match.arg(hpc)
-  if(hpc == "foreach" && !require("foreach")) {
+  if(hpc == "foreach" && !requireNamespace("foreach")) {
     warning("High perfomance computing (hpc) support with 'foreach' package is not available, foreach is not installed.")
     hpc <- "none"
   }
@@ -62,7 +62,7 @@ breakpoints.formula <- function(formula, h = 0.15, breaks = NULL,
   }
 
   ## employ HPC support if available/selected
-  RSS.triang <- if(hpc == "none") sapply(1:(n-h+1), RSSi) else foreach(i = 1:(n-h+1)) %dopar% RSSi(i)
+  RSS.triang <- if(hpc == "none") sapply(1:(n-h+1), RSSi) else foreach::foreach(i = 1:(n-h+1)) %dopar% RSSi(i)
 
   ## function to extract the RSS(i,j) from RSS.triang
   RSS <- function(i,j) RSS.triang[[i]][j - i + 1]
@@ -298,7 +298,7 @@ summary.breakpointsfull <- function(object, breaks = NULL,
   return(RVAL)
 }
 
-print.summary.breakpointsfull <- function(x, ...)
+print.summary.breakpointsfull <- function(x, digits = max(2, getOption("digits") - 3), ...)
 {
   bp <- x$breakpoints
   breaks <- ncol(bp)
@@ -308,7 +308,7 @@ print.summary.breakpointsfull <- function(x, ...)
   bd[is.na(bd)] <- ""
   rownames(bp) <- paste("m = ", rownames(bp), "  ", sep = "")
   rownames(bd) <- paste("m = ", rownames(bd), "  ", sep = "")
-  RSS <- rbind(0:(ncol(RSS) - 1), format(RSS))
+  RSS <- rbind(0:(ncol(RSS) - 1), format(RSS, digits = digits))
   rownames(RSS) <- c("m","RSS", "BIC")
   colnames(RSS) <- rep("", breaks + 1)
 

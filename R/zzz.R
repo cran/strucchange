@@ -262,24 +262,76 @@ catL2BB <- function(freq)
 ## ordL2BB: ordinal supLM-type statistic,
 ## ordwmax: weighted double-maximum type statistic
 
-ordL2BB <- function(freq, nobs = NULL, nproc = NULL, nrep = 50000, ...)
+ordL2BB <- function(freq, nproc = NULL, nrep = 1e5, probs = c(0:84/100, 850:1000/1000), ...)
 {
   if(inherits(freq, "gefp")) {
     if(is.null(nproc)) nproc <- NCOL(freq$process)
     freq <- prop.table(table(time(freq)[-1L]))
   } else if(is.factor(freq)) {
-    if(is.null(nproc)) nproc <- 1:20
+    if(is.null(nproc)) nproc <- 1L:20L
     freq <- prop.table(table(freq))
   } else {
-    if(is.null(nproc)) nproc <- 1:20
+    if(is.null(nproc)) nproc <- 1L:20L
   }
   freq <- freq / sum(freq)
   ncat <- length(freq)
   tcat <- cumsum(freq[-ncat])
-  if(is.null(nobs)) nobs <- ceiling(50 / min(freq))
   lab <- names(freq)
-  if(is.null(lab)) lab <- as.character(1:ncat)
+  if(is.null(lab)) lab <- as.character(1L:ncat)
 
+  ## simulate quantiles of observations from asymptotic distribution
+  probs <- probs[probs != 0]
+  simordL2BB <- function(nproc, nrep, ...)
+  {
+    ## dimensions
+    nbin <- ncat - 1L
+    maxproc <- max(nproc)
+
+    ## find multivariate normal covariance matrix between bins
+    cmat <- matrix(NA, nbin, nbin)
+    for(i in 1L:nbin) cmat[i:nbin, i] <- cmat[i, i:nbin] <- sqrt(tcat[i] * (1 - tcat[i:nbin]))/sqrt((1 - tcat[i]) * tcat[i:nbin])
+
+    ## create block-diagonal matrix so we can simulate all parameters at once
+    fullcmat <- matrix(0, nbin * maxproc, nbin * maxproc)
+    for(j in 1L:maxproc) fullcmat[(nbin * (j - 1L) + 1L):(nbin * j), (nbin * (j - 1L) + 1L):(nbin * j)] <- cmat
+
+    ## get samples from mvtnorm
+    draws <- mvtnorm::rmvnorm(nrep, sigma = fullcmat, ...)
+
+    ## now get L2 norm sequentially for each bin:
+    ## columns 1,(nbin+1),(2nbin+1),...
+    ## columns 2,(nbin+2),(2nbin+2),...
+    colnums <- 1L:maxproc
+    rval <- vector(mode = "list", length = nbin)
+    for(j in 1L:nbin){
+      cols <- (colnums - 1L) * nbin + j
+      res <- t(apply(as.matrix(draws[, cols])^2, 1L, cumsum))
+      if(maxproc == 1L) res <- matrix(res, nrep, 1L)
+      rval[[j]] <- res[, nproc, drop = FALSE]
+    }
+    rval <- do.call("pmax", rval)
+    rval <- rbind(0, apply(rval, 2, quantile, probs = probs))
+    colnames(rval) <- nproc
+    return(rval)
+  }
+  sim <- simordL2BB(nproc = nproc, nrep = nrep)
+
+  ## compute p values and critical values from simulated quantiles
+  computePval <- function(x, nproc = 1) {
+    if(as.character(nproc) %in% colnames(sim)) {
+      pfun <- approxfun(sim[, as.character(nproc)], 1 - c(0, probs))
+      ifelse(x > max(sim[, as.character(nproc)]), 0, pfun(x))
+    }
+    else stop("insufficient simulated values: cannot compute p value")
+  }
+  computeCritval <- function(alpha, nproc = 1) {
+    if(as.character(nproc) %in% colnames(sim)) {
+      cfun <- approxfun(c(0, probs), sim[, as.character(nproc)])
+      cfun(1 - alpha)
+    } else stop("insufficient simulated values: cannot compute critical value")
+  }
+
+  ## "time" component of aggregation functional
   catwmax <- function(x) {
     n <- length(x)
     tt <- seq(along = x)/n
@@ -290,16 +342,19 @@ ordL2BB <- function(freq, nobs = NULL, nproc = NULL, nrep = 50000, ...)
     return(max(x))
   }
 
+  ## constant boundaries
   boundary <- function(x) rep(1, length(x))
 
+  ## visualization
   plotProcess <- function(x, alpha = 0.05, aggregate = TRUE,
     xlab = NULL, ylab = NULL, main = x$type.name, ylim = NULL,
-    type = "b", boundary = TRUE, critval = 0, ...)
+    type = "b", boundary = TRUE, ...)
   {
     n <- x$nobs
     ix <- round(tcat * n)
     tt <- ix/n
 
+    critval <- computeCritval(alpha = alpha, nproc = NCOL(x$process))
     bound <- critval * boundary(tt)
     if(!identical(boundary, FALSE)) {
       if(isTRUE(boundary)) {
@@ -318,7 +373,7 @@ ordL2BB <- function(freq, nobs = NULL, nproc = NULL, nrep = 50000, ...)
     }
 
     if(aggregate) {
-      proc <- zoo(rowSums(as.matrix(x$process)^2)[-1][ix], time(x)[-1][ix])
+      proc <- zoo(rowSums(as.matrix(x$process)^2)[-1L][ix], time(x)[-1L][ix])
       bound <- zoo(bound, time(proc))
       tt <- zoo(tt, time(proc))      
       proc <- proc/(tt * (1-tt))
@@ -331,12 +386,12 @@ ordL2BB <- function(freq, nobs = NULL, nproc = NULL, nrep = 50000, ...)
       abline(0, 0)
       if(boundary) do.call("lines", c(list(bound), bargs))
 
-      axis(1, at = unique(time(proc))[1:(ncat - 1)], labels = lab[1:(ncat - 1)])
+      axis(1, at = unique(time(proc))[1L:(ncat - 1L)], labels = lab[1L:(ncat - 1L)])
       axis(2)
       box()
     } else {
-      if(is.null(ylim) & NCOL(x$process) < 2) ylim <- range(c(range(x$process)))
-      if(is.null(ylab) & NCOL(x$process) < 2) ylab <- "Empirical fluctuation process"
+      if(is.null(ylim) & NCOL(x$process) < 2L) ylim <- range(c(range(x$process)))
+      if(is.null(ylab) & NCOL(x$process) < 2L) ylab <- "Empirical fluctuation process"
 
       panel <- function(x, ...)
       {
@@ -348,26 +403,14 @@ ordL2BB <- function(freq, nobs = NULL, nproc = NULL, nrep = 50000, ...)
     }
   }
 
-  rval <- efpFunctional(lim.process = "Brownian bridge",
+  efpFunctional(lim.process = "Brownian bridge",
     functional = list(comp = function(x) sum(x^2), time = catwmax),
     boundary = boundary, plotProcess = plotProcess,
-    nobs = nobs, nproc = nproc, nrep = nrep, ...)
-  rval$plotProcess <- function(x, alpha = 0.05, aggregate = TRUE,
-    xlab = NULL, ylab = NULL, main = x$type.name, ylim = NULL,
-    type = "b", boundary = TRUE, ...)
-  {
-    cval <- rval$computeCritval(alpha = alpha, nproc = NCOL(x$process))
-    plotProcess(x, alpha = alpha, aggregate = aggregate,
-      xlab = xlab, ylab = ylab, main = main, ylim = ylim,
-      type = type, boundary = boundary, critval = cval, ...)  
-  }
-  return(rval)
+    computeCritval = computeCritval, computePval = computePval, ...)
 }
 
-ordwmax <- function(freq, algorithm = GenzBretz(), ...)
+ordwmax <- function(freq, algorithm = mvtnorm::GenzBretz(), ...)
 {
-  stopifnot(require("mvtnorm"))
-  
   if(inherits(freq, "gefp")) {
     freq <- prop.table(table(time(freq)[-1L]))
   } else if(is.factor(freq)) {
@@ -394,10 +437,10 @@ ordwmax <- function(freq, algorithm = GenzBretz(), ...)
   sigma <- make_sigma(tcat)
   
   computePval <- function(x, nproc = 1)
-    (1 - pmvnorm(lower = -x, upper = x, mean = rep(0, ncat - 1), sigma = sigma)^nproc)
+    (1 - mvtnorm::pmvnorm(lower = -x, upper = x, mean = rep(0, ncat - 1), sigma = sigma)^nproc)
 
   computeCritval <- function(alpha, nproc = 1)
-    qmvnorm((1 - alpha)^(1/nproc), tail = "both.tails", sigma = sigma)$quantile
+    mvtnorm::qmvnorm((1 - alpha)^(1/nproc), tail = "both.tails", sigma = sigma)$quantile
 
   boundary <- function(x) rep(1, length(x))
 

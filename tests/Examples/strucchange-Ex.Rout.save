@@ -1,6 +1,6 @@
 
-R version 3.0.1 (2013-05-16) -- "Good Sport"
-Copyright (C) 2013 The R Foundation for Statistical Computing
+R version 3.2.0 (2015-04-16) -- "Full of Ingredients"
+Copyright (C) 2015 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -23,7 +23,7 @@ Loading required package: zoo
 
 Attaching package: 'zoo'
 
-The following object is masked from 'package:base':
+The following objects are masked from 'package:base':
 
     as.Date, as.Date.numeric
 
@@ -196,7 +196,7 @@ Corresponding to breakdates:
 	supF test
 
 data:  fs.nile
-sup.F = 75.9298, p-value = 2.22e-16
+sup.F = 75.93, p-value = 2.22e-16
 
 > ## visualize the breakpoint implied by the argmax of the F statistics
 > plot(Nile)
@@ -307,14 +307,10 @@ m = 4   1967(3) 1972(4) 1978(3)         1990(3)
 m = 5   1967(3) 1972(4) 1978(3) 1985(2) 1990(3)
 
 Fit:
-                                                                         
-m   0             1             2             3             4            
-RSS  3.682680e-02  1.915789e-02  1.521998e-02  1.300657e-02  1.052593e-02
-BIC -6.974416e+02 -7.296334e+02 -7.025485e+02 -6.652504e+02 -6.355766e+02
-                 
-m   5            
-RSS  9.198182e-03
-BIC -5.951538e+02
+                                                                     
+m   0          1          2          3          4          5         
+RSS  3.683e-02  1.916e-02  1.522e-02  1.301e-02  1.053e-02  9.198e-03
+BIC -6.974e+02 -7.296e+02 -7.025e+02 -6.653e+02 -6.356e+02 -5.952e+02
 > plot(bp)
 > 
 > plot(fs)
@@ -393,14 +389,14 @@ m = 7   1734 1754 1779 1800 1821      1856 1878
 m = 8   1734 1754 1778 1798 1818 1838 1858 1878
 
 Fit:
-                                                                    
-m   0            1            2            3            4           
-RSS    1.1087756    0.8756063    0.6854095    0.6587436    0.6279026
-BIC -460.8401553 -497.4625451 -535.8459249 -533.1857089 -532.1789212
-                                                       
-m   5            6            7            8           
-RSS    0.6018729    0.5917348    0.5933721    0.6084319
-BIC -530.0500553 -522.8509509 -511.7016920 -496.0924207
+                                                                         
+m   0         1         2         3         4         5         6        
+RSS    1.1088    0.8756    0.6854    0.6587    0.6279    0.6019    0.5917
+BIC -460.8402 -497.4625 -535.8459 -533.1857 -532.1789 -530.0501 -522.8510
+                       
+m   7         8        
+RSS    0.5934    0.6084
+BIC -511.7017 -496.0924
 > ## RSS, BIC, AIC
 > plot(bp)
 > plot(0:8, AIC(bp), type = "b")
@@ -477,14 +473,10 @@ m = 7        1738 1761 1794 1814 1835 1855 1875
 m = 8   1720 1740 1761 1794 1814 1835 1855 1875
 
 Fit:
-                                                                           
-m   0        1        2        3        4        5        6        7       
-RSS 3831.680 3059.473 2863.003 2722.783 2670.544 2633.841 2625.697 2625.597
-BIC 1168.720 1134.305 1131.627 1132.180 1138.903 1146.731 1156.709 1167.298
-            
-m   8       
-RSS 2645.033
-BIC 1179.369
+                                                
+m   0    1    2    3    4    5    6    7    8   
+RSS 3832 3059 2863 2723 2671 2634 2626 2626 2645
+BIC 1169 1134 1132 1132 1139 1147 1157 1167 1179
 > ## RSS, BIC, AIC
 > plot(bp)
 > plot(0:8, AIC(bp), type = "b")
@@ -556,10 +548,10 @@ m = 2        1967 1975
 m = 3   1956 1967 1975
 
 Fit:
-                                                           
-m   0             1             2             3            
-RSS    0.03067807    0.02671859    0.01837817    0.01785840
-BIC -162.34174380 -156.80265333 -160.70385201 -150.78479201
+                                               
+m   0          1          2          3         
+RSS    0.03068    0.02672    0.01838    0.01786
+BIC -162.34174 -156.80265 -160.70385 -150.78479
 > 
 > ## fit segmented model with three breaks
 > fac.inf <- breakfactor(bp.inf, breaks = 2, label = "seg")
@@ -650,14 +642,10 @@ m = 4   1958 1963      1972 1977
 m = 5   1958 1963 1969 1974 1979
 
 Fit:
-                                                                         
-m   0             1             2             3             4            
-RSS  3.408620e-02  1.690204e-02  1.062031e-02  7.834590e-03  5.183220e-03
-BIC -1.507502e+02 -1.603642e+02 -1.605064e+02 -1.542308e+02 -1.523113e+02
-                 
-m   5            
-RSS  3.388099e-03
-BIC -1.508732e+02
+                                                                     
+m   0          1          2          3          4          5         
+RSS  3.409e-02  1.690e-02  1.062e-02  7.835e-03  5.183e-03  3.388e-03
+BIC -1.508e+02 -1.604e+02 -1.605e+02 -1.542e+02 -1.523e+02 -1.509e+02
 > 
 > ## fit segmented model with three breaks
 > fac.pc <- breakfactor(bp.pc, breaks = 2, label = "seg")
@@ -767,10 +755,10 @@ m = 4           1966(4) 1972(3) 1976(4) 1980(3)
 m = 5   1964(4) 1968(3) 1972(3) 1976(4) 1980(3)
 
 Fit:
-                                                               
-m   0         1         2         3         4         5        
-RSS 1214.9219  644.9955  455.9502  445.1819  444.8797  449.6395
-BIC  555.7445  499.7952  473.3381  480.1458  489.3454  499.7110
+                                             
+m   0      1      2      3      4      5     
+RSS 1214.9  645.0  456.0  445.2  444.9  449.6
+BIC  555.7  499.8  473.3  480.1  489.3  499.7
 > 
 > ## fit segmented model with three breaks
 > fac.ri <- breakfactor(bp.ri, breaks = 3, label = "seg")
@@ -1286,10 +1274,10 @@ m = 4        1898 1915 1938 1953
 m = 5   1885 1900 1915 1938 1953
 
 Fit:
-                                                                           
-m   0           1           2           3           4           5          
-RSS 2835156.750 1597457.194 1552923.616 1538096.513 1507888.476 1659993.500
-BIC    1318.242    1270.084    1276.467    1284.718    1291.944    1310.765
+                                                   
+m   0       1       2       3       4       5      
+RSS 2835157 1597457 1552924 1538097 1507888 1659994
+BIC    1318    1270    1276    1285    1292    1311
 > plot(bp.nile)
 > 
 > ## compute breakdates corresponding to the
@@ -1420,10 +1408,10 @@ m = 4        1898 1915 1938 1953
 m = 5   1885 1900 1915 1938 1953
 
 Fit:
-                                                                           
-m   0           1           2           3           4           5          
-RSS 2835156.750 1597457.194 1552923.616 1538096.513 1507888.476 1659993.500
-BIC    1318.242    1270.084    1276.467    1284.718    1291.944    1310.765
+                                                   
+m   0       1       2       3       4       5      
+RSS 2835157 1597457 1552924 1538097 1507888 1659994
+BIC    1318    1270    1276    1285    1292    1311
 > 
 > ## the BIC also chooses one breakpoint
 > plot(bp.nile)
@@ -1516,14 +1504,14 @@ m = 7           1973(10) 1975(10) 1977(5) 1978(11) 1980(5)  1981(12) 1983(6)
 m = 8   1971(6) 1973(10) 1975(10) 1977(5) 1978(11) 1980(5)  1981(12) 1983(6)
 
 Fit:
-                                                                    
-m   0            1            2            3            4           
-RSS    0.3297082    0.2967377    0.2675731    0.2438039    0.2395281
-BIC -602.8610528 -601.0539119 -598.9041553 -594.8774283 -577.2904615
-                                                       
-m   5            6            7            8           
-RSS    0.2317149    0.2258093    0.2243860    0.2231045
-BIC -562.4879701 -546.3631592 -526.7295255 -506.9886310
+                                                                         
+m   0         1         2         3         4         5         6        
+RSS    0.3297    0.2967    0.2676    0.2438    0.2395    0.2317    0.2258
+BIC -602.8611 -601.0539 -598.9042 -594.8774 -577.2905 -562.4880 -546.3632
+                       
+m   7         8        
+RSS    0.2244    0.2231
+BIC -526.7295 -506.9886
 > lines(bp.seat, breaks = 2)
 > 
 > ## minimum BIC partition
@@ -1612,39 +1600,34 @@ Corresponding to breakdates:
 	M-fluctuation test
 
 data:  scus
-f(efp) = 12.3749, p-value = 0.05411
+f(efp) = 12.375, p-value = 0.05411
 
 > 
-> ## ordinal maxLM test (with few replications only
-> ## to save time)
-> maxLMo <- ordL2BB(scus, nrep = 2000)
+> ## ordinal maxLM test (with few replications only to save time)
+> maxLMo <- ordL2BB(scus, nrep = 10000)
 > plot(scus, functional = maxLMo)
 > sctest(scus, functional = maxLMo)
 
 	M-fluctuation test
 
 data:  scus
-f(efp) = 9.0937, p-value = 0.03047
+f(efp) = 9.0937, p-value = 0.03173
 
 > 
 > ## ordinal weighted double maximum test
 > WDM <- ordwmax(scus)
-Loading required package: mvtnorm
 > plot(scus, functional = WDM)
 > sctest(scus, functional = WDM)
 
 	M-fluctuation test
 
 data:  scus
-f(efp) = 3.001, p-value = 0.01458
+f(efp) = 3.001, p-value = 0.015
 
 > 
 > 
 > 
 > cleanEx()
-
-detaching 'package:mvtnorm'
-
 > nameEx("confint.breakpointsfull")
 > ### * confint.breakpointsfull
 > 
@@ -1744,14 +1727,10 @@ m = 4   1956(8) 1965(7)          1981(12) 1991(5)
 m = 5   1956(8) 1965(7)  1973(9) 1981(12) 1991(5)
 
 Fit:
-                                                                         
-m   0             1             2             3             4            
-RSS  5.585766e-02  5.431308e-02  5.325480e-02  5.220120e-02  5.170801e-02
-BIC -4.221198e+03 -4.219994e+03 -4.213353e+03 -4.206911e+03 -4.193650e+03
-                 
-m   5            
-RSS  5.157302e-02
-BIC -4.175918e+03
+                                                                     
+m   0          1          2          3          4          5         
+RSS  5.586e-02  5.431e-02  5.325e-02  5.220e-02  5.171e-02  5.157e-02
+BIC -4.221e+03 -4.220e+03 -4.213e+03 -4.207e+03 -4.194e+03 -4.176e+03
 > plot(summary(bp))
 > 
 > plot(ols)
@@ -1865,7 +1844,7 @@ Residual Deviance: 115.6 	AIC: 316.5
 	M-fluctuation test
 
 data:  gcus
-f(efp) = 0.9337, p-value = 0.005
+f(efp) = 0.93375, p-value = 0.005
 
 > 
 > y <- rnorm(1000)
@@ -1880,7 +1859,7 @@ f(efp) = 0.9337, p-value = 0.005
 	supF test
 
 data:  fs
-sup.F = 12.2517, p-value = 0.1161
+sup.F = 12.252, p-value = 0.1161
 
 > 
 > ## compare with supLM statistic
@@ -1891,7 +1870,7 @@ sup.F = 12.2517, p-value = 0.1161
 	M-fluctuation test
 
 data:  scus
-f(efp) = 12.2579, p-value = 0.1158
+f(efp) = 12.258, p-value = 0.1158
 
 > 
 > ## seatbelt data
@@ -2002,10 +1981,10 @@ m = 4        1898 1915 1938 1953
 m = 5   1885 1900 1915 1938 1953
 
 Fit:
-                                                                           
-m   0           1           2           3           4           5          
-RSS 2835156.750 1597457.194 1552923.616 1538096.513 1507888.476 1659993.500
-BIC    1318.242    1270.084    1276.467    1284.718    1291.944    1310.765
+                                                   
+m   0       1       2       3       4       5      
+RSS 2835157 1597457 1552924 1538097 1507888 1659994
+BIC    1318    1270    1276    1285    1292    1311
 > plot(bp.nile)
 > 
 > ## BIC of partitions with0 to 5 breakpoints
@@ -2111,7 +2090,7 @@ Break detected at observation # 58
 	aveF test
 
 data:  fs
-ave.F = 10.8103, p-value = 2.059e-06
+ave.F = 10.81, p-value = 2.059e-06
 
 > 
 > 
@@ -2311,7 +2290,7 @@ Break detected at observation # 183
 	aveF test
 
 data:  fs
-ave.F = 10.8103, p-value = 2.059e-06
+ave.F = 10.81, p-value = 2.059e-06
 
 > 
 > 
@@ -2552,7 +2531,7 @@ F-statistic: 106.9 on 9 and 6 DF,  p-value: 6.28e-06
 > ###
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  58.496 0.168 59.563 0 0 
+Time elapsed:  43.26 0.124 43.969 0 0 
 > grDevices::dev.off()
 null device 
           1 
