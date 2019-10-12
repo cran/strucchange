@@ -1,21 +1,45 @@
 efp <- function(formula, data = list(),
                 type = c("Rec-CUSUM", "OLS-CUSUM", "Rec-MOSUM", "OLS-MOSUM",
                 "RE", "ME", "Score-CUSUM", "Score-MOSUM", "fluctuation"),
-                h = 0.15, dynamic = FALSE, rescale = TRUE)
+                h = 0.15, dynamic = FALSE, rescale = TRUE, lrvar = FALSE, vcov = NULL)
 {
     if(!inherits(formula, "formula")) {
+      mt <- terms(formula)
       X <- if(is.matrix(formula$x))
              formula$x
-           else model.matrix(terms(formula), model.frame(formula))
+           else model.matrix(mt, model.frame(formula))
       y <- if(is.vector(formula$y))
              formula$y
            else model.response(model.frame(formula))
     } else {
       mf <- model.frame(formula, data = data)
+      mt <- attr(mf, "terms")
       y <- model.response(mf)
       X <- model.matrix(formula, data = data)
     }  
    
+    lmfit <- function(x, y, ...) {
+      rval <- lm.fit(x, y, ...)
+      rval$terms <- mt
+      rval$x <- x
+      class(rval) <- "lm"
+      return(rval)
+    }
+
+    lrvartype <- if(is.character(lrvar)) lrvar else "Andrews"
+    sdev <- if(identical(lrvar, FALSE)) {
+        function(x, df = NULL) {
+            if(is.null(df)) df <- length(x) - 1
+	    sd(x) * sqrt((length(x) - 1)/df)
+        } 
+    } else {
+        function(x, df = NULL) {
+	    s <- sqrt(sandwich::lrvar(x, type = lrvartype) * length(x))
+	    if(!is.null(df)) s <- s * sqrt(length(x)/df)
+	    return(s)
+	}
+    }
+
     n <- nrow(X)
     if(dynamic)
     {
@@ -51,14 +75,14 @@ efp <- function(formula, data = list(),
 
            "Rec-CUSUM" = {
                w <- recresid(X, y)
-               sigma <- sqrt(var(w))
+               sigma <- sdev(w) ## sqrt(var(w))
                process <- cumsum(c(0,w))/(sigma*sqrt(n-k))
                if(is.ts(data)) {
                    if(NROW(data) == n) process <- ts(process, end = end(data), frequency = frequency(data))
                } else {
 	         env <- environment(formula)
                  if(missing(data)) data <- env
-                 orig.y <- eval(attr(terms(formula), "variables")[[2]], data, env)
+                 orig.y <- eval(attr(mt, "variables")[[2]], data, env)
                  if(is.ts(orig.y) && (NROW(orig.y) == n))
                    process <- ts(process, end = end(orig.y),
                                  frequency = frequency(orig.y))
@@ -72,14 +96,14 @@ efp <- function(formula, data = list(),
            "OLS-CUSUM" = {
                fm <- lm.fit(X,y)
                e <- fm$residuals
-               sigma <- sqrt(sum(e^2)/fm$df.residual)
-               process <- cumsum(c(0,e))/(sigma*sqrt(n))
+               sigma <- sdev(e, df = fm$df.residual) ## sqrt(sum(e^2)/fm$df.residual)
+               process <- cumsum(c(0,e))/(sigma * sqrt(n))
                if(is.ts(data)) {
                    if(NROW(data) == n) process <- ts(process, end = end(data), frequency = frequency(data))
                } else {
 	         env <- environment(formula)
                  if(missing(data)) data <- env
-                 orig.y <- eval(attr(terms(formula), "variables")[[2]], data, env)
+                 orig.y <- eval(attr(mt, "variables")[[2]], data, env)
                  if(is.ts(orig.y) && (NROW(orig.y) == n))
                    process <- ts(process, end = end(orig.y),
                                  frequency = frequency(orig.y))
@@ -99,14 +123,14 @@ efp <- function(formula, data = list(),
                {
                    process[i+1] <- sum(w[(i+1):(i+nh)])
                }
-               sigma <- sqrt(var(w)*(nw-1)/(nw-k))
-               process <- process/(sigma*sqrt(nw))
+               sigma <- sdev(w, df = nw - k) ## sqrt(var(w)*(nw-1)/(nw-k))
+               process <- process/(sigma * sqrt(nw))
                if(is.ts(data)) {
                    if(NROW(data) == n) process <- ts(process, end = time(data)[(n-floor(0.5 + nh/2))], frequency = frequency(data))
                } else {
 	         env <- environment(formula)
                  if(missing(data)) data <- env
-                 orig.y <- eval(attr(terms(formula), "variables")[[2]], data, env)
+                 orig.y <- eval(attr(mt, "variables")[[2]], data, env)
                  if(is.ts(orig.y) && (NROW(orig.y) == n)) {
                    process <- ts(process, end = time(orig.y)[(n-floor(0.5 + nh/2))],
                                  frequency = frequency(orig.y))
@@ -125,17 +149,17 @@ efp <- function(formula, data = list(),
            "OLS-MOSUM" = {
                fm <- lm.fit(X,y)
                e <- fm$residuals
-               sigma <- sqrt(sum(e^2)/fm$df.residual)
+               sigma <- sdev(e, df = fm$df.residual) ## sqrt(sum(e^2)/fm$df.residual)
                nh <- floor(n*h)
                process <- cumsum(c(0,e))
                process <- process[-(1:nh)] - process[1:(n-nh+1)]
-	       process <- process/(sigma*sqrt(n))
+	       process <- process/(sigma * sqrt(n))
                if(is.ts(data)) {
                    if(NROW(data) == n) process <- ts(process, end = time(data)[(n-floor(0.5 + nh/2))], frequency = frequency(data))
                } else {
 	         env <- environment(formula)
                  if(missing(data)) data <- env
-                 orig.y <- eval(attr(terms(formula), "variables")[[2]], data, env)
+                 orig.y <- eval(attr(mt, "variables")[[2]], data, env)
                  if(is.ts(orig.y) && (NROW(orig.y) == n)) {
                    process <- ts(process, end = time(orig.y)[(n-floor(0.5 + nh/2))],
                                  frequency = frequency(orig.y))
@@ -152,37 +176,36 @@ efp <- function(formula, data = list(),
            ## empirical process of recursive estimates fluctuation
 
            "RE" = {
-               m.fit <- lm.fit(X,y)
+               m.fit <- lmfit(X,y)
                beta.hat <- m.fit$coefficients
-               sigma <- sqrt(sum(m.fit$residual^2)/m.fit$df.residual)
+               sigma <- sdev(m.fit$residual, df = m.fit$df.residual) ## sqrt(sum(m.fit$residual^2)/m.fit$df.residual)
                process <- matrix(rep(0,k*(n-k+1)), nrow=k)
-               Q12 <- root.matrix(crossprod(X))/sqrt(n)
-               if(rescale)
-               {
-                   for(i in k:(n-1))
-                   {
-                       Qi12 <- root.matrix(crossprod(X[1:i,]))/sqrt(i)
-                       process[,(i-k+1)] <- Qi12 %*%
-                               (lm.fit(as.matrix(X[1:i,]), y[1:i])$coefficients - beta.hat)
+               Q12 <- if(is.null(vcov)) {
+	           root.matrix(crossprod(X))/(sigma * sqrt(n))
+	       } else {
+	           root.matrix(solve(vcov(m.fit)))/sqrt(n)
+	       }
+               if(rescale) {
+                   for(i in k:(n-1)) {
+		       mi.fit <- lmfit(as.matrix(X[1:i,]), y[1:i])
+		       if(!is.null(vcov)) warning("custom vcov not implemented yet if rescale = TRUE")
+                       Qi12 <- root.matrix(crossprod(X[1:i, ]))/(sigma * sqrt(i))
+                       process[,(i-k+1)] <- Qi12 %*% (mi.fit$coefficients - beta.hat)
+                   }
+               } else {
+                   for(i in k:(n-1)) {
+		       mi.fit <- lmfit(as.matrix(X[1:i,]), y[1:i])
+                       process[,(i-k+1)] <- Q12 %*% (mi.fit$coefficients - beta.hat)
                    }
                }
-               else
-               {
-                   for(i in k:(n-1))
-                   {
-                       process[,(i-k+1)] <- Q12 %*% (lm.fit(as.matrix(X[1:i,]),
-                                                           y[1:i])$coefficients - beta.hat)
-                   }
-               }
-               process <- t(cbind(0, process))*matrix(rep((k-1):n,k),
-                                                      ncol=k)/(sigma*sqrt(n))
+               process <- t(cbind(0, process)) * matrix(rep((k - 1):n, k), ncol = k)/sqrt(n)
                colnames(process) <- colnames(X)
                if(is.ts(data)) {
                    if(NROW(data) == n) process <- ts(process, end = end(data), frequency = frequency(data))
                } else {
 	         env <- environment(formula)
                  if(missing(data)) data <- env
-                 orig.y <- eval(attr(terms(formula), "variables")[[2]], data, env)
+                 orig.y <- eval(attr(mt, "variables")[[2]], data, env)
                  if(is.ts(orig.y) && (NROW(orig.y) == n)) {
                    process <- ts(process, end = end(orig.y),
                                  frequency = frequency(orig.y))
@@ -196,37 +219,40 @@ efp <- function(formula, data = list(),
            ## empirical process of moving estimates fluctuation
 
            "ME" = {
-               m.fit <- lm.fit(X,y)
+               m.fit <- lmfit(X,y)
                beta.hat <- m.fit$coefficients
-               sigma <- sqrt(sum(m.fit$residual^2)/m.fit$df.residual)
+               sigma <- sdev(m.fit$residual, df = m.fit$df.residual) ## sqrt(sum(m.fit$residual^2)/m.fit$df.residual)
                nh <- floor(n*h)
                process <- matrix(rep(0,k*(n-nh+1)), nrow=k)
-               Q12 <- root.matrix(crossprod(X))/sqrt(n)
-               if(rescale)
-               {
-                   for(i in 0:(n-nh))
-                   {
-                       Qnh12 <- root.matrix(crossprod(X[(i+1):(i+nh),]))/sqrt(nh)
-                       process[, i+1] <-  Qnh12 %*% (lm.fit(
-                                             as.matrix(X[(i+1):(i+nh),]), y[(i+1):(i+nh)])$coefficients - beta.hat)
+               Q12 <- if(is.null(vcov)) {
+	           root.matrix(crossprod(X))/(sigma * sqrt(n))
+	       } else {
+	           root.matrix(solve(vcov(m.fit)))/sqrt(n)
+	       }
+               if(rescale) {
+                   for(i in 0:(n-nh)) {
+		       mi.fit <- lmfit(as.matrix(X[(i+1):(i+nh),]), y[(i+1):(i+nh)])
+                       Qnh12 <- if(is.null(vcov)) {
+		           root.matrix(crossprod(X[(i+1):(i+nh),]))/(sigma * sqrt(nh))
+		       } else {
+		           root.matrix(solve(vcov(mi.fit)))/sqrt(nh)
+		       }
+                       process[, i+1] <-  Qnh12 %*% (mi.fit$coefficients - beta.hat)
+                   }
+               } else {
+                   for(i in 0:(n-nh)) {
+		       mi.fit <- lmfit(as.matrix(X[(i+1):(i+nh),]), y[(i+1):(i+nh)])
+                       process[, i+1] <- Q12 %*% (mi.fit$coefficients - beta.hat)
                    }
                }
-               else
-               {
-                   for(i in 0:(n-nh))
-                   {
-                       process[, i+1] <- Q12 %*% (lm.fit(as.matrix(X[(i+1):(i+nh),]),
-		         y[(i+1):(i+nh)])$coefficients - beta.hat)
-                   }
-               }
-               process <- nh*t(process)/(sqrt(n)*sigma)
+               process <- nh * t(process)/sqrt(n)
                colnames(process) <- colnames(X)
                if(is.ts(data)) {
                    if(NROW(data) == n) process <- ts(process, end = time(data)[(n-floor(0.5 + nh/2))], frequency = frequency(data))
                } else {
 	         env <- environment(formula)
                  if(missing(data)) data <- env
-                 orig.y <- eval(attr(terms(formula), "variables")[[2]], data, env)
+                 orig.y <- eval(attr(mt, "variables")[[2]], data, env)
                  if(is.ts(orig.y) && (NROW(orig.y) == n)) {
                    process <- ts(process, end = time(orig.y)[(n-floor(0.5 + nh/2))],
                                  frequency = frequency(orig.y))
@@ -262,7 +288,7 @@ efp <- function(formula, data = list(),
                } else {
 	         env <- environment(formula)
                  if(missing(data)) data <- env
-                 orig.y <- eval(attr(terms(formula), "variables")[[2]], data, env)
+                 orig.y <- eval(attr(mt, "variables")[[2]], data, env)
                  if(is.ts(orig.y) && (NROW(orig.y) == n)) {
                    process <- ts(process, end = end(orig.y),
                                  frequency = frequency(orig.y))
@@ -296,7 +322,7 @@ efp <- function(formula, data = list(),
                } else {
 	         env <- environment(formula)
                  if(missing(data)) data <- env
-                 orig.y <- eval(attr(terms(formula), "variables")[[2]], data, env)
+                 orig.y <- eval(attr(mt, "variables")[[2]], data, env)
                  if(is.ts(orig.y) && (NROW(orig.y) == n)) {
                    process <- ts(process, end = time(orig.y)[(n-floor(0.5 + nh/2))],
                                  frequency = frequency(orig.y))
@@ -609,7 +635,7 @@ sctest.formula <- function(formula, type = c("Rec-CUSUM", "OLS-CUSUM",
     } else {
         env <- environment(formula)
         if(missing(data)) data <- env
-        orig.y <- eval(attr(terms(formula), "variables")[[2]], data, env)
+        orig.y <- eval(attr(modelterms, "variables")[[2]], data, env)
         if(is.ts(orig.y) & NROW(orig.y) == n){
             ytime <- time(orig.y)
             ytsp <- tsp(orig.y)

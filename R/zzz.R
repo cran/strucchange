@@ -72,7 +72,7 @@ supLM <- function(from = 0.15, to = NULL) {
     n <- length(x)
     n1 <- floor(from * n)
     n2 <- floor(to * n)
-    tt <- seq(along = x)/n
+    tt <- seq_along(x)/n
     x <- x[n1:n2]
     tt <- tt[n1:n2]
     x <- x/(tt * (1-tt))
@@ -334,7 +334,7 @@ ordL2BB <- function(freq, nproc = NULL, nrep = 1e5, probs = c(0:84/100, 850:1000
   ## "time" component of aggregation functional
   catwmax <- function(x) {
     n <- length(x)
-    tt <- seq(along = x)/n
+    tt <- seq_along(x)/n
     ix <- round(tcat * n)
     x <- x[ix]
     tt <- tt[ix]
@@ -424,7 +424,7 @@ ordwmax <- function(freq, algorithm = mvtnorm::GenzBretz(), ...)
 
   catwmax <- function(x) {
     n <- length(x)
-    tt <- seq(along = x)/n
+    tt <- seq_along(x)/n
     ix <- round(tcat * n)
     x <- x[ix]
     tt <- tt[ix]

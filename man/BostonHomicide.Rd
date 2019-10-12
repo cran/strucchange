@@ -27,10 +27,6 @@ and two factors coding seasonality and year, respectively.
 \details{The `Boston Gun Project' is a policing initiative aiming at lowering
 youth homicides in Boston. The project began in early 1995 and implemented the
 so-called `Operation Ceasefire' intervention which began in the late spring of 1996.
-
-More information is available at:
-
-  \url{http://www.ksg.harvard.edu/criminaljustice/research/bgp.htm}
 }
 
 \source{Piehl et al. (2004), Figure 1, Figure 3, and Table 1.

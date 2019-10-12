@@ -1,13 +1,14 @@
 Package: strucchange
-Version: 1.5-1
-Date: 2015-06-06
+Version: 1.5-2
+Date: 2019-10-12
 Title: Testing, Monitoring, and Dating Structural Changes
-Authors@R: c(person(given = "Achim", family = "Zeileis", role = c("aut", "cre"), email = "Achim.Zeileis@R-project.org"),
+Authors@R: c(person(given = "Achim", family = "Zeileis", role = c("aut", "cre"), email = "Achim.Zeileis@R-project.org",
+                    comment = c(ORCID = "0000-0003-0918-3766")),
              person(given = "Friedrich", family = "Leisch", role = "aut", email = "Friedrich.Leisch@R-project.org"),
              person(given = "Kurt", family = "Hornik", role = "aut", email = "Kurt.Hornik@R-project.org"),
 	     person(given = "Christian", family = "Kleiber", role = "aut", email = "Christian.Kleiber@unibas.ch"),
 	     person(given = "Bruce", family = "Hansen", role = "ctb"),
-	     person(give = c("Edgar", "C."), family = "Merkle", role = "ctb"))
+	     person(given = c("Edgar", "C."), family = "Merkle", role = "ctb"))
 Description: Testing, monitoring and dating structural changes in (linear)
              regression models. strucchange features tests/methods from
 	     the generalized fluctuation test framework as well as from
@@ -22,11 +23,11 @@ Description: Testing, monitoring and dating structural changes in (linear)
 LazyData: yes
 Depends: R (>= 2.10.0), zoo, sandwich
 Suggests: stats4, car, dynlm, e1071, foreach, lmtest, mvtnorm, tseries
-Imports: graphics, stats
+Imports: graphics, stats, utils
 License: GPL-2 | GPL-3
-NeedsCompilation: no
-Packaged: 2015-06-06 10:01:15 UTC; zeileis
-Author: Achim Zeileis [aut, cre],
+NeedsCompilation: yes
+Packaged: 2019-10-12 07:22:10 UTC; zeileis
+Author: Achim Zeileis [aut, cre] (<https://orcid.org/0000-0003-0918-3766>),
   Friedrich Leisch [aut],
   Kurt Hornik [aut],
   Christian Kleiber [aut],
@@ -34,4 +35,4 @@ Author: Achim Zeileis [aut, cre],
   Edgar C. Merkle [ctb]
 Maintainer: Achim Zeileis <Achim.Zeileis@R-project.org>
 Repository: CRAN
-Date/Publication: 2015-06-06 13:03:15
+Date/Publication: 2019-10-12 18:35:49 UTC

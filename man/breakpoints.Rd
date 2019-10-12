@@ -44,14 +44,14 @@
   \item{h}{minimal segment size either given as fraction relative to the
     sample size or as an integer giving the minimal number of observations
     in each segment.}
-  \item{breaks}{integer specifying the maximal number of breaks to be calculated.
+  \item{breaks}{positive integer specifying the maximal number of breaks to be calculated.
     By default the maximal number allowed by \code{h} is used.}
   \item{data}{an optional data frame containing the variables in the model. By
      default the variables are taken from the environment which \code{breakpoints} is
      called from.}
   \item{hpc}{a character specifying the high performance computing support.
     Default is \code{"none"}, can be set to \code{"foreach"}.}
-  \item{\dots}{currently not used.}
+  \item{\dots}{arguments passed to \code{\link{recresid}}.}
   \item{obj, object}{an object of class \code{"breakpointsfull"}.}
   \item{sort}{logical. If set to \code{TRUE} \code{summary} tries to match
     the breakpoints from partitions with different numbers of breaks.}

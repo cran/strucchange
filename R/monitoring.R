@@ -117,7 +117,7 @@ mefp.efp <-
         {
                e <- as.vector(y - X %*% histcoef)
                process <- rep(0, nrow(X)-K+1)
-               for(i in 0:(nrow(X)-K))
+               for(i in 0:(nrow(X)-K)) ## FIXME: cumsum - cumsum
                {
                    process[i+1] <- sum(e[(i+1):(i+K)])
                }

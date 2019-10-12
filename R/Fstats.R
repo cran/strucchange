@@ -31,7 +31,7 @@ Fstats <- function(formula, from = 0.15, to = NULL, data = list(), vcov. = NULL)
   } else {
       env <- environment(formula)
       if(missing(data)) data <- env
-      orig.y <- eval(attr(terms(formula), "variables")[[2]], data, env)
+      orig.y <- eval(attr(terms(formula, data = data), "variables")[[2]], data, env)
       if(is.ts(orig.y) & (NROW(orig.y) == n)){
 	    ytime <- time(orig.y)
 	    ytsp <- tsp(orig.y)

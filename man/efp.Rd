@@ -10,7 +10,7 @@ or OLS residuals, parameter estimates or ML scores (OLS first order
 conditions).}
 \usage{
 efp(formula, data, type = , h = 0.15,
-    dynamic = FALSE, rescale = TRUE)}
+    dynamic = FALSE, rescale = TRUE, lrvar = FALSE, vcov = NULL)}
 \arguments{
   \item{formula}{a symbolic description for the model to be tested.}
   \item{data}{an optional data frame containing the variables in the model. By
@@ -27,6 +27,14 @@ efp(formula, data, type = , h = 0.15,
     the regressor matrix of the corresponding subsample according to Kuan & Chen
     (1994); if \code{FALSE} the whole regressor matrix will be used.
     (only if \code{type} is either \code{"RE"} or \code{"ME"})}
+  \item{lrvar}{logical or character. Should a long-run variance estimator
+    be used for the residuals? By default, the standard OLS variance is employed.
+    Alternatively, \code{\link[sandwich]{lrvar}} can be used. If \code{lrvar}
+    is character (\code{"Andrews"} or \code{"Newey-West"}), then the corresponding
+    \code{type} of long-run variance is used. (The argument is ignored for the
+    score-based tests where \code{\link{gefp}} should be used instead.)}
+  \item{vcov}{a function to extract the covariance matrix for the coefficients
+    of the fitted model (only for \code{"RE"} and \code{"ME"}).}
 }
 
 \details{If \code{type} is one of \code{"Rec-CUSUM"}, \code{"OLS-CUSUM"},

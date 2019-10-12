@@ -1,4 +1,5 @@
 import("stats", "graphics", "zoo", "sandwich")
+importFrom("utils", "globalVariables")
 
 export(
 ## testing
@@ -125,3 +126,6 @@ S3method("print", "summary.breakpointsfull")
 
 S3method("print", "confint.breakpoints")
 S3method("lines", "confint.breakpoints")
+
+useDynLib(strucchange, .registration = TRUE)
+

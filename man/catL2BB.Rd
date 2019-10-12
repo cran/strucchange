@@ -53,11 +53,11 @@ ordwmax(freq, algorithm = mvtnorm::GenzBretz(), \dots)
   \code{ordL2BB} is the ordinal counterpart to \code{\link{supLM}}
   where aggregation is done along the ordered categories (rather than
   continuously). The asymptotic distribution is non-standard and needs
-  to be simulated via \code{\link[mvtnorm]{rmvnorm}} for every combination
-  of frequencies and number of processes. This can be somewhat
-  time-consuming, hence it is recommended to store the result of 
-  \code{ordL2BB} in case it needs to be applied several \code{\link{gefp}}
-  fluctuation processes.
+  to be simulated for every combination of frequencies and number of
+  processes. Hence, this is somewhat more time-consuming compared to
+  the closed-form solution employed in \code{catL2BB}. It is also
+  possible to store the result of \code{ordL2BB} in case it needs to
+  be applied several \code{\link{gefp}} fluctuation processes.
 
   \code{ordwmax} is a weighted double maximum test based on ideas
   previously suggested by Hothorn and Zeileis (2008) in the context of

@@ -1,13 +1,15 @@
 root.matrix <- function(X)
 {
-    if((ncol(X)==1)&&(nrow(X)==1)) return(sqrt(X))
+    if((ncol(X) == 1L)&&(nrow(X) == 1L)) return(sqrt(X))
     else
     {
         X.eigen <- eigen(X, symmetric=TRUE)
         if(any(X.eigen$values < 0)) stop("matrix is not positive semidefinite")
         sqomega <- sqrt(diag(X.eigen$values))
         V <- X.eigen$vectors
-        return(V %*% sqomega %*% t(V))
+        V <- V %*% sqomega %*% t(V)
+	dimnames(V) <- dimnames(X)
+	return(V)
     }
 }
 

@@ -1,3 +1,5 @@
+utils::globalVariables(c("i", "%dopar%"))
+
 breakpoints <- function(obj, ...)
 {
   UseMethod("breakpoints")
@@ -35,6 +37,10 @@ breakpoints.formula <- function(formula, h = 0.15, breaks = NULL,
   if(is.null(breaks)) {
     breaks <- ceiling(n/h) - 2
   } else {
+    if(breaks < 1) {
+      breaks <- 1
+      warning("number of breaks must be at least 1")
+    }
     if(breaks > ceiling(n/h) - 2) {
       breaks0 <- breaks
       breaks <- ceiling(n/h) - 2
@@ -43,9 +49,13 @@ breakpoints.formula <- function(formula, h = 0.15, breaks = NULL,
   }
 
   hpc <- match.arg(hpc)
-  if(hpc == "foreach" && !requireNamespace("foreach")) {
-    warning("High perfomance computing (hpc) support with 'foreach' package is not available, foreach is not installed.")
-    hpc <- "none"
+  if(hpc == "foreach") {
+    if(requireNamespace("foreach")) {
+      `%dopar%` <- foreach::`%dopar%`
+    } else {
+      warning("High perfomance computing (hpc) support with 'foreach' package is not available, foreach is not installed.")    
+      hpc <- "none"
+    }
   }
 
   ## compute ith row of the RSS diagonal matrix, i.e,
@@ -56,7 +66,7 @@ breakpoints.formula <- function(formula, h = 0.15, breaks = NULL,
     ssr <- if(intercept_only) {
       (y[i:n] - cumsum(y[i:n])/(1L:(n-i+1L)))[-1L] * sqrt(1L + 1L/(1L:(n-i)))
     } else {
-      recresid(X[i:n,,drop = FALSE],y[i:n])
+      recresid(X[i:n,,drop = FALSE],y[i:n], ...)
     }
     c(rep(NA, k), cumsum(ssr^2))
   }
@@ -129,7 +139,7 @@ breakpoints.formula <- function(formula, h = 0.15, breaks = NULL,
   } else {
       env <- environment(formula)
       if(missing(data)) data <- env
-      orig.y <- eval(attr(terms(formula), "variables")[[2]], data, env)
+      orig.y <- eval(attr(modelterms, "variables")[[2]], data, env)
       if(is.ts(orig.y) & (NROW(orig.y) == n)) datatsp <- tsp(orig.y)
         else datatsp <- c(1/n, 1, n)
   }

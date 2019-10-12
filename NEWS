@@ -1,3 +1,35 @@
+Changes in Version 1.5-2
+
+  o Added lrvar = FALSE argument to efp() so that optionally a long-run variance
+    estimator (Andrews or Newey-West) instead of the standard OLS estimator can
+    be used for the error variance.
+
+  o Added vcov. = NULL argument to efp() so that optionally other covariance
+    matrix estimators can be plugged into RE and ME tests (e.g., sandwich(),
+    kernHAC(), NeweyWest(), etc.).
+
+  o The default recresid() gained an argument qr.tol = 1e-7 which allows to
+    pass another tolerance to lm.fit() for detecting linear dependencies in
+    (small) subsamples. Furthermore, an argument engine = c("R", "C") has been
+    added along with an alternative faster C implementation.
+    
+  o The formula method of breakpoints() now passes ... to recresid(), e.g., for
+    the qr.tol and engine arguments above.
+  
+  o The breaks argument of the breakpoints() formula argument is now checked
+    to be at least 1.
+
+  o breakpoints(..., hpc = "foreach") now also works if the "foreach" package
+    is not attached.
+
+  o Improved support for formulas like 'y ~ .' in efp(), Fstats(), and
+    breakpoints(). (Suggested by Matthieu Stigler.)
+
+  o Bug fix in gefp(..., decorrelate = FALSE). Scaling is done with the square
+    root of the diagnoal of the variance - as opposed to the diagonal of the
+    square root of the variance. (Reported by Dries Debeer.)
+
+
 Changes in Version 1.5-1
 
   o ordL2BB() now uses a direct simulation method based on mvtnorm::rmvnorm()
