@@ -27,7 +27,7 @@
 \method{breakpoints}{formula}(formula, h = 0.15, breaks = NULL,
     data = list(), hpc = c("none", "foreach"), \dots)
 \method{breakpoints}{breakpointsfull}(obj, breaks = NULL, \dots)
-\method{summary}{breakpointsfull}(object, breaks = NULL, sort = TRUE,
+\method{summary}{breakpointsfull}(object, breaks = NULL, sort = NULL,
     format.times = NULL, \dots)
 \method{lines}{breakpoints}(x, breaks = NULL, lty = 2, \dots)
 
@@ -54,7 +54,8 @@
   \item{\dots}{arguments passed to \code{\link{recresid}}.}
   \item{obj, object}{an object of class \code{"breakpointsfull"}.}
   \item{sort}{logical. If set to \code{TRUE} \code{summary} tries to match
-    the breakpoints from partitions with different numbers of breaks.}
+    the breakpoints from partitions with different numbers of breaks.
+    The default tries to sort if a suitable matching can be found.}
   \item{format.times}{logical. If set to \code{TRUE} a vector of
     strings with the formatted breakdates is printed. See \code{\link{breakdates}}
     for more information.}

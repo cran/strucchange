@@ -1,18 +1,18 @@
 \name{SP2001}
 \alias{SP2001}
-\title{S\&P 500 Stock Prices}
+\title{S&P 500 Stock Prices}
 \description{
-  A multivariate series of all S\&P 500 stock prices in the
+  A multivariate series of all S&P 500 stock prices in the
   second half of the year 2001, i.e., before and after the
   terrorist attacks of 2001-09-11. 
 }
 \usage{data("SP2001")}
 \format{
  A multivariate daily \code{"zoo"} series with \code{"Date"} index 
- from 2001-07-31 to 2001-12-31 (103 observations) of all 500 S\&P
+ from 2001-07-31 to 2001-12-31 (103 observations) of all 500 S&P
  stock prices. 
 }
-\source{Yahoo! Finance: \url{http://finance.yahoo.com/}.}
+\source{Yahoo! Finance: \url{https://finance.yahoo.com/}.}
 
 \references{
 Zeileis A., Leisch F., Kleiber C., Hornik K. (2005), Monitoring

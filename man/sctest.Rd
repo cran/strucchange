@@ -44,11 +44,11 @@ in linear regression models and general parametric models are provided in
 Zeileis A., Leisch F., Hornik K., Kleiber C. (2002), \code{strucchange}:
 An R Package for Testing for Structural Change in Linear Regression Models,
 \emph{Journal of Statistical Software}, \bold{7}(2), 1-38.
-URL \url{http://www.jstatsoft.org/v07/i02/}.
+\doi{10.18637/jss.v007.i02}.
 
 Zeileis A. (2006), Implementing a Class of Structural Change Tests: An
 Econometric Computing Approach. \emph{Computational Statistics & Data Analysis}, 
-\bold{50}, 2987--3008. doi:10.1016/j.csda.2005.07.001.
+\bold{50}, 2987--3008. \doi{10.1016/j.csda.2005.07.001}.
 }
 
 \seealso{\code{\link{sctest.formula}}, \code{\link{sctest.default}},

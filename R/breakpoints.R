@@ -257,7 +257,7 @@ summary.breakpoints <- function(object, ...)
 }
 
 summary.breakpointsfull <- function(object, breaks = NULL,
-  sort = TRUE, format.times = NULL, ...)
+  sort = NULL, format.times = NULL, ...)
 {
   if(is.null(format.times)) format.times <- ((object$datatsp[3] > 1) & (object$datatsp[3] < object$nobs))
   if(is.null(breaks)) breaks <- ncol(object$RSS.table)/2
@@ -277,12 +277,14 @@ summary.breakpointsfull <- function(object, breaks = NULL,
     bp <- rbind(NA, bp)
     bd <- rbind(NA, bd)
     bpm <- breakpoints(object, breaks = m)
-    if(sort) {
+    if(is.null(sort) || identical(sort, TRUE)) {
       pos <- apply(outer(bpm$breakpoints, bp[nrow(bp),],
                    FUN = function(x,y) abs(x - y)), 1, which.min)
-      if(length(pos) > unique(length(pos))) {
-        warning("sorting not possible", call. = FALSE)
+      if(length(pos) > length(unique(pos))) {
+        if(!is.null(sort)) warning("sorting not possible", call. = FALSE)
 	sort <- FALSE
+      } else {
+        sort <- TRUE
       }
     }
     if(!sort) pos <- 1:m

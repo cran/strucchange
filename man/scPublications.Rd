@@ -38,7 +38,7 @@ Additionally, the famous CUSUM paper of Brown, Durbin and Evans (1975) was added
 manually to \code{scPublications} (because it did not match the query above).
 }
 
-\source{ISI Web of Science at \url{http://www.isiknowledge.com/}.
+\source{ISI Web of Science at \url{https://www.webofknowledge.com/}.
 Queried by James Bullard.
 }
 

@@ -1,3 +1,15 @@
+Changes in Version 1.5-3
+
+  o Fixups for R CMD check on different platforms (thanks to support from
+    Kurt Hornik and Tomas Kalibera).
+  
+  o Fixed auto-detection of problems with sorting in summary() methods of
+    breakpointsfull objects (reported by Spencer Graves). In some extreme
+    cases with many breakpoints and very short segments, the sort=TRUE
+    approach of displaying the breakpoints fails which was not reported
+    correctly automatically.
+
+
 Changes in Version 1.5-2
 
   o Added lrvar = FALSE argument to efp() so that optionally a long-run variance
@@ -11,7 +23,8 @@ Changes in Version 1.5-2
   o The default recresid() gained an argument qr.tol = 1e-7 which allows to
     pass another tolerance to lm.fit() for detecting linear dependencies in
     (small) subsamples. Furthermore, an argument engine = c("R", "C") has been
-    added along with an alternative faster C implementation.
+    added along with an alternative faster C implementation (by Nikolaus
+    Umlauf).
     
   o The formula method of breakpoints() now passes ... to recresid(), e.g., for
     the qr.tol and engine arguments above.
