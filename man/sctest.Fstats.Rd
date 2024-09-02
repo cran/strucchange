@@ -21,7 +21,7 @@
 
 The original GAUSS code for computing the p values of the supF-, aveF- and
 expF-test was written by Bruce Hansen and is available from
-\url{http://www.ssc.wisc.edu/~bhansen/}. R port by Achim Zeileis.
+\url{https://www.ssc.wisc.edu/~bhansen/}. R port by Achim Zeileis.
 }
 
 \value{

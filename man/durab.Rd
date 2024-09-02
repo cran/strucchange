@@ -16,7 +16,7 @@ to 2001(4) with variables
 }
 
 \source{The data set is available from Bruce Hansen's homepage
-\url{http://www.ssc.wisc.edu/~bhansen/}. For more information
+\url{https://www.ssc.wisc.edu/~bhansen/}. For more information
 see Hansen (2001).}
 
 \references{
@@ -42,10 +42,12 @@ plot(ols)
 fs <- Fstats(durab.model, data = durab, from = 0.1)
 plot(fs)
 
+\donttest{
 ## F statistics based on heteroskadisticy-consistent covariance matrix
 fsHC <- Fstats(durab.model, data = durab, from = 0.1,
 	       vcov = function(x, ...) vcovHC(x, type = "HC", ...))
 plot(fsHC)
+}
 
 ## monitoring
 Durab <- window(durab, start=1964, end = c(1979, 12))
@@ -63,6 +65,7 @@ lines(boundary(ols.mon2), col = 2)
 ## interpolation between the values for T = 2 and T = 3 at
 ## alpha = 0.05. A typo switched 1.732 to 1.723.
 
+\donttest{
 ## dating
 bp <- breakpoints(durab.model, data = durab)
 summary(bp)
@@ -74,5 +77,6 @@ lines(breakpoints(bp, breaks = 2), col = 4)
 plot(fs)
 lines(breakpoints(bp, breaks = 1), col = 3)
 lines(breakpoints(bp, breaks = 2), col = 4)
+}
 }
 \keyword{datasets}

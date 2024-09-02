@@ -1,6 +1,6 @@
-213ae2e630c8723863be3c1f9648ddc7 *DESCRIPTION
+0f27a2fba757103bb9f6295cdd981a0a *DESCRIPTION
 1985ca4c849f2d3b4148c7facc54f1e0 *NAMESPACE
-9ef6b23682ef00fc597e934ae67c0101 *NEWS
+8d0769e9f49418c7f0e86f06b1b6638e *NEWS
 fc2f2d8a033007d24579cba0c3ea356f *R/Fstats.R
 5f257e8831577c15f3f46c1a16e8d5f2 *R/breakpoints.R
 83ebfbfce67826d4de1057f877032de1 *R/critvals-monitoring.R
@@ -13,8 +13,8 @@ ec193b9a5408ae70992b713fff4be110 *R/pvalue.Fstats.R
 84b6fcee29c31f05ad777323404bbed2 *R/recresid.R
 c3ea007515ab771f472dcdf32513de09 *R/simul-monitoring.R
 ea23808af5cc4ad5d2a59b085651fbd3 *R/zzz.R
-1961639f6f4f7f9efffa91b624b3d060 *build/partial.rdb
-2c8c17981a79dfc4de96e2456be0d614 *build/vignette.rds
+aa5e5a2cbfaea3d9b6cdbe378ac48cee *build/partial.rdb
+cc1635f7973362e7623e856e35987e9f *build/vignette.rds
 a9256482d5b60c89f3e7d2ca14308e76 *data/BostonHomicide.rda
 26a5fa422078d9204cc42e4c9770ed55 *data/DJIA.rda
 a6edd1f627f227fc983f1e79f216c5cd *data/GermanM1.rda
@@ -31,7 +31,7 @@ c77ba4211143ced0ec937b346c8c4a1a *data/USIncExp.rda
 26c7fdec7aa6c9b79f932e7c7cb42735 *inst/CITATION
 32e086a5c07fe063785627e77bb0681e *inst/doc/strucchange-intro.R
 f35042db7270565c9ed5ae8024a3d257 *inst/doc/strucchange-intro.Rnw
-a8567832e5a61bf18c28c192743d0370 *inst/doc/strucchange-intro.pdf
+aadf37d5337621521789dd552b57bc8a *inst/doc/strucchange-intro.pdf
 5afc3ad081d75ce8d2d13c0d7be42b89 *man/BostonHomicide.Rd
 5ff562b597ec94367c62cb6303dc8e61 *man/DJIA.Rd
 4cfee4fc225a86e83d148d274a2095a2 *man/Fstats.Rd
@@ -50,7 +50,7 @@ f743fcf976e38d5ba9e1565d589a2789 *man/breakdates.Rd
 83e47e8489c86f13063bd7655c28a706 *man/breakpoints.Rd
 7284c953e2217c273f9e470ae8639c1e *man/catL2BB.Rd
 3e5d93b9aecd573f54504131b82a0b79 *man/confint.breakpointsfull.Rd
-aaec76376ec93ab3f789356b47b34c09 *man/durab.Rd
+2b117cf6e0690d395518ae65d25ad839 *man/durab.Rd
 f9c359e165131270b54f6208324ef4ac *man/efp.Rd
 1dc2b825d5674ada19348e717d6b2fe3 *man/efpFunctional.Rd
 2cc039f6d50a890becf8613972f4e0e7 *man/gefp.Rd
@@ -62,7 +62,7 @@ b8a4e7c52ed059b7ce37070365ec96a5 *man/plot.mefp.Rd
 670dcd98b7f5229c7920ec73ca24455a *man/recresid.Rd
 e8d7a3f6557b85d6d11fddc62ba0ac25 *man/root.matrix.Rd
 58d797bb311eb0f5d40e99eeeb59c8d6 *man/scPublications.Rd
-2f3e16c91418428ecb8a054594948378 *man/sctest.Fstats.Rd
+f7d24a28971107e645dd100a4bc6602c *man/sctest.Fstats.Rd
 306c07dd70d54a2a5ecb94827d0bb3e1 *man/sctest.Rd
 ab3e8b149e27f09ffbe7cc1ca8bb9652 *man/sctest.default.Rd
 72d4dce2c7bb7b5c5c5b024d87c40a01 *man/sctest.efp.Rd
@@ -73,7 +73,7 @@ ab3e8b149e27f09ffbe7cc1ca8bb9652 *man/sctest.default.Rd
 3996e7c16bfb96fad295ee425815cb4d *src/Makevars
 e1f6b7bbece18fcb0084a3ace6c0039b *src/strucchange_functions.c
 b783ee4886de200b5e85c56da94ce21e *src/strucchange_init.c
-861dcbc5766f6d36e11d1f5e48a7cba8 *tests/Examples/strucchange-Ex.Rout.save
+e0144e1bf6002845d8e867da26d09350 *tests/Examples/strucchange-Ex.Rout.save
 9696e67f58d81e623660360dcfde48fb *tests/strucchange-tests.R
 e310a1e0d54efdcf915bb9c86dd4cf47 *tests/strucchange-tests.Rout.save
 f35042db7270565c9ed5ae8024a3d257 *vignettes/strucchange-intro.Rnw

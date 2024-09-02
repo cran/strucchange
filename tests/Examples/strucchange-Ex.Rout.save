@@ -1,11 +1,13 @@
 
-R version 3.2.0 (2015-04-16) -- "Full of Ingredients"
-Copyright (C) 2015 The R Foundation for Statistical Computing
-Platform: x86_64-pc-linux-gnu (64-bit)
+R version 4.4.1 (2024-06-14) -- "Race for Your Life"
+Copyright (C) 2024 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
 Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
 
 R is a collaborative project with many contributors.
 Type 'contributors()' for more information and
@@ -21,15 +23,16 @@ Type 'q()' to quit R.
 > library('strucchange')
 Loading required package: zoo
 
-Attaching package: 'zoo'
+Attaching package: ‘zoo’
 
-The following objects are masked from 'package:base':
+The following objects are masked from ‘package:base’:
 
     as.Date, as.Date.numeric
 
 Loading required package: sandwich
 > 
 > base::assign(".oldSearch", base::search(), pos = 'CheckExEnv')
+> base::assign(".old_wd", base::getwd(), pos = 'CheckExEnv')
 > cleanEx()
 > nameEx("BostonHomicide")
 > ### * BostonHomicide
@@ -75,7 +78,7 @@ populationBM  1  14.364 14.3642  3.7961 0.05576 .
 season       11  47.254  4.2959  1.1353 0.34985  
 Residuals    64 242.174  3.7840                  
 ---
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 > ## as GLM
 > fmA1 <- glm(homicides ~ populationBM + season, family = poisson)
 > anova(fmA1, test = "Chisq")
@@ -93,7 +96,7 @@ NULL                            76    115.649
 populationBM  1   4.9916        75    110.657  0.02547 *
 season       11  18.2135        64     92.444  0.07676 .
 ---
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 > 
 > ## model B & C
 > fmB <- lm(homicides ~ populationBM + season + ahomicides25)
@@ -244,7 +247,6 @@ exp.F = 6.4247, p-value = 0.008093
 > flush(stderr()); flush(stdout())
 > 
 > ### Encoding: UTF-8
-> 
 > ### Name: GermanM1
 > ### Title: German M1 Money Demand
 > ### Aliases: GermanM1 historyM1 monitorM1
@@ -574,7 +576,7 @@ fac.infseg1:dp1  0.274012   0.269892   1.015   0.3171
 fac.infseg2:dp1  1.343369   0.224521   5.983 9.05e-07 ***
 fac.infseg3:dp1  0.683410   0.130106   5.253 8.07e-06 ***
 ---
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
 Residual standard error: 0.02325 on 34 degrees of freedom
 Multiple R-squared:  0.9237,	Adjusted R-squared:  0.9103 
@@ -670,7 +672,7 @@ fac.pcseg1:dp1  0.09373    0.24053   0.390  0.69936
 fac.pcseg2:dp1  1.23143    0.20498   6.008 1.06e-06 ***
 fac.pcseg3:dp1  0.01618    0.25667   0.063  0.95013    
 ---
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
 Residual standard error: 0.02021 on 32 degrees of freedom
 Multiple R-squared:  0.9655,	Adjusted R-squared:  0.9569 
@@ -779,7 +781,7 @@ fac.riseg2   0.8661     0.4422   1.959    0.053 .
 fac.riseg3  -1.7961     0.3749  -4.791 5.83e-06 ***
 fac.riseg4   5.6429     0.4329  13.036  < 2e-16 ***
 ---
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
 Residual standard error: 2.121 on 99 degrees of freedom
 Multiple R-squared:  0.6842,	Adjusted R-squared:  0.6714 
@@ -1678,10 +1680,6 @@ f(efp) = 3.001, p-value = 0.01498
 > fs <- Fstats(durab.model, data = durab, from = 0.1)
 > plot(fs)
 > 
-> ## F statistics based on heteroskadisticy-consistent covariance matrix
-> fsHC <- Fstats(durab.model, data = durab, from = 0.1,
-+ 	       vcov = function(x, ...) vcovHC(x, type = "HC", ...))
-> plot(fsHC)
 > 
 > ## monitoring
 > Durab <- window(durab, start=1964, end = c(1979, 12))
@@ -1701,44 +1699,6 @@ Break detected at observation # 416
 > ## interpolation between the values for T = 2 and T = 3 at
 > ## alpha = 0.05. A typo switched 1.732 to 1.723.
 > 
-> ## dating
-> bp <- breakpoints(durab.model, data = durab)
-> summary(bp)
-
-	 Optimal (m+1)-segment partition: 
-
-Call:
-breakpoints.formula(formula = durab.model, data = durab)
-
-Breakpoints at observation number:
-                           
-m = 1               418    
-m = 2       221         530
-m = 3   114 225         530
-m = 4   114 221     418 531
-m = 5   114 221 319 418 531
-
-Corresponding to breakdates:
-                                                 
-m = 1                            1981(12)        
-m = 2           1965(7)                   1991(4)
-m = 3   1956(8) 1965(11)                  1991(4)
-m = 4   1956(8) 1965(7)          1981(12) 1991(5)
-m = 5   1956(8) 1965(7)  1973(9) 1981(12) 1991(5)
-
-Fit:
-                                                                     
-m   0          1          2          3          4          5         
-RSS  5.586e-02  5.431e-02  5.325e-02  5.220e-02  5.171e-02  5.157e-02
-BIC -4.221e+03 -4.220e+03 -4.213e+03 -4.207e+03 -4.194e+03 -4.176e+03
-> plot(summary(bp))
-> 
-> plot(ols)
-> lines(breakpoints(bp, breaks = 1), col = 3)
-> lines(breakpoints(bp, breaks = 2), col = 4)
-> plot(fs)
-> lines(breakpoints(bp, breaks = 1), col = 3)
-> lines(breakpoints(bp, breaks = 2), col = 4)
 > 
 > 
 > 
@@ -2407,7 +2367,7 @@ Model 2: Employed ~ fac/(Year + GNP.deflator + GNP + Armed.Forces)
 1     11 4.8987                              
 2      6 1.1466  5    3.7521 3.9268 0.06307 .
 ---
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 > 
 > ## estimates from Table 7.5 in Greene (1993)
 > summary(fm0)
@@ -2428,7 +2388,7 @@ GNP.deflator -1.977e-02  1.389e-01  -0.142  0.88940
 GNP           6.439e-02  1.995e-02   3.227  0.00805 **
 Armed.Forces -1.015e-04  3.086e-03  -0.033  0.97436   
 ---
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
 Residual standard error: 0.6673 on 11 degrees of freedom
 Multiple R-squared:  0.9735,	Adjusted R-squared:  0.9639 
@@ -2457,7 +2417,7 @@ fac2:GNP           1.123e-01  2.269e-02   4.951  0.00258 **
 fac1:Armed.Forces -2.467e-03  6.965e-03  -0.354  0.73532   
 fac2:Armed.Forces -2.579e-02  1.259e-02  -2.049  0.08635 . 
 ---
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
 Residual standard error: 0.4372 on 6 degrees of freedom
 Multiple R-squared:  0.9938,	Adjusted R-squared:  0.9845 
@@ -2529,9 +2489,10 @@ F-statistic: 106.9 on 9 and 6 DF,  p-value: 6.28e-06
 > 
 > ### * <FOOTER>
 > ###
+> cleanEx()
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  43.26 0.124 43.969 0 0 
+Time elapsed:  4.055 0.076 4.13 0 0 
 > grDevices::dev.off()
 null device 
           1 
