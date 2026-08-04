@@ -1,15 +1,14 @@
 Package: strucchange
-Version: 1.5-4
-Date: 2024-09-02
+Version: 1.6-0
+Date: 2026-08-04
 Title: Testing, Monitoring, and Dating Structural Changes
-Authors@R: c(person(given = "Achim", family = "Zeileis", role = c("aut", "cre"), email = "Achim.Zeileis@R-project.org",
-                    comment = c(ORCID = "0000-0003-0918-3766")),
-             person(given = "Friedrich", family = "Leisch", role = "aut", email = "Friedrich.Leisch@R-project.org"),
-             person(given = "Kurt", family = "Hornik", role = "aut", email = "Kurt.Hornik@R-project.org"),
-	     person(given = "Christian", family = "Kleiber", role = "aut", email = "Christian.Kleiber@unibas.ch"),
-	     person(given = "Bruce", family = "Hansen", role = "ctb"),
-	     person(given = c("Edgar", "C."), family = "Merkle", role = "ctb"),
-	     person(given = "Nikolaus", family = "Umlauf", role = "ctb"))
+Authors@R: c(person(given = "Achim", family = "Zeileis", role = c("aut", "cre"), email = "Achim.Zeileis@R-project.org", comment = c(ORCID = "0000-0003-0918-3766")),
+             person(given = "Friedrich", family = "Leisch", role = "aut", email = "Friedrich.Leisch@R-project.org", comment = c(ORCID = "0000-0001-7278-1983")),
+             person(given = "Kurt", family = "Hornik", role = "aut", email = "Kurt.Hornik@R-project.org", comment = c(ORCID = "0000-0003-4198-9911")),
+	     person(given = "Christian", family = "Kleiber", role = "aut", email = "Christian.Kleiber@unibas.ch", comment = c(ORCID = "0000-0002-6781-4733")),
+	     person(given = c("Bruce", "E."), family = "Hansen", role = "ctb"),
+	     person(given = c("Edgar", "C."), family = "Merkle", role = "ctb", email = "merklee@missouri.edu", comment = c(ORCID = "0000-0001-7158-0653")),
+	     person(given = "Nikolaus", family = "Umlauf", role = "ctb", email = "Nikolaus.Umlauf@uibk.ac.at", comment = c(ORCID = "0000-0003-2160-9803")))
 Description: Testing, monitoring and dating structural changes in (linear)
              regression models. strucchange features tests/methods from
 	     the generalized fluctuation test framework as well as from
@@ -23,18 +22,24 @@ Description: Testing, monitoring and dating structural changes in (linear)
              Emphasis is always given to methods for visualizing the data.
 LazyData: yes
 Depends: R (>= 2.10.0), zoo, sandwich
-Suggests: stats4, car, dynlm, e1071, foreach, lmtest, mvtnorm, tseries
+Suggests: stats4, car, dynlm, e1071, foreach, lmtest, mvtnorm, tseries,
+        knitr, rmarkdown
 Imports: graphics, stats, utils
 License: GPL-2 | GPL-3
+VignetteBuilder: knitr
+URL: https://zeileis.codeberg.page/strucchange/
+BugReports: https://codeberg.org/zeileis/strucchange/issues
 NeedsCompilation: yes
-Packaged: 2024-09-02 00:15:58 UTC; zeileis
-Author: Achim Zeileis [aut, cre] (<https://orcid.org/0000-0003-0918-3766>),
-  Friedrich Leisch [aut],
-  Kurt Hornik [aut],
-  Christian Kleiber [aut],
-  Bruce Hansen [ctb],
-  Edgar C. Merkle [ctb],
-  Nikolaus Umlauf [ctb]
+Packaged: 2026-08-04 07:56:29 UTC; zeileis
+Author: Achim Zeileis [aut, cre] (ORCID:
+    <https://orcid.org/0000-0003-0918-3766>),
+  Friedrich Leisch [aut] (ORCID: <https://orcid.org/0000-0001-7278-1983>),
+  Kurt Hornik [aut] (ORCID: <https://orcid.org/0000-0003-4198-9911>),
+  Christian Kleiber [aut] (ORCID:
+    <https://orcid.org/0000-0002-6781-4733>),
+  Bruce E. Hansen [ctb],
+  Edgar C. Merkle [ctb] (ORCID: <https://orcid.org/0000-0001-7158-0653>),
+  Nikolaus Umlauf [ctb] (ORCID: <https://orcid.org/0000-0003-2160-9803>)
 Maintainer: Achim Zeileis <Achim.Zeileis@R-project.org>
 Repository: CRAN
-Date/Publication: 2024-09-02 08:00:02 UTC
+Date/Publication: 2026-08-04 10:30:02 UTC

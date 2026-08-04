@@ -361,10 +361,14 @@ efpFunctional <- function(functional = list(comp = function(x) max(abs(x)), time
       ## special case: lambda = max(lambda_comp(x))
       ## can also use boundary argument: b(t) = critval * boundary(t)
     
-          plotProcess <- function(x, alpha = 0.05, aggregate = TRUE,
-	    xlab = NULL, ylab = NULL, main = x$type.name, ylim = NULL,
-	    boundary = TRUE, ...)
+          plotProcess <- function(x, alpha = 0.05, aggregate = NULL,
+	    xlab = NULL, ylab = NULL, main = x$type.name, xlim = NULL, ylim = NULL,
+	    boundary = NULL, statistic = NULL, ...)
 	  {
+            if(is.null(aggregate)) aggregate <- TRUE
+            if(is.null(boundary)) boundary <- TRUE
+            if(is.null(statistic)) statistic <- FALSE
+            stopifnot(identical(statistic, FALSE))
             n <- x$nobs
 	    bound <- computeCritval(alpha = alpha, nproc = NCOL(x$process)) * boundary0(0:n/n)
 	    bound <- suppressWarnings(zoo(bound, time(x)))
@@ -416,10 +420,13 @@ efpFunctional <- function(functional = list(comp = function(x) max(abs(x)), time
       ## nothing specific known about lambda_time
       ## plot: first aggregate, add critval and statistic
 
-          plotProcess <- function(x, alpha = 0.05, aggregate = TRUE,
-	    xlab = NULL, ylab = NULL, main = x$type.name, ylim = NULL,
-	    boundary = TRUE, statistic = TRUE, ...)
+          plotProcess <- function(x, alpha = 0.05, aggregate = NULL,
+	    xlab = NULL, ylab = NULL, main = x$type.name, xlim = NULL, ylim = NULL,
+	    boundary = NULL, statistic = NULL, ...)
 	  {
+            if(is.null(aggregate)) aggregate <- TRUE
+            if(is.null(boundary)) boundary <- TRUE
+            if(is.null(statistic)) statistic <- TRUE
             n <- x$nobs
 	    bound <- computeCritval(alpha = alpha, nproc = NCOL(x$process)) * boundary0(0:n/n)
 	    bound <- suppressWarnings(zoo(bound, time(x)))
@@ -466,10 +473,14 @@ efpFunctional <- function(functional = list(comp = function(x) max(abs(x)), time
 
       ## lambda = lambda_comp(lambda_time(x))
 
-        plotProcess <- function(x, alpha = 0.05, aggregate = TRUE,
+        plotProcess <- function(x, alpha = 0.05, aggregate = NULL,
 	    xlab = NULL, ylab = NULL, main = x$type.name, xlim = NULL, ylim = NULL,
-	    boundary = TRUE, ...)
+	    boundary = NULL, statistic = NULL, ...)
         {
+          if(is.null(aggregate)) aggregate <- TRUE
+          if(is.null(boundary)) boundary <- TRUE
+          if(is.null(statistic)) statistic <- FALSE
+          stopifnot(identical(statistic, FALSE))
           k <- NCOL(x$process)
           bound <- computeCritval(alpha = alpha, nproc = NCOL(x$process)) * boundary0(1:k/k)
 	  ## for pretty printing
@@ -525,9 +536,15 @@ efpFunctional <- function(functional = list(comp = function(x) max(abs(x)), time
       ## lambda = lambda(x)
       ## functional is already the full functional lambda
       ## for plotting: just plot raw process
-      plotProcess <- function(x, alpha = 0.05, aggregate = FALSE,
-        xlab = NULL, ylab = NULL, main = x$type.name, ...)
+      plotProcess <- function(x, alpha = 0.05, aggregate = NULL,
+        xlab = NULL, ylab = NULL, main = x$type.name, xlim = NULL,
+        ylim = NULL, boundary = NULL, statistic = NULL, ...)
       {
+        if(is.null(aggregate)) aggregate <- FALSE
+        if(is.null(boundary)) boundary <- FALSE
+        if(boundary) warning("no boundary can be visualized for this efpFunctional")
+        if(is.null(statistic)) statistic <- FALSE
+        stopifnot(identical(statistic, FALSE))
 	if(is.null(xlab)) {
 	  if(!is.null(x$order.name)) xlab <- x$order.name
 	    else xlab <- "Time"

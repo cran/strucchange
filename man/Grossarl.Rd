@@ -1,7 +1,7 @@
 \name{Grossarl}
 \alias{Grossarl}
 \docType{data}
-\encoding{latin1}
+\encoding{UTF-8}
 \title{Marriages, Births and Deaths in Grossarl}
 \usage{data("Grossarl")}
 \description{
@@ -50,8 +50,8 @@ Population System in the Austrian Alps, forthcoming.
 Zeileis A., Veichtlbauer O. (2002), Policy Interventions
 Affecting Illegitimacy in Preindustrial Austria:
 A Structural Change Analysis, In R. Dutter (ed.),
-\emph{Festschrift 50 Jahre Österreichische Statistische Gesellschaft}, 133-146,
-Österreichische Statistische Gesellschaft.
+\emph{Festschrift 50 Jahre Ã–sterreichische Statistische Gesellschaft}, 133-146,
+Ã–sterreichische Statistische Gesellschaft.
 }
 
 \examples{

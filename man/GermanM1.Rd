@@ -3,7 +3,7 @@
 \alias{historyM1}
 \alias{monitorM1}
 \docType{data}
-\encoding{latin1}
+\encoding{UTF-8}
 \title{German M1 Money Demand}
 \usage{data("GermanM1")}
 \description{
@@ -32,13 +32,13 @@ the unification. All three data frames contain the variables
     \item{R1}{time series. Lag 1 of \code{R},}
     \item{season}{factor coding the seasonality,}
     \item{ecm.res}{vector containing the OLS residuals of
-                   the Lütkepohl et al. (1999) model fitted in the history
+                   the LÃ¼tkepohl et al. (1999) model fitted in the history
 		   period.}
 }
 }
 
 \details{
-Lütkepohl et al. (1999) investigate the linearity and
+LÃ¼tkepohl et al. (1999) investigate the linearity and
 stability of German M1 money demand: they find a stable regression relation
 for the time before the monetary union on 1990-06-01 but a clear structural
 instability afterwards.
@@ -58,7 +58,7 @@ Econometrics
 \url{http://qed.econ.queensu.ca/jae/1999-v14.5/lutkepohl-terasvirta-wolters/}.}
 
 \references{
-Lütkepohl H., Teräsvirta T., Wolters J. (1999), Investigating
+LÃ¼tkepohl H., TerÃ¤svirta T., Wolters J. (1999), Investigating
 Stability and Linearity of a German M1 Money Demand Function,
 \emph{Journal of Applied Econometrics}, \bold{14}, 511-525.
 
@@ -69,7 +69,7 @@ Structural Change in Dynamic Econometric Models,
 
 \examples{
 data("GermanM1")
-## Lütkepohl et al. (1999) use the following model
+## LÃ¼tkepohl et al. (1999) use the following model
 LTW.model <- dm ~ dy2 + dR + dR1 + dp + m1 + y1 + R1 + season
 ## Zeileis et al. (2005) use
 M1.model <- dm ~ dy2 + dR + dR1 + dp + ecm.res + season

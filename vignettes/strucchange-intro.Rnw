@@ -83,7 +83,7 @@ Furthermore, it is described how incoming data can be monitored.
 
 \noindent
 {\bf Keywords:} structural change, CUSUM, MOSUM, recursive estimates, moving
-estimates, monitoring, \textsf{R}, \textsf{S}.\\
+estimates, monitoring, \textsf{R}, \textsf{S}.
 
 \section{Introduction} \label{sec:intro}
 
@@ -98,12 +98,12 @@ fluctuation test, while the Chow and the sup$F$ test belong to the latter.
 A topic that gained more interest rather recently is to monitor structural
 change, i.e., to start after a history phase (without structural changes) to
 analyze new observations and to be able to detect a structural change as soon
-after its occurrence as possible.\\
+after its occurrence as possible.
 
 This paper concerns ideas and methods for implementing generalized fluctuation
 tests as well as $F$ tests in a comprehensive and flexible way, that reflects
 the common features of the testing procedures. It also offers facilities to
-display the results in various ways.\\
+display the results in various ways.
 
 This paper is organized as follows: In Section~\ref{sec:model} the standard
 linear regression model upon which all tests are based will be described and the
@@ -136,7 +136,7 @@ H_0: \quad \beta_i = \beta_0 \qquad (i = 1, \dots, n)
 against
 the alternative that the coefficient vector varies over time, with
 certain tests being more or less suitable (i.e., having good or poor power) for
-certain patterns of deviation from the null hypothesis.\\
+certain patterns of deviation from the null hypothesis.
 
 It is assumed
 that the regressors are nonstochastic with $||x_i|| = O(1)$ and that
@@ -147,7 +147,7 @@ are strict regularity conditions excluding trends in the data which are assumed
 for simplicity. For some tests these assumptions can be
 extended to dynamic models without changing the main properties of the tests;
 but as these details are not part of the focus of this work they are omitted
-here.\\
+here.
 
 In what follows $\hat \beta^{(i, j)}$ is the ordinary least
 squares (OLS) estimate of the regression coefficients based on the
@@ -173,7 +173,7 @@ series from the USA. The data set contains the aggregated monthly personal
 income and
 personal consumption expenditures (in billion US dollars) between January 1959
 and February 2001, which are seasonally adjusted at annual rates.
-It was originally taken from \url{http://www.economagic.com/}, a web site for
+It was originally taken from Economagic, a former web site for
 economic times series. Both time series are depicted in Figure
 \ref{fig:USIncExp}.
 
@@ -256,7 +256,7 @@ hence the null hypothesis should be rejected (at significance level $\alpha$).
 Given a formula that describes a linear regression model to be tested the
 function {\tt efp} creates an object of class {\tt "efp"} which contains
 a fitted empirical fluctuation process of a specified type. The types
-available will be described in detail in this section.\\
+available will be described in detail in this section.
 
 {\bf CUSUM processes}:
 The first type of processes that can be computed are CUSUM processes, which
@@ -267,14 +267,14 @@ recursive residuals:
 \sqrt{\eta}}\sum_{i=k+1}^{k +\lfloor t\eta \rfloor} \tilde u_i \qquad (0
 \le t \le 1),\end{equation}
 where $\eta = n-k$ is the number of recursive residuals and $\lfloor t\eta
-\rfloor$ is the integer part of $t\eta$.\\
+\rfloor$ is the integer part of $t\eta$.
 
 Under the null hypothesis the limiting process for the empirical fluctuation
 process $W_n(t)$ is the Standard Brownian Motion (or Wiener Process) $W(t)$.
 More precisely the following functional central limit theorem (FCLT) holds:
 \begin{equation}\label{lim(Rec-CUSUM)}  W_n \Longrightarrow W, \end{equation}
 as $n \rightarrow \infty$, where $\Rightarrow$ denotes weak convergence
-of the associated probability measures.\\
+of the associated probability measures.
 
 Under the alternative, if there is just a single structural change point $t_0$,
 the recursive residuals will only have zero mean up to $t_0$. Hence the path of
@@ -283,7 +283,7 @@ the process should be close to 0 up to $t_0$ and leave its mean afterwards.
 show that the main properties of the CUSUM quantity remain the same even under 
 weaker assumptions, in particular in dynamic models. Therefore {\tt efp} has the
 logical argument {\tt dynamic}; if set to {\tt TRUE} the lagged observations
-$y_{t-1}$ will be included as regressors.\\
+$y_{t-1}$ will be included as regressors.
 
 \cite{Z:Ploberger+Kraemer:1992} suggested to
 base a structural change test on cumulative sums of the common OLS residuals.
@@ -294,11 +294,11 @@ Thus, the OLS-CUSUM type empirical fluctuation process is defined by:
 The limiting process for $W_n^0(t)$ is the standard Brownian bridge $W^0(t) =
 W(t) - t W(1)$. It starts in 0 at $t = 0$ and it also returns to 0 for $t =
 1$. Under a single structural shift alternative the path should have a peak
-around $t_0$.\\
+around $t_0$.
 
 These processes are available in the function {\tt efp} by specifying the
 argument {\tt type} to be either {\tt "Rec-CUSUM"} or {\tt "OLS-CUSUM"},
-respectively.\\
+respectively.
 
 {\bf MOSUM processes}:
 Another possibility to detect a
@@ -332,13 +332,13 @@ where $N_n = (n - \lfloor n h \rfloor)/(1-h)$. As the representations
 (\ref{Rec-MOSUM2}) and (\ref{OLS-MOSUM2}) suggest, the limiting process
 for the empirical MOSUM processes are the increments of a Brownian motion or a
 Brownian bridge respectively. This is shown in detail in
- \cite{Z:Chu+Hornik+Kuan:1995}.\\
+ \cite{Z:Chu+Hornik+Kuan:1995}.
 
 If again a single structural shift is assumed at $t_0$, then both MOSUM paths
-should also have a strong shift around $t_0$.\\
+should also have a strong shift around $t_0$.
 
 The MOSUM processes will be computed if {\tt type} is set to {\tt "Rec-MOSUM"}
-or {\tt "OLS-MOSUM"}, respectively.\\
+or {\tt "OLS-MOSUM"}, respectively.
 
 {\bf Estimates-based processes}:
 Instead of defining fluctuation processes on the basis of residuals they
@@ -370,15 +370,15 @@ $\left( {X^{(n)}}^\top X^{(n)} \right)^{\frac{1}{2}}$. This has the
 advantage that it has to be calculated only once, but \cite{Z:Kuan+Chen:1994}
 showed that if there are dependencies between the regressors the rescaling
 improves the empirical size of the resulting test. Heuristically the rescaled
-empirical fluctuation process ``looks'' more like its theoretic counterpart.\\
+empirical fluctuation process ``looks'' more like its theoretic counterpart.
 
 Under a single shift alternative the recursive estimates processes should
 have a peak and the moving estimates process
-should again have a shift close to the shift point $t_0$.\\
+should again have a shift close to the shift point $t_0$.
 
 For {\tt type="fluctuation"} the function {\tt efp} returns the recursive
 estimates process, whereas for {\tt "ME"} the moving estimates process is
-returned.\\
+returned.
 
 All six processes may be fitted using the function {\tt efp}.
 For our example we want to fit an OLS-based CUSUM process, and a moving
@@ -395,7 +395,7 @@ properties of the dependent variable if this is a time series (like in our
 example), or which is standardized to the interval $[0,1]$ (or a
 subinterval). For the MOSUM and ME processes the centered interval $[h/2,
 1-h/2]$ is chosen rather than $[0,1-h]$ as in (\ref{Rec-MOSUM}) and
-(\ref{OLS-MOSUM}).\\
+(\ref{OLS-MOSUM}).
 
 Any other process type introduced in this section can be fitted by setting the
 {\tt type} argument. The fitted process can then be printed, plotted or tested
@@ -419,7 +419,7 @@ itself a boundary for $||\mathit{efp}_i(t)||$ is used,
 where $||\cdot||$ is an appropriate functional which is applied component-wise.
 We have implemented the functionals `max' and `range'. The null hypothesis is
 rejected if $||\mathit{efp}_i(t)||$ gets larger than a constant $\lambda$, which
-depends on the confidence level $\alpha$, for any $i = 1, \dots, k$.\\
+depends on the confidence level $\alpha$, for any $i = 1, \dots, k$.
 
 The boundaries for the MOSUM processes are also constants, i.e., of form $b(t) =
 \lambda$, which seems natural as the limiting processes are stationary. The
@@ -445,7 +445,7 @@ They were chosen because they are tangential to the boundaries
 However, \cite{Zo:Zeileis:2000a} examined the properties of the alternative
 boundaries (\ref{bound:Rec-CUS1}) and (\ref{bound:OLS-CUS1}) and showed that
 the resulting OLS-based CUSUM test has better power
-for structural changes early and late in the sample period.\\
+for structural changes early and late in the sample period.
 
 Given a fitted empirical fluctuation process the boundaries can be
 computed very easily using the function {\tt boundary}, which returns a time
@@ -468,7 +468,7 @@ plot(ocus)
 It can be seen that the OLS-based CUSUM process exceeds its boundary; hence
 there is evidence for a structural change. Furthermore the process seems to
 indicate two changes: one in the first half of the 1990s and another one at the
-end of 1998.\\
+end of 1998.
 
 It is also possible to suppress the boundaries and add them afterwards, e.g. in
 another color
@@ -525,7 +525,7 @@ processes: \begin{eqnarray} \label{statr} S_r & = & \max_t
 where $f(t)$ depends on the shape of the boundary, i.e.,
 $b(t) = \lambda \cdot f(t)$. For most boundaries is $f(t) \equiv 1$, but the
 linear boundary for the Recursive CUSUM test for example has shape $f(t) = 1 + 
-2t$.\\
+2t$.
 
 It is either possible to supply {\tt sctest} with a fitted
 empirical fluctuation process or with a formula describing the model that should
@@ -619,7 +619,7 @@ Figure~\ref{fig:Fstats}. As the $F$ statistics cross their boundary, there is
 evidence for a structural change (at the level $\alpha = 0.05$). The process
 has a clear peak in 1998, which mirrors
 the results from the analysis by empirical fluctuation processes and tests,
-respectively, that also indicated a break in the late 1990s.\\
+respectively, that also indicated a break in the late 1990s.
 
 It is also possible to plot the $p$ values instead of
 the $F$ statistics themselves by
@@ -796,7 +796,7 @@ In this paper, we have described the {\tt strucchange} package that implements
 methods for testing for structural change in linear regression relationships.
 It provides a unified framework for displaying information
 about structural changes flexibly and for assessing their significance
-according to various tests.\\
+according to various tests.
 
 Containing tests from the generalized fluctuation test framework as well as
 tests based on $F$ statistics (Chow test ststistics) the package extends
@@ -821,7 +821,8 @@ The corresponding functions in \texttt{strucchange} are presented in
 
 The research of Achim Zeileis, Friedrich Leisch and Kurt Hornik was supported
 by the Austrian Science Foundation (FWF) under grant SFB\#010 (`Adaptive
-Information Systems and Modeling in Economics and Management Science').\\
+Information Systems and Modeling in Economics and Management Science').
+
 The work of Christian Kleiber was supported by the
 Deutsche Forschungsgemeinschaft, Sonderforschungsbereich 475.
 
@@ -835,7 +836,7 @@ Deutsche Forschungsgemeinschaft, Sonderforschungsbereich 475.
 An important and useful tool concerning significance tests are $p$ values,
 especially for application in a software package. Their implementation is
 therefore crucial and in this section we will give more detail about the
-implementation in the {\tt strucchange} package.\\
+implementation in the {\tt strucchange} package.
 
 For the CUSUM tests with linear boundaries there are rather good
 approximations to the asymptotic $p$ value functions given in
@@ -850,7 +851,7 @@ for the Recursive MOSUM test for levels in $[0.01, 0.2]$ are taken from
 \cite{Z:Chu+Hornik+Kuan:1995}, while the critical values for the levels
 in $[0.01, 0.1]$ for the OLS-based MOSUM and the ME test are given in
 \cite{Z:Chu+Hornik+Kuan:1995a}; the parameter $h$ is in both cases interpolated
-for values in $[0.05, 0.5]$.\\
+for values in $[0.05, 0.5]$.
 
 The $p$ values for the sup$F$, ave$F$ and exp$F$ test are approximated based on
 \cite{Z:Hansen:1997}, who also wrote the original code in \textsf{GAUSS}, which

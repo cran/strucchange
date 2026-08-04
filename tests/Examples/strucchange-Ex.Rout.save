@@ -1861,7 +1861,7 @@ f(efp) = 12.258, p-value = 0.1158
 > 
 > ### Name: gefp
 > ### Title: Generalized Empirical M-Fluctuation Processes
-> ### Aliases: gefp print.gefp sctest.gefp plot.gefp time.gefp print.gefp
+> ### Aliases: gefp print.gefp sctest.gefp plot.gefp time.gefp
 > ### Keywords: regression
 > 
 > ### ** Examples

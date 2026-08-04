@@ -13,7 +13,7 @@ February 2001 (seasonally adjusted at annual rates).}
                        (in billion US Dollars).}
  }
 }
-\source{\url{https://www.economagic.com/} }
+\source{Economagic}
 \references{
 
 A. Zeileis, F. Leisch, K. Hornik, C. Kleiber (2002),

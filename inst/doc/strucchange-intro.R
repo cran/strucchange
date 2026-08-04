@@ -164,5 +164,3 @@ me.mefp <- monitor(me.mefp)
 ### code chunk number 24: monitor-plot2
 ###################################################
 plot(me.mefp)
-
-

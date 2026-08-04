@@ -78,8 +78,9 @@ mefp.efp <-
         }
         critval <- optimize(mreCritval, c(0,10), tol = tolerance)$minimum
 
-        computeEmpProc <- function(X, y)
+        computeEmpProc <- function(X = NULL, y = NULL, newcoef = NULL, Q = NULL, k = NULL)
         {
+          stopifnot(!is.null(X), !is.null(y), is.null(newcoef), is.null(Q), is.null(k))
           as.vector(cumsum((y - X %*% histcoef)/(sigmahat*sqrt(histsize))))
         }
         computeEstims <- NULL
@@ -113,8 +114,9 @@ mefp.efp <-
                        paste(range(1-as.numeric(dntab[[3]])),
                              collapse="-")))
 
-        computeEmpProc <- function(X, y)
+        computeEmpProc <- function(X = NULL, y = NULL, newcoef = NULL, Q = NULL, k = NULL)
         {
+               stopifnot(!is.null(X), !is.null(y), is.null(newcoef), is.null(Q), is.null(k))
                e <- as.vector(y - X %*% histcoef)
                process <- rep(0, nrow(X)-K+1)
                for(i in 0:(nrow(X)-K)) ## FIXME: cumsum - cumsum
@@ -162,7 +164,8 @@ mefp.efp <-
             retval
         }
 
-        computeEmpProc <- function(newcoef, Q, k){
+        computeEmpProc <- function(X = NULL, y = NULL, newcoef = NULL, Q = NULL, k = NULL) {
+            stopifnot(is.null(X), is.null(y), !is.null(newcoef), !is.null(Q), !is.null(k))
             if(is.null(Q)) Q <- Q12
             Q <- Q * K/(sigmahat*sqrt(histsize))
             t(Q %*%(newcoef-histcoef))
@@ -211,7 +214,8 @@ mefp.efp <-
             retval
         }
 
-        computeEmpProc <- function(newcoef, Q, k){
+        computeEmpProc <- function(X = NULL, y = NULL, newcoef = NULL, Q = NULL, k = NULL){
+            stopifnot(is.null(X), is.null(y), !is.null(newcoef), !is.null(Q), !is.null(k))
             if(is.null(Q)) Q <- Q12
             Q <- Q * k/(sigmahat*sqrt(histsize))
             t(Q %*%(newcoef-histcoef))
@@ -284,11 +288,11 @@ monitor <- function(obj, data=NULL, verbose=TRUE){
     {
       if(obj$type == "OLS-CUSUM")
       {
-        obj$process <- obj$computeEmpProc(x,y)[-(1:obj$histsize)]
+        obj$process <- obj$computeEmpProc(X = x, y = y)[-(1:obj$histsize)]
       }
       else
       {
-        obj$process <- obj$computeEmpProc(x,y)[-(1:length(obj$efpprocess))]
+        obj$process <- obj$computeEmpProc(X = x, y = y)[-(1:length(obj$efpprocess))]
       }
       boundary <- obj$border((obj$histsize+1):nrow(x))
       obj$statistic <- max(abs(obj$process))
@@ -305,7 +309,7 @@ monitor <- function(obj, data=NULL, verbose=TRUE){
       for(k in (obj$last+1):nrow(x)){
           newestims <- obj$computeEstims(x,y,k)
           obj$process <- rbind(obj$process,
-                               obj$computeEmpProc(newestims$coef, newestims$Qr12,k))
+                               obj$computeEmpProc(newcoef = newestims$coef, Q = newestims$Qr12, k = k))
           stat <- obj$computeStat(obj$process)
           obj$statistic <- c(obj$statistic, stat)
           if(!foundBreak & (stat > obj$border(k))){

@@ -4,7 +4,6 @@
 \alias{sctest.gefp}
 \alias{plot.gefp}
 \alias{time.gefp}
-\alias{print.gefp}
 
 \title{Generalized Empirical M-Fluctuation Processes}
 \description{Computes an empirical M-fluctuation process 

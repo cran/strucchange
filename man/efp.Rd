@@ -1,7 +1,7 @@
 \name{efp}
 \alias{efp}
 \alias{print.efp}
-\encoding{latin1}
+\encoding{UTF-8}
 \title{Empirical Fluctuation Processes}
 \description{Computes an empirical fluctuation process according
 to a specified method from the generalized fluctuation test
@@ -98,7 +98,7 @@ Hansen B. (1992), Testing for Parameter Instability in Linear Models,
 Hjort N.L., Koning A. (2002), Tests for Constancy of Model Parameters
 Over Time, \emph{Nonparametric Statistics}, \bold{14}, 113-132.
 
-Kr‰mer W., Ploberger W., Alt R. (1988), Testing for structural change in
+Kr√§mer W., Ploberger W., Alt R. (1988), Testing for structural change in
 dynamic models, \emph{Econometrica}, \bold{56}, 1355-1369.
 
 Kuan C.-M., Hornik K. (1995), The generalized fluctuation test: A
@@ -108,7 +108,7 @@ Kuan C.-M., Chen (1994), Implementing the fluctuation and moving estimates
 tests in dynamic econometric models, \emph{Economics Letters}, \bold{44},
 235-239.
 
-Ploberger W., Kr‰mer W. (1992), The CUSUM test with OLS residuals,
+Ploberger W., Kr√§mer W. (1992), The CUSUM test with OLS residuals,
 \emph{Econometrica}, \bold{60}, 271-285.
 
 Zeileis A., Leisch F., Hornik K., Kleiber C. (2002), \code{strucchange}:
@@ -167,13 +167,6 @@ plot(re.seat, functional = NULL)
 sctest(re.seat)
 }
 
-\concept{CUSUM}
-\concept{MOSUM}
-\concept{recursive estimates}
-\concept{moving estimates}
-\concept{fluctuation test}
-\concept{maximum likelihood scores}
-\concept{structural change}
 \concept{CUSUM}
 \concept{MOSUM}
 \concept{recursive estimates}

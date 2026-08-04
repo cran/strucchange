@@ -1,6 +1,6 @@
 \name{sctest.efp}
 \alias{sctest.efp}
-\encoding{latin1}
+\encoding{UTF-8}
 \title{Generalized Fluctuation Tests}
 \description{Performs a generalized fluctuation test.}
 \usage{
@@ -43,7 +43,7 @@ constancy, \emph{Biometrika}, \bold{82}, 603-617.
 Chu C.-S., Hornik K., Kuan C.-M. (1995), The moving-estimates test for
 parameter stability, \emph{Econometric Theory}, \bold{11}, 669-720.
 
-Kr‰mer W., Ploberger W., Alt R. (1988), Testing for structural change in
+Kr√§mer W., Ploberger W., Alt R. (1988), Testing for structural change in
 dynamic models, \emph{Econometrica}, \bold{56}, 1355-1369.
 
 Kuan C.-M., Hornik K. (1995), The generalized fluctuation test: A
@@ -53,7 +53,7 @@ Kuan C.-M., Chen (1994), Implementing the fluctuation and moving estimates
 tests in dynamic econometric models, \emph{Economics Letters}, \bold{44},
 235-239.
 
-Ploberger W., Kr‰mer W. (1992), The CUSUM Test with OLS Residuals,
+Ploberger W., Kr√§mer W. (1992), The CUSUM Test with OLS Residuals,
 \emph{Econometrica}, \bold{60}, 271-285.
 
 Zeileis A., Leisch F., Hornik K., Kleiber C. (2002), \code{strucchange}:
